@@ -1,3 +1,12 @@
+DROP TABLE IF EXISTS Iscritto;
+DROP TABLE IF EXISTS Responsabile;
+DROP TABLE IF EXISTS Settore;
+DROP TABLE IF EXISTS Iscrizione;
+DROP TABLE IF EXISTS SalaProve;
+DROP TABLE IF EXISTS Strumentazione;
+DROP TABLE IF EXISTS Prenotazione;
+DROP TABLE IF EXISTS Invito;
+
 CREATE TABLE Iscritto (
     Email VARCHAR(100) NOT NULL PRIMARY KEY,
     Cognome VARCHAR(100) NOT NULL,
@@ -12,20 +21,20 @@ CREATE TABLE Iscritto (
 CREATE TABLE Responsabile (
     ResponsabileEmail VARCHAR(255) NOT NULL, -- vincolo solo docente può essere resp. non esprimibile
     InizioIncarico DATE NOT NULL,
-    AnniServizio INT,
+    AnniServizio INT DEFAULT 0,
 
     FOREIGN KEY (ResponsabileEmail) REFERENCES Iscritto(Email)
-        ON DELETE CASCADE
+        ON DELETE NO ACTION
         ON UPDATE CASCADE
 );
 
 CREATE TABLE Settore (
     Nome VARCHAR(100) NOT NULL PRIMARY KEY,
-    Tipologia VARCHAR(50) NOT NULL,
+    Tipologia ENUM() NOT NULL,
     NumIscritti INT DEFAULT 0,
     ResponsabileEmail VARCHAR(255) NOT NULL,
 
-    CONSTRAINT chk_TipologiaSettore CHECK (Tipologia IN ('danza', 'musica', 'teatro')),
+    --CONSTRAINT chk_TipologiaSettore CHECK (Tipologia IN ('danza', 'musica', 'teatro')),
     FOREIGN KEY (ResponsabileEmail) REFERENCES Responsabile(ResponsabileEmail)
 );
 
@@ -35,10 +44,10 @@ CREATE TABLE Iscrizione (
 
     PRIMARY KEY (IscrittoEmail, SettoreNome),
     FOREIGN KEY (IscrittoEmail) REFERENCES Iscritto(Email)
-        ON DELETE CASCADE
+        ON DELETE NO ACTION
         ON UPDATE CASCADE,
     FOREIGN KEY (SettoreNome) REFERENCES Settore(Nome)
-        ON DELETE CASCADE
+        ON DELETE NO ACTION
         ON UPDATE CASCADE
 );
 
@@ -48,7 +57,7 @@ CREATE TABLE SalaProve (
     SettoreNome VARCHAR(100) NOT NULL,
 
     FOREIGN KEY (SettoreNome) REFERENCES Settore(Nome)
-        ON DELETE CASCADE
+        ON DELETE NO ACTION
         ON UPDATE CASCADE
 );
 
@@ -62,4 +71,41 @@ CREATE TABLE Strumentazione (
     FOREIGN KEY (NumAula) REFERENCES SalaProve(NumAula)
         ON DELETE CASCADE -- se elimino un'aula, elimino la sua strumentazione (?)
         ON UPDATE CASCADE
+);
+
+CREATE TABLE Prenotazione (
+    
+    ID INT NOT NULL PRIMARY KEY,
+    DataPren DATE NOT NULL,
+    OraInizio TIMESTAMP NULL DEFAULT NULL,
+    OraFine TIMESTAMP NULL DEFAULT NULL,
+    Attivita VARCHAR(50),
+    NumAula VARCHAR(50) NOT NULL,
+    ResponsabileEmail VARCHAR(100),
+
+    FOREIGN KEY (ResponsabileEmail) REFERENCES Responsabile(ResponsabileEmail)
+        ON UPDATE CASCADE
+        ON DELETE NO ACTION,
+    FOREIGN KEY (NumAula) REFERENCES SalaProve(NumAula)
+        ON UPDATE CASCADE
+        ON DELETE NO ACTION
+);
+
+CREATE TABLE Invito (
+
+    PrenotazioneID INT NOT NULL,
+    IscrittoEmail VARCHAR(100) NOT NULL,
+    Accettazione BOOLEAN,
+    Motivazione VARCHAR(300),
+    DataRisposta DATE,
+    
+    PRIMARY KEY(PrenotazioneID, IscrittoEmail),
+
+    FOREIGN KEY (PrenotazioneID) REFERENCES Prenotazione(ID)
+        ON UPDATE CASCADE
+        ON DELETE NO ACTION,
+    FOREIGN KEY (IscrittoEmail) REFERENCES Iscritto(Email)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+
 );
