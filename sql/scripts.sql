@@ -30,7 +30,7 @@ CREATE TABLE Responsabile (
 
 CREATE TABLE Settore (
     Nome VARCHAR(100) NOT NULL PRIMARY KEY,
-    Tipologia ENUM() NOT NULL,
+    Tipologia ENUM('danza', 'musica', 'teatro') NOT NULL,
     NumIscritti INT DEFAULT 0,
     ResponsabileEmail VARCHAR(255) NOT NULL,
 
@@ -64,10 +64,10 @@ CREATE TABLE SalaProve (
 CREATE TABLE Strumentazione (
     ID INT AUTO_INCREMENT PRIMARY KEY, -- su internet dicono sia corretto, controllerò su file di Perlasca
     NumAula VARCHAR(50) NOT NULL,
-    Tipologia VARCHAR(100) NOT NULL,
+    Tipologia ENUM('strumenti musicali', 'impianti audio', 'specchi', 'palcoscenico') NOT NULL,
     Descrizione VARCHAR(300), -- 300 numero arbitrario, è anche possibile che la descrizione sia vuota
 
-    CONSTRAINT chk_TipologiaStrumenti CHECK (Tipologia IN ('strumenti musicali', 'impianti audio', 'specchi', 'palcoscenico')),
+    --CONSTRAINT chk_TipologiaStrumenti CHECK (Tipologia IN ('strumenti musicali', 'impianti audio', 'specchi', 'palcoscenico')),
     FOREIGN KEY (NumAula) REFERENCES SalaProve(NumAula)
         ON DELETE CASCADE -- se elimino un'aula, elimino la sua strumentazione (?)
         ON UPDATE CASCADE
