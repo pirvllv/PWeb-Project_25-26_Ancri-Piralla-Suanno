@@ -14,9 +14,13 @@ ORDER BY p.ID;
 SELECT Data, NumAula, COUNT(ID) AS NumPrenotCoinvolto
 FROM Prenotazione AS p
 WHERE p.ID IN (
-    SELECT p.ID
-    FROM Prenotazione p JOIN Invito i ON p.ID = i.PrenotazioneID
-    WHERE i.IscrittoEmail = ? -- passaggio per parametro di un'email di un iscritto (PRIMARY KEY)
+    SELECT p.ID -- elenco ID prenotazioni organizzate da responsabile
+    FROM Prenotazione AS p
+    WHERE ResponsabileEmail = ?
+    UNION
+    SELECT i.PrenotazioneID -- elenco ID prenotazioni a cui un utente è stato invitato
+    FROM Invito AS i
+    WHERE IscrittoEmail = ?
 )
 GROUP BY Data, NumAula
 ORDER BY Data, NumAula;
