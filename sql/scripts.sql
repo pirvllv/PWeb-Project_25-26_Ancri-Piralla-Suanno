@@ -1,19 +1,10 @@
-DROP TABLE IF EXISTS Iscritto;
-DROP TABLE IF EXISTS Responsabile;
-DROP TABLE IF EXISTS Settore;
-DROP TABLE IF EXISTS Iscrizione;
-DROP TABLE IF EXISTS SalaProve;
-DROP TABLE IF EXISTS Strumentazione;
-DROP TABLE IF EXISTS Prenotazione;
-DROP TABLE IF EXISTS Invito;
-
 CREATE TABLE Iscritto (
     Email VARCHAR(100) NOT NULL PRIMARY KEY,
     Cognome VARCHAR(100) NOT NULL,
     Nome VARCHAR(100) NOT NULL,
     DataNascita DATE NOT NULL,
     Foto VARCHAR(500), -- URL o path
-    Ruolo VARCHAR(10) NOT NULL,
+    Ruolo VARCHAR(30) NOT NULL,
 
     CONSTRAINT chk_Ruolo CHECK (Ruolo IN ('studente', 'docente', 'tecnico'))
 );
@@ -21,7 +12,6 @@ CREATE TABLE Iscritto (
 CREATE TABLE Responsabile (
     ResponsabileEmail VARCHAR(255) NOT NULL, -- vincolo solo docente può essere resp. non esprimibile
     InizioIncarico DATE NOT NULL,
-    AnniServizio INT DEFAULT 0,
 
     FOREIGN KEY (ResponsabileEmail) REFERENCES Iscritto(Email)
         ON DELETE NO ACTION
@@ -29,12 +19,11 @@ CREATE TABLE Responsabile (
 );
 
 CREATE TABLE Settore (
-    Nome VARCHAR(100) NOT NULL PRIMARY KEY,
-    Tipologia ENUM('danza', 'musica', 'teatro') NOT NULL,
-    NumIscritti INT DEFAULT 0,
+    Nome VARCHAR(50) NOT NULL PRIMARY KEY,
+    Tipologia VARCHAR(50) NOT NULL,
     ResponsabileEmail VARCHAR(255) NOT NULL,
 
-    --CONSTRAINT chk_TipologiaSettore CHECK (Tipologia IN ('danza', 'musica', 'teatro')),
+    CONSTRAINT chk_TipologiaSettore CHECK (Tipologia IN ('danza', 'musica', 'teatro')),
     FOREIGN KEY (ResponsabileEmail) REFERENCES Responsabile(ResponsabileEmail)
 );
 
@@ -62,26 +51,30 @@ CREATE TABLE SalaProve (
 );
 
 CREATE TABLE Strumentazione (
-    ID INT AUTO_INCREMENT PRIMARY KEY, -- su internet dicono sia corretto, controllerò su file di Perlasca
-    NumAula VARCHAR(50) NOT NULL,
-    Tipologia ENUM('strumenti musicali', 'impianti audio', 'specchi', 'palcoscenico') NOT NULL,
-    Descrizione VARCHAR(300), -- 300 numero arbitrario, è anche possibile che la descrizione sia vuota
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    NumAula VARCHAR(15) NOT NULL,
+    Tipologia VARCHAR(50) NOT NULL,
+    Descrizione VARCHAR(300),
 
-    --CONSTRAINT chk_TipologiaStrumenti CHECK (Tipologia IN ('strumenti musicali', 'impianti audio', 'specchi', 'palcoscenico')),
+    CONSTRAINT chk_TipologiaStrumentazione CHECK (Tipologia IN ('strumenti musicali', 'impianti audio', 'specchi', 'palcoscenico')),
+
     FOREIGN KEY (NumAula) REFERENCES SalaProve(NumAula)
-        ON DELETE CASCADE -- se elimino un'aula, elimino la sua strumentazione (?)
+        ON DELETE CASCADE
         ON UPDATE CASCADE
 );
 
+ALTER TABLE Strumentazione AUTO_INCREMENT=1;
+
 CREATE TABLE Prenotazione (
     
-    ID INT NOT NULL PRIMARY KEY,
-    DataPren DATE NOT NULL,
-    OraInizio TIMESTAMP NULL DEFAULT NULL,
-    OraFine TIMESTAMP NULL DEFAULT NULL,
+    ID INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    OraInizio DATETIME NULL DEFAULT NULL,
+    OraFine DATETIME NULL DEFAULT NULL,
     Attivita VARCHAR(50),
     NumAula VARCHAR(50) NOT NULL,
     ResponsabileEmail VARCHAR(100),
+
+    CONSTRAINT ChckDirTemp CHECK (OraFine > OraInizio),
 
     FOREIGN KEY (ResponsabileEmail) REFERENCES Responsabile(ResponsabileEmail)
         ON UPDATE CASCADE
@@ -91,13 +84,15 @@ CREATE TABLE Prenotazione (
         ON DELETE NO ACTION
 );
 
+ALTER TABLE Prenotazione AUTO_INCREMENT=1;
+
 CREATE TABLE Invito (
 
     PrenotazioneID INT NOT NULL,
     IscrittoEmail VARCHAR(100) NOT NULL,
     Accettazione BOOLEAN,
     Motivazione VARCHAR(300),
-    DataRisposta DATE,
+    DataRisposta TIMESTAMP,
     
     PRIMARY KEY(PrenotazioneID, IscrittoEmail),
 
