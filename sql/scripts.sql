@@ -68,8 +68,9 @@ ALTER TABLE Strumentazione AUTO_INCREMENT=1;
 CREATE TABLE Prenotazione (
     
     ID INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
-    OraInizio DATETIME NULL DEFAULT NULL,
-    OraFine DATETIME NULL DEFAULT NULL,
+    DataPren DATE NULL DEFAULT NULL,
+    OraInizio TIME NULL DEFAULT NULL, -- ? come mai inizializzi con NULL DEFAULT NULL?
+    OraFine TIME NULL DEFAULT NULL,
     Attivita VARCHAR(50),
     NumAula VARCHAR(50) NOT NULL,
     ResponsabileEmail VARCHAR(100),
