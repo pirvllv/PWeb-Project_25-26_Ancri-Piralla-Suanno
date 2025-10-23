@@ -39,7 +39,11 @@ ORDER BY Data, NumAula;
 
 ------------------------------------------------------- c
 -- Quando viene definita una prenotazione, verificare che la sala non sia già occupata
-
+SELECT EXIST (
+    SELECT 1
+    FROM Prenotazione
+    WHERE NumAula = ? AND DataPren = ? AND OraInizio < ? AND OraFine > ?
+);
 ------------------------------------------------------- c end
 
 
