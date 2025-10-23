@@ -42,14 +42,29 @@ ORDER BY Data, NumAula;
 SELECT EXIST (
     SELECT 1
     FROM Prenotazione
-    WHERE NumAula = ? AND DataPren = ? AND OraInizio < ? AND OraFine > ?
+    WHERE NumAula = ? AND DataPren = ? AND OraInizio < ? AND OraFine > ? -- OraInizio < "OraFine_inDB", OraFine > "OraInizio_inDB"
 );
 ------------------------------------------------------- c end
 
 
 ------------------------------------------------------- d
 -- Quando un utente accetta un invito, non devono esserci sovrapposizioni con altre prove affinché l’operazione vada a buon fine
-
+SELECT EXIST (
+    SELECT 1
+    FROM Prenotazione p
+    WHERE
+        p.ID <> ? -- prenotazione diversa da quella che stiamo accettando
+        AND DataPren = ? AND OraInizio < ? AND OraFine > ? -- deve essere sovrapposta temporalmente
+        AND (
+            p.ResponsabileEmail = ? -- o l'utente è l'organizzatore
+            OR
+            p.ID IN ( -- o l'utente ha gia accettato un invito per questa prenotazione'
+                SELECT PrenotazioneID
+                FROM Invito
+                WHERE IscrittoEmail = ? AND Accettazione = TRUE
+            )
+        )
+);
 ------------------------------------------------------- d end
 
 
