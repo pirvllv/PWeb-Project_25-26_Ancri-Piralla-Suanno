@@ -66,7 +66,6 @@ CREATE TABLE Strumentazione (
 ALTER TABLE Strumentazione AUTO_INCREMENT=1;
 
 CREATE TABLE Prenotazione (
-    
     ID INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
     DataPren DATE NULL DEFAULT NULL,
     OraInizio TIME NULL DEFAULT NULL, -- ? come mai inizializzi con NULL DEFAULT NULL?
@@ -88,7 +87,6 @@ CREATE TABLE Prenotazione (
 ALTER TABLE Prenotazione AUTO_INCREMENT=1;
 
 CREATE TABLE Invito (
-
     PrenotazioneID INT NOT NULL,
     IscrittoEmail VARCHAR(100) NOT NULL,
     Accettazione BOOLEAN,
@@ -103,5 +101,4 @@ CREATE TABLE Invito (
     FOREIGN KEY (IscrittoEmail) REFERENCES Iscritto(Email)
         ON UPDATE CASCADE
         ON DELETE CASCADE
-
 );
