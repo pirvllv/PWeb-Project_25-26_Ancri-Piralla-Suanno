@@ -48,7 +48,7 @@ INSERT INTO Strumentazione (ID, NumAula, Tipologia, Descrizione) VALUES
 (6, 'M02', 'impianti audio', 'Mixer audio 8 canali'),
 (7, 'D02', 'specchi', 'Parete a specchio 12x3m con sbarre');
 
-INSERT INTO Prenotazione (ID, DataPren, OraInizio, OraFine, Attivita, NumAula, ResponsabileEmail) VALUES
+INSERT INTO Prenotazione (IDPrenotazione, DataPren, OraInizio, OraFine, Attivita, NumAula, ResponsabileEmail) VALUES
 (1, '2025-11-10', '15:00:00', '17:00:00', 'Prove orchestra', 'M01', 'mario.rossi@email.com'),
 (2, '2025-11-10', '17:00:00', '19:00:00', 'Coreografia di gruppo', 'D01', 'anna.verdi@email.com'),
 (3, '2025-11-11', '10:00:00', '13:00:00', 'Lettura copione', 'T01', 'davide.romano@email.com'),

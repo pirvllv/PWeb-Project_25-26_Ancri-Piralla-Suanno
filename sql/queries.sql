@@ -1,11 +1,11 @@
 ------------------------------------------------------- a
 -- Contare il numero di partecipanti per ogni prenotazione e verificare che non venga superato il numero di posti per la sala
-SELECT p.ID AS ID_Prenotazione, sp.Capienza, COUNT(i.IscrittoEmail) AS NumeroPartecipanti,
-CASE WHEN COUNT(i.IscrittoEmail) > sp.Capienza THEN TRUE ELSE FALSE END AS SuperaCapienza
-FROM Prenotazione p JOIN Invito i ON p.ID = i.PrenotazioneID JOIN SalaProve sp ON p.NumAula = sp.NumAula
+SELECT p.IDPrenotazione, sp.Capienza, COUNT(i.IscrittoEmail),
+CASE WHEN COUNT(i.IscrittoEmail) > sp.Capienza THEN TRUE ELSE FALSE END
+FROM Prenotazione p JOIN Invito i ON p.IDPrenotazione = i.IDPrenotazione JOIN SalaProve sp ON p.NumAula = sp.NumAula
 WHERE i.Accettazione = TRUE
-GROUP BY p.ID, sp.Capienza
-ORDER BY p.ID;
+GROUP BY p.IDPrenotazione, sp.Capienza
+ORDER BY p.IDPrenotazione;
 ------------------------------------------------------- a end
 
 
@@ -13,10 +13,10 @@ ORDER BY p.ID;
 
 ------------------------------------------------------- b-1
 -- Contare il numero di prenotazioni che sono state organizzate, per giorno e per sala di prova.
-SELECT DataPren, NumAula, COUNT(ID) AS NumPrenotCoinvolto
+SELECT DataPren, NumAula, COUNT(IDPrenotazione)
 FROM Prenotazione AS p
-WHERE p.ID IN (
-    SELECT p.ID -- elenco ID prenotazioni organizzate da responsabile
+WHERE p.IDPrenotazione IN (
+    SELECT p.IDPrenotazione -- elenco ID prenotazioni organizzate da responsabile
     FROM Prenotazione AS p
     WHERE ResponsabileEmail = ?
 )
@@ -29,10 +29,10 @@ ORDER BY DataPren, NumAula;
 
 ------------------------------------------------------- b-2
 -- Contare il numero di prenotazioni a cui si è stati invitati, per giorno e per sala di prova.
-SELECT DataPren, NumAula, COUNT(ID) AS NumPrenotCoinvolto
+SELECT DataPren, NumAula, COUNT(IDPrenotazione)
 FROM Prenotazione AS p
-WHERE p.ID IN (
-    SELECT i.PrenotazioneID -- elenco ID prenotazioni a cui un utente è stato invitato
+WHERE p.IDPrenotazione IN (
+    SELECT i.IDPrenotazione -- elenco ID prenotazioni a cui un utente è stato invitato
     FROM Invito AS i
     WHERE IscrittoEmail = ?
 )
@@ -49,7 +49,7 @@ SELECT EXISTS(
     SELECT IDPrenotazione
     FROM Prenotazione
     WHERE NumAula = ? AND DataPren = ? AND OraInizio < ? AND OraFine > ?
-);
+);  -- OraInizio < OraFineNuovaPren AND OraFine > OraInizioNuovaPren
 ------------------------------------------------------- c end
 
 
@@ -57,22 +57,18 @@ SELECT EXISTS(
 
 ------------------------------------------------------- d
 -- Quando un utente accetta un invito, non devono esserci sovrapposizioni con altre prove affinché l’operazione vada a buon fine
-SELECT EXIST (
+SELECT EXISTS (
     SELECT 1
-    FROM Prenotazione p
+    FROM Prenotazione AS p
+    JOIN Invito AS i ON p.IDPrenotazione = i.IDPrenotazione
     WHERE
-        p.ID <> ? -- prenotazione diversa da quella che stiamo accettando
-        AND DataPren = ? AND OraInizio < ? AND OraFine > ? -- deve essere sovrapposta temporalmente
-        AND (
-            p.ResponsabileEmail = ? -- o l'utente è l'organizzatore
-            OR
-            p.ID IN ( -- o l'utente ha gia accettato un invito per questa prenotazione'
-                SELECT PrenotazioneID
-                FROM Invito
-                WHERE IscrittoEmail = ? AND Accettazione = TRUE
-            )
-        )
-);
+        i.IscrittoEmail = ?
+        AND i.Accettazione = TRUE
+        AND p.IDPrenotazione <> ?
+        AND p.DataPren = ?
+        AND p.OraInizio < ?
+        AND p.OraFine > ?
+);      -- OraInizio < OraFineNuovaPren AND OraFine > OraInizioNuovaPren
 ------------------------------------------------------- d end
 
 

@@ -93,7 +93,7 @@ CREATE TABLE Invito (
     
     PRIMARY KEY(IDPrenotazione, IscrittoEmail),
 
-    FOREIGN KEY (PrenotazioneID) REFERENCES Prenotazione(ID)
+    FOREIGN KEY (IDPrenotazione) REFERENCES Prenotazione(IDPrenotazione)
         ON UPDATE CASCADE
         ON DELETE CASCADE,
     FOREIGN KEY (IscrittoEmail) REFERENCES Iscritto(Email)
