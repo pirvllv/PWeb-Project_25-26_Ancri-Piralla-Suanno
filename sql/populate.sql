@@ -57,7 +57,7 @@ INSERT INTO Prenotazione (ID, DataPren, OraInizio, OraFine, Attivita, NumAula, R
 (6, '2025-11-13', '14:00:00', '16:00:00', 'Riscaldamento e stretching', 'D02', 'anna.verdi@email.com'),
 (7, '2025-11-13', '18:00:00', '20:00:00', 'Sessione di improvvisazione', 'T01', 'davide.romano@email.com');
 
-INSERT INTO Invito (PrenotazioneID, IscrittoEmail, Accettazione, Motivazione, DataRisposta) VALUES
+INSERT INTO Invito (IDPrenotazione, IscrittoEmail, Accettazione, Motivazione, DataRisposta) VALUES
 (1, 'mario.rossi@email.com', TRUE, NULL, '2025-11-01 10:00:00'),
 (1, 'luca.bianchi@email.com', TRUE, NULL, '2025-11-02 11:30:00'),
 (1, 'elisa.bruni@email.com', FALSE, 'Conflitto orario con un altro impegno.', '2025-11-03 09:00:00'),
