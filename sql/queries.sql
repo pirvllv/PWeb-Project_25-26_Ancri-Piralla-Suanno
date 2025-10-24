@@ -9,6 +9,8 @@ ORDER BY p.ID;
 ------------------------------------------------------- a end
 
 
+
+
 ------------------------------------------------------- b-1
 -- Contare il numero di prenotazioni che sono state organizzate, per giorno e per sala di prova.
 SELECT Data, NumAula, COUNT(ID) AS NumPrenotCoinvolto
@@ -21,6 +23,8 @@ WHERE p.ID IN (
 GROUP BY Data, NumAula
 ORDER BY Data, NumAula;
 ------------------------------------------------------- b-1 end
+
+
 
 
 ------------------------------------------------------- b-2
@@ -37,6 +41,8 @@ ORDER BY Data, NumAula;
 ------------------------------------------------------- b-2 end
 
 
+
+
 ------------------------------------------------------- c
 -- Quando viene definita una prenotazione, verificare che la sala non sia già occupata
 SELECT EXIST (
@@ -45,6 +51,8 @@ SELECT EXIST (
     WHERE NumAula = ? AND DataPren = ? AND OraInizio < ? AND OraFine > ? -- OraInizio < "OraFine_inDB", OraFine > "OraInizio_inDB"
 );
 ------------------------------------------------------- c end
+
+
 
 
 ------------------------------------------------------- d
@@ -66,6 +74,8 @@ SELECT EXIST (
         )
 );
 ------------------------------------------------------- d end
+
+
 
 
 ------------------------------------------------------- e
