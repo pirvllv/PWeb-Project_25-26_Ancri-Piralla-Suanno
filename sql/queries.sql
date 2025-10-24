@@ -2,7 +2,7 @@
 -- Contare il numero di partecipanti per ogni prenotazione e verificare che non venga superato il numero di posti per la sala
 SELECT p.ID AS ID_Prenotazione, sp.Capienza, COUNT(i.IscrittoEmail) AS NumeroPartecipanti,
 CASE WHEN COUNT(i.IscrittoEmail) > sp.Capienza THEN TRUE ELSE FALSE END AS SuperaCapienza
-FROM Prenotazione p JOIN Invito i ON p.ID = i.PrenotazioneID JOIN Salaprove sp ON p.NumAula = sp.NumAula
+FROM Prenotazione p JOIN Invito i ON p.ID = i.PrenotazioneID JOIN SalaProve sp ON p.NumAula = sp.NumAula
 WHERE i.Accettazione = TRUE
 GROUP BY p.ID, sp.Capienza
 ORDER BY p.ID;
@@ -13,15 +13,15 @@ ORDER BY p.ID;
 
 ------------------------------------------------------- b-1
 -- Contare il numero di prenotazioni che sono state organizzate, per giorno e per sala di prova.
-SELECT Data, NumAula, COUNT(ID) AS NumPrenotCoinvolto
+SELECT DataPren, NumAula, COUNT(ID) AS NumPrenotCoinvolto
 FROM Prenotazione AS p
 WHERE p.ID IN (
     SELECT p.ID -- elenco ID prenotazioni organizzate da responsabile
     FROM Prenotazione AS p
     WHERE ResponsabileEmail = ?
 )
-GROUP BY Data, NumAula
-ORDER BY Data, NumAula;
+GROUP BY DataPren, NumAula
+ORDER BY DataPren, NumAula;
 ------------------------------------------------------- b-1 end
 
 
@@ -29,15 +29,15 @@ ORDER BY Data, NumAula;
 
 ------------------------------------------------------- b-2
 -- Contare il numero di prenotazioni a cui si è stati invitati, per giorno e per sala di prova.
-SELECT Data, NumAula, COUNT(ID) AS NumPrenotCoinvolto
+SELECT DataPren, NumAula, COUNT(ID) AS NumPrenotCoinvolto
 FROM Prenotazione AS p
 WHERE p.ID IN (
     SELECT i.PrenotazioneID -- elenco ID prenotazioni a cui un utente è stato invitato
     FROM Invito AS i
     WHERE IscrittoEmail = ?
 )
-GROUP BY Data, NumAula
-ORDER BY Data, NumAula;
+GROUP BY DataPren, NumAula
+ORDER BY DataPren, NumAula;
 ------------------------------------------------------- b-2 end
 
 
@@ -45,10 +45,10 @@ ORDER BY Data, NumAula;
 
 ------------------------------------------------------- c
 -- Quando viene definita una prenotazione, verificare che la sala non sia già occupata
-SELECT EXIST (
-    SELECT 1
+SELECT EXISTS(
+    SELECT IDPrenotazione
     FROM Prenotazione
-    WHERE NumAula = ? AND DataPren = ? AND OraInizio < ? AND OraFine > ? -- OraInizio < "OraFine_inDB", OraFine > "OraInizio_inDB"
+    WHERE NumAula = ? AND DataPren = ? AND OraInizio < ? AND OraFine > ?
 );
 ------------------------------------------------------- c end
 
