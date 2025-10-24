@@ -85,13 +85,13 @@ CREATE TABLE Prenotazione (     -- il vincolo di non sovrapposizione verrà impo
 );
 
 CREATE TABLE Invito (
-    PrenotazioneID INT NOT NULL,
+    IDPrenotazione INT NOT NULL,
     IscrittoEmail VARCHAR(255) NOT NULL,
     Accettazione BOOLEAN DEFAULT NULL,
     Motivazione VARCHAR(300) DEFAULT NULL, -- da imporre in backend come NOT NULL quando viene data risposta negativa
     DataRisposta DATETIME DEFAULT NULL,
     
-    PRIMARY KEY(PrenotazioneID, IscrittoEmail),
+    PRIMARY KEY(IDPrenotazione, IscrittoEmail),
 
     FOREIGN KEY (PrenotazioneID) REFERENCES Prenotazione(ID)
         ON UPDATE CASCADE
