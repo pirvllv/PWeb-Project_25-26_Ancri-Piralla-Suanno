@@ -76,15 +76,26 @@ SELECT EXISTS (
 
 ------------------------------------------------------- e
 -- Trovare le prenotazioni a cui hanno partecipato un numero di membri dell’associazione che è superiore al numero di membri che afferiscono al settore del responsabile che ha organizzato la prova.
-WITH CountPartecipanti AS (
-    SELECT PrenotazioneID, COUNT(IscrittoEmail) AS NumPartecipanti
-    FROM Invito
-    WHERE Accettazione = TRUE
-    GROUP BY PrenotazioneID
-);
-
-SELECT p.ID AS ID_Prenotazione, s.Nome AS NomeSettore, s.NumIscritti AS IscrittiNelSettore, cp.NumeroPartecipanti
-FROM Prenotazione p JOIN Settore s ON p.ResponsabileEmail = s.ResponsabileEmail JOIN CountPartecipanti cp ON p.ID = cp.PrenotazioneID
-WHERE cp.NumeroPartecipanti > s.NumIscritti
-ORDER BY p.ID;
+SELECT
+    p.IDPrenotazione,
+    p.Attivita,
+    s.Nome AS NomeSettoreResponsabile,
+    cp.NumPartecipanti AS PartecipantiAllaProva,
+    cis.NumIscritti AS IscrittiAlSettore
+FROM
+    Prenotazione AS p
+    JOIN Settore AS s ON p.ResponsabileEmail = s.ResponsabileEmail
+    JOIN (
+        SELECT IDPrenotazione, COUNT(IscrittoEmail) AS NumPartecipanti
+        FROM Invito
+        WHERE Accettazione = TRUE
+        GROUP BY IDPrenotazione
+    ) AS cp ON p.IDPrenotazione = cp.IDPrenotazione
+    JOIN (
+        SELECT SettoreNome, COUNT(IscrittoEmail) AS NumIscritti
+        FROM Iscrizione
+        GROUP BY SettoreNome
+    ) AS cis ON s.Nome = cis.SettoreNome
+WHERE cp.NumPartecipanti > cis.NumIscritti
+ORDER BY p.IDPrenotazione;
 ------------------------------------------------------- e end
