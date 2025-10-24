@@ -6,6 +6,7 @@ INSERT INTO Iscritto (Email, Cognome, Nome, DataNascita, Foto, Ruolo) VALUES
 ('giorgio.presti@example.com', 'Neri', 'Paolo', '1980-07-12', NULL, 'docente'),
 ('antonio.esposito@example.com', 'Esposito', 'Antonio', '1998-01-01', NULL, 'studente'),
 ('sara.galli@example.com', 'Galli', 'Sara', '1995-03-03', NULL, 'tecnico'),
+('micheal.jackson@example.com', 'Jackson', 'Micheal', '1075-05-02', NULL, 'docente'),
 ('marco.bianco@example.com', 'Bianco', 'Mario', '1992-12-10', NULL, 'studente'),
 ('elena.costa@example.com', 'Costa', 'Elena', '1962-12-10', NULL, 'docente'),
 ('franco.ferri@example.com', 'Ferri', 'Franco', '1985-06-06', NULL, 'tecnico'),
