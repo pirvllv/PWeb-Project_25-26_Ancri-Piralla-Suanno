@@ -66,7 +66,7 @@ CREATE TABLE Strumentazione (
 );
 
 CREATE TABLE Prenotazione (     -- il vincolo di non sovrapposizione verrà imposto in backend
-    ID INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    IDPrenotazione INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
     DataPren DATE NOT NULL,
     OraInizio TIME NOT NULL,
     OraFine TIME NOT NULL,
