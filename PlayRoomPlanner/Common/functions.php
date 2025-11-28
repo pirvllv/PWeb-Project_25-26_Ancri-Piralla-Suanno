@@ -32,10 +32,11 @@ function table_from_schedule($sched, $hmin, $hmax) {
 
             if ($att["orafine"]<=$att["orainizio"]) {continue;}
 
-            $column = $g+1;
+            $column = $g+2;
             $row = 1+$att["orainizio"]-$hmin+1;
-            $span = $att["orafine"]-$att["orainizio"];
-            $table = $table."<div class=\"act ".$att["stato"]."\" style=\"grid-column:".$column."/ span 1; grid-row:".$row."/span ".$span."\">".$att["attivita"]."</div>\n";
+            $span = $att["orafine"]-$att["orainizio"]+$row;
+            //$table = $table."\n<div class=\"act ".$att["stato"]."\" style=\"grid-column:".$column."/ span 1; grid-row:".$row."/span ".$span."\">".$att["attivita"]."</div>";
+            $table = $table."\n<div class=\"cell ".$att["stato"]."\" style=\"grid-area: ".$row."/".$column."/".$span."/".$column.";\">".$att["attivita"]."</div>";
 
         }
 

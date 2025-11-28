@@ -1,7 +1,8 @@
 <?php
     function getNavbar() {
-        $titolo = "Prova navbar";
-        return "<nav class=\"navbar-dark\">$titolo</nav>";
+        $titolo = "Sala prove Federico II - Foggia";
+        $navbar = "<nav><span class=\"home-title\">".$titolo."</span></nav>";
+        return $navbar;
     }
     
 ?>

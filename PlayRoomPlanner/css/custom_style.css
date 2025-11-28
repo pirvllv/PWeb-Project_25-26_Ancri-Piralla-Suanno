@@ -1,63 +1,52 @@
-.attAccettata {
+nav {
 
-    background-color: forestgreen;
+    height: var(--navheight);
+    line-height: var(--navheight);
+    background-color: rgb(64, 190, 253);
+    text-align: center;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 10000;
+    border-top: 5px solid blue;
+    border-bottom: 5px solid blue;
+
+
 }
 
-.attRifiutata {
+nav > .home-title {
 
-    background-color: firebrick;
-}
+    vertical-align: middle;
+    display: inline-block;
 
-.attInSospeso {
-
-    background-color: darkorange;
 }
 
 .scroll-sched {
     overflow: auto;
     border: 1px solid #000000;
-    padding: 10px;
-}
-
-.table-sched {
-  display: grid;
-  border: 1px solid #000000;
-  grid-template-rows: 20% 80%;
-  grid-gap: 4px;
-  background-color: #2196F3;
-  padding: 10px;
-}
-
-.table-sched > .timetable {
-    display: grid;
-    grid-template-rows: repeat(12, 1fr);
-    grid-template-columns: repeat(7, 1fr);
-    background-color: #c8bfff;
-    grid-gap: 4px;
-
-}
-
-.act {
-
-    border: 2px solid #000000;
-    text-align: center;
-    font-family: "Funnel Display", sans-serif;
-
-}
-
-.table-sched > .header {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    background-color: rgba(255, 255, 255, 0.8);
-    text-align: center;
-    padding: 5px 0;
-    font-size: 20px;
+    background-color: whitesmoke;
 }
 
 .schedule {
     display: grid;
     grid-template-columns: 75% 25%;
-    height: 50vh;
+    height: 60vh;
     width: 75vw;
+    max-width: 1000px;
+    min-width: 600px;
+    padding-left: 10px;
+}
+
+body {
+
+    background-color: whitesmoke;
+    padding-top: calc(var(--navheight) + 30px);
+    margin: 0;
+
+}
+
+:root {
+
+    --navheight: 50px;
 
 }
