@@ -1,5 +1,4 @@
 <?php
-// Includiamo l'header comune (Navbar e apertura HTML)
 include 'common/navbar.php';
 ?>
 
@@ -18,9 +17,9 @@ include 'common/navbar.php';
 <body>
 
     <div class="container mt-5 text-center">
-        <h1 class="display-4">Benvenuto in PlayRoomPlanner</h1>
+        <h1 class="display-4">Benvenuto in PlayRoomPlanner<?php if (isset($_SESSION['username'])) { echo ", " . htmlspecialchars($_SESSION['username']); } ?></h1>
 
-        <p class="lead">Mettiamo a disposizione 3 settori adatti ad ogni esigenza:</p>
+        <p class="lead">Mettiamo a disposizione tre settori adatti all'esigenza di ogni artista:</p>
 
         <hr class="my-4">
 
@@ -30,8 +29,8 @@ include 'common/navbar.php';
                 <div class="card text-white bg-dark mb-3"
                     style="background-image: url('immagini/danza.jpg'); background-size: cover; height: 200px;">
                     <div class="card-body d-flex align-items-center justify-content-center"
-                        style="background-color: rgba(49, 46, 46, 0.5);">
-                        <h3 class="card-title">Danza</h3>
+                        style="background-color: rgba(146, 135, 135, 0.5);">
+                        <h3 class="card-title p-2 border border-light rounded-3 bg-light bg-opacity-50">Danza</h3>
                     </div>
                 </div>
             </div>
@@ -41,8 +40,8 @@ include 'common/navbar.php';
                 <div class="card text-white bg-dark mb-3"
                     style="background-image: url('immagini/musica.jpg'); background-size: cover; height: 200px;">
                     <div class="card-body d-flex align-items-center justify-content-center"
-                        style="background-color: rgba(114, 104, 104, 0.5);">
-                        <h3 class="card-title">Musica</h3>
+                        style="background-color: rgba(136, 125, 125, 0.5);">
+                        <h3 class="card-title p-2 border border-light rounded-3 bg-light bg-opacity-50">Musica</h3>
                     </div>
                 </div>
             </div>
@@ -52,8 +51,8 @@ include 'common/navbar.php';
                 <div class="card text-white bg-dark mb-3"
                     style="background-image: url('immagini/teatro.jpg'); background-size: cover; height: 200px;">
                     <div class="card-body d-flex align-items-center justify-content-center"
-                        style="background-color: rgba(153, 142, 142, 0.5);">
-                        <h3 class="card-title">Teatro</h3>
+                        style="background-color: rgba(180, 169, 169, 0.5);">
+                        <h3 class="card-title p-2 border border-light rounded-3 bg-light bg-opacity-50">Teatro</h3>
                     </div>
                 </div>
             </div>
@@ -64,8 +63,6 @@ include 'common/navbar.php';
 </body>
 
 </html>
-
-
 
 <?php
 include 'common/footer.php';
