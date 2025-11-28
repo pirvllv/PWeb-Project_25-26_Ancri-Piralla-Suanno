@@ -2,34 +2,33 @@
 
 <html>
     <head>
-        <link rel="stylesheet" href="/PlayRoomPlanner/css/style.css">
+        <link rel="stylesheet" href="../css/bootstrap.min.css">
+        <link rel="stylesheet" href="../css/style.css">
         <title>Gestione prenotazioni</title>
     </head>
 
     <body>
-            <h1>Gestore prenotazioni</h1>
-            <p>Scegli la settimnana da gestire</p>
+        <div class="container-calendario">
+            <div class="testo-calendario">
+                <h1>Gestore prenotazioni</h1>
+                <p>Scegli la settimana da gestire</p>
+            </div>
 
-        <div class="month">
-            <ul>
-                <li class="prev">prev</li>
-                <li class="next">next</li>
-            </ul>
+            <div class="boxSettimana">
+                <div class="nav-settimana">
+                    <button id="settPrec">Prec</button>
+                    <span id="labelSett"></span>
+                    <button id="settSucc">Succ</button>
+                </div>
+
+                <ul class="giorni">
+                    <li>Lun</li><li>Mar</li><li>Mer</li><li>Gio</li><li>Ven</li><li>Sab</li><li>Dom</li>
+                </ul>
+
+                <ul class="settimana" id="settimana"></ul>
+            </div>
         </div>
-
-        <ul class="weekdays">
-            <li>Lun</li><li>Mar</li><li>Mer</li><li>Gio</li><li>Ven</li><li>Sab</li><li>Dom</li>
-        </ul>
-
-
-        <ul class="days">
-            <li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li>
-            <li><span class="active">10</span></li>
-            <li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li><li>17</li><li>18</li><li>19</li>
-            <li><span class="active">20</span></li>
-            <li>21</li><li>22</li><li>23</li><li>24</li><li>25</li><li>26</li><li>27</li><li>28</li><li>29</li>
-            <li><span class="active">30</span></li>
-        </ul>
+        <script src="calendario.js"></script>
     </body>
 
 </html>
