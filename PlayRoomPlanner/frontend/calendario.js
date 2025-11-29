@@ -22,7 +22,12 @@ function renderWeek() {
     for (let i = 0; i < 7; i++) {
         const d = new Date(currentMonday);
         d.setDate(d.getDate() + i);
-        daysList.innerHTML += `<li><button>${d.getDate()}</button></li>`;
+        daysList.innerHTML += `
+            <li>
+                <button class="giorno-btn" data-date="&{d.toISOString()}">
+                    ${d.getDate()}
+                </button>
+            </li>`;
     }
 }
 

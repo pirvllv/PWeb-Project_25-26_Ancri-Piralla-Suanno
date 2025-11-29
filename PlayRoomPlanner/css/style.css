@@ -26,7 +26,8 @@
     margin-bottom: 10px;
 }
 
-.nav-settimana button {
+.nav-settimana button,
+.settimana li button {
     padding: 5px 10px;
     cursor: pointer;
     border-radius: 15px;
