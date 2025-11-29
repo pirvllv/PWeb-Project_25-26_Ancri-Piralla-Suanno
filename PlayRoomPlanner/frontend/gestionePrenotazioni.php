@@ -29,6 +29,16 @@
             </div>
         </div>
         <script src="calendario.js"></script>
+        
+        <div class="select-sala">
+            <p>Scegli la sala prove</p>
+            <select name="salaProve">
+                <option>Musica d'insieme - 101</option>
+                <option>Teatro lirico - 102</option>
+                <option>Danza classica - 103</option>
+            </select>
+        </div>
+
     </body>
 
 </html>

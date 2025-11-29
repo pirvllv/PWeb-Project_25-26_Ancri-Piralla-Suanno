@@ -8,10 +8,10 @@ function getMonday(d) {
 let currentMonday = getMonday(new Date());
 
 function renderWeek() {
-    const ul = document.getElementById("settimana");
+    const daysList = document.getElementById("settimana");
     const label = document.getElementById("labelSett");
 
-    ul.innerHTML = "";
+    daysList.innerHTML = "";
 
     const start = new Date(currentMonday);
     const end = new Date(currentMonday);
@@ -22,7 +22,7 @@ function renderWeek() {
     for (let i = 0; i < 7; i++) {
         const d = new Date(currentMonday);
         d.setDate(d.getDate() + i);
-        ul.innerHTML += `<li>${d.getDate()}</li>`;
+        daysList.innerHTML += `<li><button>${d.getDate()}</button></li>`;
     }
 }
 
