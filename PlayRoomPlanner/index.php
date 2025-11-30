@@ -51,7 +51,9 @@
 						<div class="row">
 							<div class="col-lg-4">
 								<div class="icon">
-									<img src="immagini/danza.jpg" alt="Danza">
+									<a href="#">
+										<img src="immagini/danza.jpg" alt="Danza">
+									</a>
 								</div>
 							</div>
 							<div class="col-lg-8">
@@ -73,7 +75,9 @@
 						<div class="row">
 							<div class="col-lg-4">
 								<div class="icon">
-									<img src="immagini/musica.jpg" alt="Musica">
+									<a href="#">
+										<img src="immagini/musica.jpg" alt="Musica">
+									</a>
 								</div>
 							</div>
 							<div class="col-lg-8">
@@ -95,7 +99,9 @@
 						<div class="row">
 							<div class="col-lg-4">
 								<div class="icon">
-									<img src="immagini/teatro.jpg" alt="Teatro">
+									<a href="#">
+										<img src="immagini/teatro.jpg" alt="Teatro">
+									</a>
 								</div>
 							</div>
 							<div class="col-lg-8">
