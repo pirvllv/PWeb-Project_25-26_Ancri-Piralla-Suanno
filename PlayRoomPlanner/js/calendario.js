@@ -8,8 +8,8 @@ function getMonday(d) {
 let currentMonday = getMonday(new Date());
 
 function renderWeek() {
-    const daysList = document.getElementById("settimana");
-    const label = document.getElementById("labelSett");
+    const daysList = document.getElementById("settimana-value");
+    const label = document.getElementById("label-sett");
 
     daysList.innerHTML = "";
     daysList.classList.add("grid-settimana");
@@ -32,12 +32,12 @@ function renderWeek() {
     }
 }
 
-document.getElementById("settPrec").onclick = () => {
+document.getElementById("btn-sett-prec").onclick = () => {
     currentMonday.setDate(currentMonday.getDate() - 7);
     renderWeek();
 };
 
-document.getElementById("settSucc").onclick = () => {
+document.getElementById("btn-sett-succ").onclick = () => {
     currentMonday.setDate(currentMonday.getDate() + 7);
     renderWeek();
 };
