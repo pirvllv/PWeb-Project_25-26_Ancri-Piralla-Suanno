@@ -29,15 +29,70 @@ font & reset css
 --------------------------------------------- 
 */
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:100,200,300,400,500,600,700,800,900");
+
 /* 
 ---------------------------------------------
 reset
 --------------------------------------------- 
 */
-html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, div
-pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, font, img, ins, kbd, q,
-s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li,
-figure, header, nav, section, article, aside, footer, figcaption {
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+div pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+font,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+figure,
+header,
+nav,
+section,
+article,
+aside,
+footer,
+figcaption {
   margin: 0;
   padding: 0;
   border: 0;
@@ -65,13 +120,20 @@ html[xmlns] .clearfix {
   height: 1%;
 }
 
-ul, li {
+ul,
+li {
   padding: 0;
   margin: 0;
   list-style: none;
 }
 
-header, nav, section, article, aside, footer, hgroup {
+header,
+nav,
+section,
+article,
+aside,
+footer,
+hgroup {
   display: block;
 }
 
@@ -79,7 +141,8 @@ header, nav, section, article, aside, footer, hgroup {
   box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
   font-family: 'Poppins', sans-serif;
   font-weight: 400;
   background-color: #fff;
@@ -93,7 +156,12 @@ a {
   text-decoration: none !important;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   margin-top: 0px;
   margin-bottom: 0px;
   color: #212741;
@@ -136,16 +204,21 @@ body {
 }
 
 @media (max-width: 991px) {
-  html, body {
+
+  html,
+  body {
     overflow-x: hidden;
   }
+
   .mobile-top-fix {
     margin-top: 30px;
     margin-bottom: 0px;
   }
+
   .mobile-bottom-fix {
     margin-bottom: 30px;
   }
+
   .mobile-bottom-fix-big {
     margin-bottom: 60px;
   }
@@ -225,16 +298,16 @@ header
 */
 .background-header {
   background-color: #212741;
-  height: 80px!important;
-  position: fixed!important;
-  top: 0!important;
+  height: 80px !important;
+  position: fixed !important;
+  top: 0 !important;
   left: 0;
   right: 0;
-  box-shadow: 0px 0px 10px rgba(0,0,0,0.15)!important;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.15) !important;
 }
 
 .header-area {
-  background-image: url(../images/header-bg.png);
+  background-color: rgba(0, 0, 0, 0.5) !important;
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
@@ -402,7 +475,7 @@ header
   opacity: 1;
   display: block;
   background: #f7f7f7;
-  color: #2a2a2a!important;
+  color: #2a2a2a !important;
   padding-left: 20px;
   height: 40px;
   line-height: 40px;
@@ -418,7 +491,7 @@ header
 
 .header-area .main-nav .nav li.has-sub ul li a:hover {
   background: #fff;
-  color: #ff511a!important;
+  color: #ff511a !important;
   padding-left: 25px;
 }
 
@@ -566,6 +639,7 @@ header
     padding-left: 10px;
     padding-right: 10px;
   }
+
   .header-area .main-nav:before {
     display: none;
   }
@@ -575,14 +649,17 @@ header
   .header-area .main-nav .logo {
     color: #1e1e1e;
   }
+
   .header-area.header-sticky .nav li a:hover,
   .header-area.header-sticky .nav li a.active {
-    color: #ff511a!important;
+    color: #ff511a !important;
     opacity: 1;
   }
+
   .header-area.header-sticky .nav li.search-icon a {
     width: 100%;
   }
+
   .header-area {
     background-color: #f7f7f7;
     padding: 0px 15px;
@@ -590,19 +667,24 @@ header
     box-shadow: none;
     text-align: center;
   }
+
   .header-area .container {
     padding: 0px;
   }
+
   .header-area .logo {
     margin-left: 0px;
     line-height: 80px;
   }
+
   .header-area .menu-trigger {
     display: block !important;
   }
+
   .header-area .main-nav {
     overflow: hidden;
   }
+
   .header-area .main-nav .nav {
     float: none;
     width: 100%;
@@ -613,15 +695,19 @@ header
     transition: all 0s ease 0s;
     margin-left: 0px;
   }
+
   .header-area .main-nav .nav li:first-child {
     border-top: 1px solid #eee;
   }
+
   .header-area.header-sticky .nav {
     margin-top: 100px !important;
   }
+
   .background-header.header-sticky .nav {
     margin-top: 80px !important;
   }
+
   .header-area .main-nav .nav li {
     width: 100%;
     background: #fff;
@@ -629,6 +715,7 @@ header
     padding-left: 0px !important;
     padding-right: 0px !important;
   }
+
   .header-area .main-nav .nav li a {
     height: 50px !important;
     line-height: 50px !important;
@@ -637,10 +724,12 @@ header
     background: #f7f7f7 !important;
     color: #191a20 !important;
   }
+
   .header-area .main-nav .nav li a:hover {
     background: #eee !important;
-    color: #ff511a!important;
+    color: #ff511a !important;
   }
+
   .header-area .main-nav .nav li.has-sub ul.sub-menu {
     position: relative;
     visibility: inherit;
@@ -653,23 +742,29 @@ header
     height: 0px;
     transition: all 0s;
   }
+
   .header-area .main-nav .nav li.submenu ul li a {
     font-size: 12px;
     font-weight: 400;
   }
+
   .header-area .main-nav .nav li.submenu ul li a:hover:before {
     width: 0px;
   }
+
   .header-area .main-nav .nav li.has-sub ul.sub-menu {
     height: auto;
   }
+
   .header-area .main-nav .nav li.has-sub:after {
     color: #3B566E;
     right: 30px;
     font-size: 14px;
     top: 15px;
   }
-  .header-area .main-nav .nav li.submenu:hover ul, .header-area .main-nav .nav li.submenu:focus ul {
+
+  .header-area .main-nav .nav li.submenu:hover ul,
+  .header-area .main-nav .nav li.submenu:focus ul {
     height: 0px;
   }
 }
@@ -790,7 +885,8 @@ banner
   margin-right: 20px;
 }
 
-.swiper-button-next, .swiper-button-prev {
+.swiper-button-next,
+.swiper-button-prev {
   color: #fff !important;
 }
 
@@ -798,7 +894,7 @@ banner
 ---------------------------------------------
 services
 ---------------------------------------------
-*/ 
+*/
 
 section.services {
   margin-top: 90px;
@@ -1039,7 +1135,7 @@ section.calculator .section-heading h4 {
 
 #calculate input,
 #calculate select {
-  background-color: rgba(121,134,151, 0.7);
+  background-color: rgba(121, 134, 151, 0.7);
   border: none;
   border-radius: 5px;
   width: 100%;
@@ -1254,38 +1350,46 @@ section.top-section .accordions {
   margin-left: 30px;
   box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
 }
+
 .accordions .accordion {
   border-bottom: 1px solid #eee;
 }
+
 .accordions .last-accordion {
   border-bottom: none;
 }
+
 .accordion-head {
-  padding: 35px 0px !important;  
+  padding: 35px 0px !important;
   font-size: 22px;
   font-weight: 600;
   color: #212741;
   cursor: pointer;
   transition: color 200ms ease-in-out;
-  
+
 }
+
 @media screen and (min-width: 768px) {
   .accordion-head {
     padding: 1rem;
     font-size: 1.2rem;
   }
 }
+
 .accordion-head .icon {
   float: right;
   transition: transform 200ms ease-in-out;
 }
+
 .accordion-head.is-open {
   color: #43ba7f;
   border-bottom: none;
 }
+
 .accordion-head.is-open .icon {
   transform: rotate(45deg);
 }
+
 .accordion-body {
   padding: 0px;
   overflow: hidden;
@@ -1293,7 +1397,8 @@ section.top-section .accordions {
   transition: height 300ms ease-in-out;
   border-bottom: 1px solid #fff;
 }
-.accordion-body > .content p {
+
+.accordion-body>.content p {
   padding: 0px 0px 30px 0px;
   padding-top: 0;
 }
@@ -1366,19 +1471,19 @@ services page
   padding-bottom: 0px;
 }
 
-.main-services  .left-image {
+.main-services .left-image {
   margin-right: 15px;
 }
 
-.main-services  .left-image img {
+.main-services .left-image img {
   border-radius: 5px;
 }
 
-.main-services  .right-image {
+.main-services .right-image {
   margin-left: 15px;
 }
 
-.main-services  .right-image img {
+.main-services .right-image img {
   border-radius: 5px;
 }
 
@@ -1595,10 +1700,11 @@ section.map .info-item a:hover {
   margin-bottom: 30px;
 }
 
-#contact input::placeholder, 
+#contact input::placeholder,
 #contact textarea::placeholder {
   color: #212741;
 }
+
 #contact button.orange-button {
   font-size: 14px;
   color: #fff;
@@ -1633,81 +1739,103 @@ body {
   .header-area .main-nav .nav li:last-child {
     display: none;
   }
+
   .header-area .main-nav .nav li ul li:last-child {
     display: inline-block;
   }
+
   .header-area {
     background-color: #212741;
   }
+
   .slide-inner .header-text {
     width: 80%;
   }
+
   .simple-cta {
     text-align: center;
   }
+
   section.simple-cta .buttons {
     justify-content: center;
   }
+
   section.about-us .naccs .menu div,
   section.service-details .naccs .menu div {
     margin-right: 15px;
     font-size: 15px;
     padding: 15px 20px;
   }
+
   section.about-us .right-content {
     margin-left: 0px;
     margin-top: 60px;
   }
+
   section.calculator .left-image {
     display: none;
   }
+
   .testimonials .item img {
     max-width: 200px;
     right: 50px;
   }
+
   section.partners .item {
-    margin:15px; 
+    margin: 15px;
   }
+
   section.top-section .accordions {
     margin-left: 0px;
     margin-top: 45px;
   }
+
   .what-we-do .left-content {
     margin-right: 0px;
     margin-bottom: 45px;
   }
+
   .main-services .left-image {
     margin-right: 0px;
     margin-bottom: 30px;
   }
+
   .main-services .right-text-content {
     margin-left: 0px;
   }
+
   .main-services .right-image {
     margin-left: 0px;
     margin-top: 30px;
   }
+
   section.service-details ul.nacc li .left-image {
     position: relative;
     margin-right: 0px;
     transform: translateY(0px);
   }
+
   section.service-details ul.nacc li .left-image img {
     border-radius: 15px;
   }
+
   section.service-details ul.nacc li .right-content {
     padding: 50px;
     margin-left: 0px;
   }
+
   section.service-details ul.nacc li .right-content h4 {
     margin-right: 0px;
   }
+
   section.service-details ul.nacc li.active {
     display: inline-block;
   }
+
   section.service-details ul.nacc li {
     display: none;
   }
+
   section.map .info-item {
     margin-top: 30px;
   }
@@ -1717,49 +1845,62 @@ body {
   .header-area .main-nav .logo {
     line-height: 100px;
   }
+
   .background-header .main-nav .logo {
     line-height: 80px;
   }
+
   .header-area .main-nav .nav li.has-sub ul.sub-menu {
     display: none;
   }
+
   .slide-inner .header-text p {
     display: none;
   }
+
   .slide-inner .header-text {
     text-align: center;
     width: 80%;
     margin-left: 10%;
     margin-right: 10%;
   }
+
   .slide-inner .header-text .div-dec {
     margin-left: auto;
     margin-right: auto;
   }
+
   .slide-inner .header-text .buttons {
     display: inline-flex;
   }
+
   .slide-inner .header-text .buttons .green-button {
     float: none;
   }
+
   .services .service-item i {
     margin-bottom: 35px;
   }
+
   section.about-us ul.nacc li span.item-title {
     font-size: 14px !important;
   }
+
   section.about-us ul.nacc li span.item {
     font-size: 13px;
   }
+
   .testimonials .item i {
     margin-bottom: 60px;
   }
+
   .testimonials .item img {
     max-width: 100px;
     right: 50px;
     top: 35px;
     transform: translateY(0);
   }
+
   .testimonials .item {
     padding: 50px;
   }
