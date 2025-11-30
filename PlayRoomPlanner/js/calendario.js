@@ -12,6 +12,7 @@ function renderWeek() {
     const label = document.getElementById("labelSett");
 
     daysList.innerHTML = "";
+    daysList.classList.add("grid-settimana");
 
     const start = new Date(currentMonday);
     const end = new Date(currentMonday);
@@ -24,7 +25,7 @@ function renderWeek() {
         d.setDate(d.getDate() + i);
         daysList.innerHTML += `
             <li>
-                <button class="giorno-btn" data-date="&{d.toISOString()}">
+                <button class="green-button" data-date="${d.toISOString()}">
                     ${d.getDate()}
                 </button>
             </li>`;
