@@ -1,9 +1,14 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Home page</title>
-        <link href="css/style.css" rel="stylesheet">
-        <link href="css/custom_style.css" rel="stylesheet">
+      <title>Home page</title>
+      <link href="css/style.css" rel="stylesheet">
+      <link href="css/custom_style.css" rel="stylesheet">
+      <link rel="stylesheet" href="css\fontawesome.css">
+      <link rel="stylesheet" href="css/templatemo-574-mexant.css">
+      <link rel="stylesheet" href="css/owl.css">
+      <link rel="stylesheet" href="css/animate.css">
+      <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css">
     </head>
     <body>
         <a href="Frontend/area_personale.php">Area personale</a>
