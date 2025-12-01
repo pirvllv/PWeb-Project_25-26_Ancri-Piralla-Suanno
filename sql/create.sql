@@ -74,8 +74,6 @@ CREATE TABLE Prenotazione (     -- il vincolo di non sovrapposizione verrà impo
     NumAula VARCHAR(50) NOT NULL,
     ResponsabileEmail VARCHAR(255) NOT NULL,
 
-    CONSTRAINT ChckDirTemp CHECK (OraFine > OraInizio),
-
     FOREIGN KEY (ResponsabileEmail) REFERENCES Responsabile(ResponsabileEmail)
         ON UPDATE CASCADE
         ON DELETE CASCADE,
