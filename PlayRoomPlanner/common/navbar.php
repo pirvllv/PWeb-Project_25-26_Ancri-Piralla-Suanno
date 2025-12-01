@@ -23,9 +23,6 @@
               <li><a href="/frontend/login.php">Login</a></li>
             <?php endif; ?>
           </ul>
-          <a class='menu-trigger'>
-            <span>Menu</span>
-          </a>
         </nav>
       </div>
     </div>
