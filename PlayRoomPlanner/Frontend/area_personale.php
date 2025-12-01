@@ -17,9 +17,9 @@ $weekdays = array("Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     </head>
     <body>
-        <script src="..\js\calendarManager.js" defer></script>
+        <!--script src="..\js\calendarManager.js" defer></script-->
         <?php
-        echo getNavbar();
+        include 'common/navbar.php'
         ?>
         <div class="page-heading area-personale">
             <div class="container">
@@ -82,5 +82,8 @@ $weekdays = array("Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "
                 </div>
             </div>
         </section>
+        <?php
+        include 'common/footer.php';
+        ?>
     </body>
 </html>
