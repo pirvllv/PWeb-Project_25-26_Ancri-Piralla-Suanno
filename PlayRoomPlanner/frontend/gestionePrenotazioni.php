@@ -117,19 +117,19 @@
             </form>
 
             <?php if ($sala && $datiSala): ?>
+            <hr>
             <h2>Dati sala: <?php echo htmlspecialchars($sala); ?></h2>
 
             <?php foreach ($datiSala as $row): ?>
                 <p>Capienza: <?php echo $row['Capienza']; ?></p>
                 <p>Nome: <?php echo $row['SettoreNome']; ?></p>
-                <hr>
             <?php endforeach; ?>
 
             <?php elseif ($sala): ?>
                 <p>Nessun dato trovato per questa sala.</p>
             <?php endif; ?>
 
-            <?php if ($datiPren): ?>
+            <?php if ($sala && $datiPren): ?>
             <h2>Dati prenotazione:</h2>
 
             <?php foreach ($datiPren as $row): ?>
@@ -138,9 +138,10 @@
                 <p>Email responsabile: <?php echo $row['ResponsabileEmail']; ?></p>
                 <hr>
             <?php endforeach; ?>
-            <?php elseif ($datiPren): ?>
+            <?php elseif ($sala): ?>
                 <p>Nessuna prenotazione per il giorno selezionato.</p>
             <?php endif; ?>
+            <hr>
 
         </div>
 
