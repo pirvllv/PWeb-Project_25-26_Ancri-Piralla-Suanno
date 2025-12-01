@@ -13,9 +13,11 @@ $weekdays = array("Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "
         <link rel="stylesheet" href="..\css\templatemo-574-mexant.css">
         <link rel="stylesheet" href="..\css\owl.css">
         <link rel="stylesheet" href="..\css\animate.css">
+        
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     </head>
     <body>
+        <script src="..\js\calendarManager.js" defer></script>
         <?php
         echo getNavbar();
         ?>
@@ -48,7 +50,7 @@ $weekdays = array("Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "
     
                         for ($h = 0; $h < 11; $h++) {
     
-                            echo "<div class=\"cell index\"; style=\"grid-area: ".($h+2)."/"."1/".($h+2)."/1;\">".($h+8)."</div>";
+                            echo "<div class=\"cell index\"; style=\"grid-area: ".($h+2)."/"."1/".($h+2)."/1;\">".($h+8).":00</div>";
                                 //<div class="cell index" style="grid-area: 1/2">Lunedì</div>
     
                         }
