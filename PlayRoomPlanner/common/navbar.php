@@ -4,7 +4,7 @@
       <div class="col-12">
         <nav class="main-nav">
 
-          <a href="index.html" class="logo">
+          <a href="/index.php" class="logo">
             <h1 style="color: white; margin: 0; line-height: inherit;">PlayRoomPlanner</h1>
           </a>
           <ul class="nav">
@@ -18,9 +18,9 @@
               </ul>
             </li>
             <?php if (isset($_SESSION['user_id'])): ?>
-              <li><a href="area_personale.php">Area Personale</a></li>
+              <li><a href="/frontend/area_personale.php">Area Personale</a></li>
             <?php else: ?>
-              <li><a href="login.php">Login</a></li>
+              <li><a href="/frontend/login.php">Login</a></li>
             <?php endif; ?>
           </ul>
           <a class='menu-trigger'>
