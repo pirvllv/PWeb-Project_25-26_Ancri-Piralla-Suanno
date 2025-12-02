@@ -4,16 +4,16 @@
       <div class="col-12">
         <nav class="main-nav">
 
-          <a href="/index.php" class="logo">
+          <a href="/PlayRoomPlanner/index.php" class="logo">
             <h1 style="color: white; margin: 0; line-height: inherit;">PlayRoomPlanner</h1>
           </a>
           <ul class="nav">
-            <li class="scroll-to-section"><a href="#top" class="active">Home</a></li>
+            <li class="scroll-to-section"><a href="/PlayRoomPlanner/index.php" class="active">Home</a></li>
             <li class="has-sub">
               <a href="javascript:void(0)">Pagine</a>
               <ul class="sub-menu">
                 <li><a href="#">Iscriviti</a></li>
-                <li><a href="#">Chi siamo</a></li>
+                <li><a href="/PlayRoomPlanner/frontend/chi_siamo.php">Chi siamo</a></li>
                 <li><a href="#">Contattaci</a></li>
               </ul>
             </li>
