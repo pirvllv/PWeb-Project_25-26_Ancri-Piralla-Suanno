@@ -1309,7 +1309,7 @@ page heading
 */
 
 .page-heading {
-  background-image: url(../images/heading-bg.jpg);
+  background-color: #24243d;
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
