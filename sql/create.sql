@@ -4,9 +4,7 @@ CREATE TABLE Iscritto (
     Nome VARCHAR(100) NOT NULL,
     DataNascita DATE NOT NULL,
     Foto VARCHAR(500), -- URL o path
-    Ruolo VARCHAR(30) NOT NULL,
-
-    CONSTRAINT chk_Ruolo CHECK (Ruolo IN ('studente', 'docente', 'tecnico'))
+    Ruolo VARCHAR(30) NOT NULL
 );
 
 CREATE TABLE Responsabile (
@@ -22,8 +20,6 @@ CREATE TABLE Settore (
     Nome VARCHAR(50) NOT NULL PRIMARY KEY,
     Tipologia VARCHAR(50) NOT NULL,
     ResponsabileEmail VARCHAR(255),
-
-    CONSTRAINT chk_TipologiaSettore CHECK (Tipologia IN ('danza', 'musica', 'teatro')),
     FOREIGN KEY (ResponsabileEmail) REFERENCES Responsabile(ResponsabileEmail)
         ON DELETE SET NULL
         ON UPDATE CASCADE
@@ -57,8 +53,6 @@ CREATE TABLE Strumentazione (
     NumAula VARCHAR(15),
     Tipologia VARCHAR(50) NOT NULL,
     Descrizione VARCHAR(300),
-
-    CONSTRAINT chk_TipologiaStrumentazione CHECK (Tipologia IN ('strumenti musicali', 'impianti audio', 'specchi', 'palcoscenico')),
 
     FOREIGN KEY (NumAula) REFERENCES SalaProve(NumAula)
         ON DELETE SET NULL
