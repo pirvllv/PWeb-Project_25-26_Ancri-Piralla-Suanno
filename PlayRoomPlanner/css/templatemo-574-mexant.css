@@ -234,7 +234,7 @@ header
 }
 
 .header-area {
-  background-image: url(../images/header-bg.png);
+  background-color: rgba(27, 26, 26, 0.5);
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
