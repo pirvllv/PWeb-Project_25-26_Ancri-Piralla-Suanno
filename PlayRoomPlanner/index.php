@@ -15,8 +15,7 @@
 	<link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css">
 
 	<!-- NOME DEL FILE DA CAMBIARE DOPO MERGE -->
-  <link rel="stylesheet" href="/PlayRoomPlanner/css/custom_style_carlo.css">
-	
+	<link rel="stylesheet" href="/PlayRoomPlanner/css/custom_style_carlo.css">
 	<title>PlayRoomPlanner - Home</title>
 </head>
 
@@ -46,79 +45,84 @@
 		</div>
 	</div>
 
-	<section class="services" id="services">
+	
+
+	<section class="services section-services-padding-bottom">
 		<div class="container">
 			<div class="row">
 				<!-- Danza -->
 				<div class="col-lg-12">
-					<div class="service-item">
-						<div class="row">
-							<div class="col-lg-4">
-								<div class="icon">
-									<a href="#">
+					<a href="/PlayRoomPlanner/frontend/sale_prova.php#danza">
+						<div class="service-item">
+							<div class="row">
+								<div class="col-lg-4">
+									<div class="icon">
 										<img src="immagini/danza.jpg" alt="Danza">
-									</a>
+									</div>
 								</div>
-							</div>
-							<div class="col-lg-8">
-								<div class="right-content">
-									<h4>Danza</h4>
-									<p>Le nostre sale danza offrono spazi luminosi, pavimentazione ammortizzata, specchi a tutta parete e
-										impianti audio professionali. Sono progettate per garantire comfort, sicurezza e la massima qualità
-										di movimento, ideali per lezioni, prove, workshop e produzioni artistiche. Disponibili per scuole,
-										compagnie e singoli professionisti.</p>
+								<div class="col-lg-8">
+									<div class="right-content">
+										<h4>Danza</h4>
+										<p>Le nostre sale danza offrono spazi luminosi, pavimentazione ammortizzata, specchi a tutta parete
+											e
+											impianti audio professionali. Sono progettate per garantire comfort, sicurezza e la massima
+											qualità
+											di movimento, ideali per lezioni, prove, workshop e produzioni artistiche. Disponibili per scuole,
+											compagnie e singoli professionisti.</p>
+									</div>
 								</div>
 							</div>
 						</div>
-					</div>
+					</a>
 				</div>
 
 				<!-- Musica -->
 				<div class="col-lg-12">
-					<div class="service-item">
-						<div class="row">
-							<div class="col-lg-4">
-								<div class="icon">
-									<a href="#">
+					<a href="/PlayRoomPlanner/frontend/sale_prova.php#musica">
+						<div class="service-item">
+							<div class="row">
+								<div class="col-lg-4">
+									<div class="icon">
 										<img src="immagini/musica.jpg" alt="Musica">
-									</a>
+									</div>
 								</div>
-							</div>
-							<div class="col-lg-8">
-								<div class="right-content">
-									<h4>Musica</h4>
-									<p>Le nostre sale di registrazione e prova sono trattate acusticamente, dotate di strumentazione
-										professionale e pensate per garantire un ascolto preciso e un ambiente di lavoro stabile. Offrono
-										spazio, isolamento e qualità sonora per band, solisti, produttori e tecnici. Ideali per prove,
-										sessioni di recording, pre-produzioni e progetti didattici.</p>
+								<div class="col-lg-8">
+									<div class="right-content">
+										<h4>Musica</h4>
+										<p>Le nostre sale di registrazione e prova sono trattate acusticamente, dotate di strumentazione
+											professionale e pensate per garantire un ascolto preciso e un ambiente di lavoro stabile. Offrono
+											spazio, isolamento e qualità sonora per band, solisti, produttori e tecnici. Ideali per prove,
+											sessioni di recording, pre-produzioni e progetti didattici.</p>
+									</div>
 								</div>
 							</div>
 						</div>
-					</div>
+					</a>
 				</div>
 
 				<!-- Teatro -->
 				<div class="col-lg-12">
-					<div class="service-item">
-						<div class="row">
-							<div class="col-lg-4">
-								<div class="icon">
-									<a href="#">
+					<a href="/PlayRoomPlanner/frontend/sale_prova.php#teatro">
+						<div class="service-item">
+							<div class="row">
+								<div class="col-lg-4">
+									<div class="icon">
 										<img src="immagini/teatro.jpg" alt="Teatro">
-									</a>
+									</div>
 								</div>
-							</div>
-							<div class="col-lg-8">
-								<div class="right-content">
-									<h4>Teatro</h4>
-									<p>Il nostro teatro è uno spazio versatile, con palco attrezzato, illuminotecnica professionale e
-										acustica curata. Offre un ambiente ideale per spettacoli, prove, rassegne, presentazioni ed eventi
-										culturali. Pensato per compagnie, scuole e realtà artistiche che necessitano di una scena affidabile
-										e pronta all'uso.</p>
+								<div class="col-lg-8">
+									<div class="right-content">
+										<h4>Teatro</h4>
+										<p>Il nostro teatro è uno spazio versatile, con palco attrezzato, illuminotecnica professionale e
+											acustica curata. Offre un ambiente ideale per spettacoli, prove, rassegne, presentazioni ed eventi
+											culturali. Pensato per compagnie, scuole e realtà artistiche che necessitano di una scena
+											affidabile
+											e pronta all'uso.</p>
+									</div>
 								</div>
 							</div>
 						</div>
-					</div>
+					</a>
 				</div>
 			</div>
 		</div>

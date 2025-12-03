@@ -10,3 +10,11 @@ section.top-section {
 div.section-heading {
   margin-bottom: 30px;
 }
+
+.sale-prova-padding {
+  padding-top: 50px;
+}
+
+.section-services-padding-bottom {
+  padding-bottom: 50px;
+}
