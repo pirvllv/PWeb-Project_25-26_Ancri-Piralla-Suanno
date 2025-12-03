@@ -259,7 +259,8 @@ body {
 }
 
 section {
-  margin-top: 120px;
+  margin-top: 60px;
+  margin-bottom: 60px;
 }
 
 .section-heading {
@@ -267,7 +268,7 @@ section {
   z-index: 2;
   margin-top: 0px;
   text-align: center;
-  margin-bottom: 70px;
+  margin-bottom: 40px;
 }
 
 .section-heading h6 {
