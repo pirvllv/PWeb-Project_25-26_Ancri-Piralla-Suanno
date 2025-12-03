@@ -13,6 +13,10 @@
 	<link rel="stylesheet" href="/PlayRoomPlanner/css/owl.css">
 	<link rel="stylesheet" href="/PlayRoomPlanner/css/animate.css">
 	<link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css">
+
+	<!-- NOME DEL FILE DA CAMBIARE DOPO MERGE -->
+  <link rel="stylesheet" href="/PlayRoomPlanner/css/custom_style_carlo.css">
+	
 	<title>PlayRoomPlanner - Home</title>
 </head>
 
