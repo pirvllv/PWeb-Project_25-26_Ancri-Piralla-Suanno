@@ -9,45 +9,13 @@
     $password = "";
     $dbname   = "mio_db";
 
+    $email = "mario.rossi@email.com";
+
     $cid = connessione($hostname, $username, $password, $dbname);
 
-    $sala = null;
-    $datiSala = [];
-    $datiPren = [];
-
-    // se l’utente ha inviato la form
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $sala = $_POST['sala-prove'] ?? null;
-
-        if ($sala) {
-            $stmt = $cid->prepare("SELECT Capienza, SettoreNome FROM SalaProve WHERE NumAula = ?");
-            $stmt->bind_param("s", $sala);
-            $stmt->execute();
-            $stmt->bind_result($capienza, $settoreNome);
-
-            while ($stmt->fetch()) {
-                $datiSala[] = [
-                    "Capienza" => $capienza,
-                    "SettoreNome" => $settoreNome
-                ];
-            }  
-
-            $stmt = $cid->prepare("SELECT IDPrenotazione, Attivita, ResponsabileEmail FROM Prenotazione
-                                    WHERE NumAula = ? AND DataPren = ?");
-            $stmt->bind_param("ss", $sala, $dataSelezionata);
-            $stmt->execute();
-            $stmt->bind_result($IDPren, $attivita, $respEmail);
-
-            while ($stmt->fetch()) {
-                $datiPren[] = [
-                    "IDPrenotazione" => $IDPren,
-                    "Attivita" => $attivita,
-                    "ResponsabileEmail" => $respEmail
-
-                ];
-            }
-        }
-    }
+    $stmt = $cid->prepare("SELECT IDPrenotazione, DataPren FROM Prenotazione WHERE ResponsabileEmail = ? ORDER BY DataPren DESC");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
 
     if ($cid) {
         $cid->close();
@@ -82,68 +50,66 @@
     </head>
 
     <body>
-        <div class="container-calendario">
-            <div class="testo-calendario">
-                <h1>Gestore prenotazioni</h1>
-                <p>Scegli la settimana da gestire</p>
-            </div>
 
-            <div class="boxSettimana">
-                <div class="nav-settimana">
-                    <button id="btn-sett-prec" class="orange-button">Prec</button>
-                    <span id="label-sett"></span>
-                    <button id="btn-sett-succ" class="orange-button">Succ</button>
+
+        <div class="titolo">
+            <h1>Gestore prenotazioni</h1>
+        </div>
+
+        <div class="gestore-prenotazioni">
+            <div class="vista-prenotazioni">
+                <div class="box-prenotazioni">
+                    <div class="form-prenotazioni">
+                        <h3>Seleziona azione</h3>
+                        <div class="form-prenotazioni">
+                            <button class="green-button" onclick="mostraForm('crea')">Crea prenotazione</button>
+                            <button class="green-button" onclick="mostraForm('modifica')">Modifica prenotazione</button>
+                            <button class="green-button" onclick="mostraForm('elimina')">Elimina prenotazione</button>
+
+                            <!-- Form Crea -->
+                            <form id="crea" action="../backend/api-gestionePrenotazioni.php" method="post" style="display:none;">
+                                <input type="date" name="DataPren">Data di prenotazione
+                                <input type="time" name="OraInizio">Ora di inizio
+                                <input type="time" name="OraFine">Ora di fine
+                                <input type="text" name="NumAula">Numero aula
+                                <input type="text" name="Attivita">Attività<br>
+                                <button class="green-button" type="submit" name="azione" value="crea">Crea</button>
+                                <button class="red-button" type="reset" name="azione">Annulla</button>
+                            </form>
+
+                            <!-- Form Modifica -->
+                            <form id="modifica" action="../backend/api-gestionePrenotazioni.php" method="post" style="display:none;">
+                                <input name="IDPrenotazione">ID prenotazione</textarea><br>
+                                <button class="green-button" type="submit" name="azione" value="modifica">Modifica</button>
+                                <button class="red-button" type="reset" name="azione">Annulla</button>
+                            </form>
+
+                            <!-- Form Elimina -->
+                            <form id="elimina" action="../backend/api-gestionePrenotazioni.php" method="post" style="display:none;">
+                                <input name="IDPrenotazione">ID prenotazione</textarea><br>
+                                <button class="green-button" type="submit" name="azione" value="elimina">Elimina</button>
+                                <button class="red-button" type="reset" name="azione">Annulla</button>
+                            </form>
+
+                            <script>
+                            function mostraForm(idForm) {
+                                // Nasconde tutte le form
+                                document.querySelectorAll('form').forEach(f => f.style.display = 'none');
+                                // Mostra solo quella selezionata
+                                document.getElementById(idForm).style.display = 'block';
+                            }
+                            </script>
+
+                        </div>
+                    </div>
                 </div>
-
-                <ul class="settimana grid-settimana" id="settimana-nome">
-                    <li>Lun</li><li>Mar</li><li>Mer</li><li>Gio</li><li>Ven</li><li>Sab</li><li>Dom</li>
-                </ul>
-
-                <ul class="settimana grid-settimana" id="settimana-value"></ul>
+                
             </div>
+            
         </div>
-        <script src="../js/calendario.js"></script>
-        
+        <script href="../js/gestionePrenotazioni.js"></script>
 
-        <div class="select-sala">
-            <p>Scegli la sala prove</p>
-
-            <form method="POST">
-                <select name="sala-prove" onchange="this.form.submit()">
-                    <option value="">Seleziona</option>
-                    <option value="D01">Danza moderna - D01</option>
-                    <option value="M01">Musica Classica - M01</option>
-                </select>
-            </form>
-
-            <?php if ($sala && $datiSala): ?>
-            <hr>
-            <h2>Dati sala: <?php echo htmlspecialchars($sala); ?></h2>
-
-            <?php foreach ($datiSala as $row): ?>
-                <p>Capienza: <?php echo $row['Capienza']; ?></p>
-                <p>Nome: <?php echo $row['SettoreNome']; ?></p>
-            <?php endforeach; ?>
-
-            <?php elseif ($sala): ?>
-                <p>Nessun dato trovato per questa sala.</p>
-            <?php endif; ?>
-
-            <?php if ($sala && $datiPren): ?>
-            <h2>Dati prenotazione:</h2>
-
-            <?php foreach ($datiPren as $row): ?>
-                <p>Attivita': <?php echo $row['Attivita']; ?></p>
-                <p>ID: <?php echo $row['IDPrenotazione']; ?></p>
-                <p>Email responsabile: <?php echo $row['ResponsabileEmail']; ?></p>
-                <hr>
-            <?php endforeach; ?>
-            <?php elseif ($sala): ?>
-                <p>Nessuna prenotazione per il giorno selezionato.</p>
-            <?php endif; ?>
-            <hr>
-
-        </div>
+            
 
     </body>
 
