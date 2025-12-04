@@ -51,6 +51,12 @@
 
     <body>
 
+        <div>
+            <?php
+                include "../common/navbar.php";
+            ?>
+        </div>
+        
 
         <div class="titolo">
             <h1>Gestore prenotazioni</h1>
@@ -109,7 +115,13 @@
         </div>
         <script href="../js/gestionePrenotazioni.js"></script>
 
-            
+
+
+        <div>
+            <?php
+                include "../common/footer.php";
+            ?>
+        </div>
 
     </body>
 
