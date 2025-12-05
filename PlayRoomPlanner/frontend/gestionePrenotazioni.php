@@ -7,7 +7,7 @@ require_once "../backend/connessione.php";
 $hostname = "localhost";
 $username = "root";
 $password = "";
-$dbname = "playroomplanner";
+$dbname = "mio_db";
 
 $email = "mario.rossi@email.com";
 
