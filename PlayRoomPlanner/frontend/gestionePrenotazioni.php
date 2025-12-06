@@ -1,25 +1,10 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-require_once "../backend/connessione.php";
 
-$hostname = "localhost";
-$username = "root";
-$password = "";
-$dbname = "mio_db";
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
 
-$email = "mario.rossi@email.com";
-
-$cid = connessione($hostname, $username, $password, $dbname);
-
-$stmt = $cid->prepare("SELECT IDPrenotazione, DataPren FROM Prenotazione WHERE ResponsabileEmail = ? ORDER BY DataPren DESC");
-$stmt->bind_param("s", $email);
-$stmt->execute();
-
-if ($cid) {
-    $cid->close();
-}
+    $email = "mario.rossi@email.com";
 
 ?>
 
@@ -56,19 +41,11 @@ if ($cid) {
 </head>
 
 <body>
-    <!-- queste righe qua sotto cancellale prima di mergiare, sono cose che ho messo 
-     nel template generale ma che non ho sbatti di prendere e portare su questo branch -->
-    <style>
-        .header-area {
-            background-color: rgba(27, 26, 26, 0.5);
-        }
-    </style>
 
     <?php
     include "../common/navbar.php";
     ?>
 
-    <!-- stai tranzollo, è giusto il chi-siamo-header, è solo che lo stiamo riutilizzando per dare lo stile a tutte le pagine -->
     <div class="page-heading chi-siamo-header">
         <div class="container">
             <div class="row">
@@ -82,69 +59,95 @@ if ($cid) {
         </div>
     </div>
 
-    <div class="gestore-prenotazioni">
-        <div class="vista-prenotazioni">
-            <div class="box-prenotazioni">
+    <div class="container" style="margin-top: 50px; margin-bottom: 50px;" name="container-prenotazioni">
+        <h4 class="section-heading">Seleziona azione</h4>
+        <div class="section">
+            <div class="form-prenotazioni">
                 <div class="form-prenotazioni">
-                    <h3>Seleziona azione</h3>
-                    <div class="form-prenotazioni">
-                        <button class="green-button" onclick="mostraForm('crea')">Crea prenotazione</button>
-                        <button class="green-button" onclick="mostraForm('modifica')">Modifica prenotazione</button>
-                        <button class="green-button" onclick="mostraForm('elimina')">Elimina prenotazione</button>
+                    <div class="crea-prenotazione">
+                        <button class="orange-button" style="margin-bottom: 30px;" onclick="mostraForm('crea')">Crea prenotazione</button>
+                        <form id="crea" action="../backend/api-gestionePrenotazioni.php" method="post" style="display:none;">
+                            <div class="container">
+                                <div class="row mb-3">
+                                    <label class="col-sm-3 col-form-label">Data di prenotazione</label>
+                                    <div class="col-sm-9">
+                                        <input type="date" name="DataPren" class="form-control">
+                                    </div>
+                                </div>
 
-                        <!-- Form Crea -->
-                        <form id="crea" action="../backend/api-gestionePrenotazioni.php" method="post"
-                            style="display:none;">
-                            <input type="date" name="DataPren">Data di prenotazione
-                            <input type="time" name="OraInizio">Ora di inizio
-                            <input type="time" name="OraFine">Ora di fine
-                            <input type="text" name="NumAula">Numero aula
-                            <input type="text" name="Attivita">Attività<br>
-                            <button class="green-button" type="submit" name="azione" value="crea">Crea</button>
-                            <button class="red-button" type="reset" name="azione">Annulla</button>
-                        </form>
+                                <div class="row mb-3">
+                                    <label class="col-sm-3 col-form-label">Ora di inizio</label>
+                                    <div class="col-sm-9">
+                                        <input type="time" name="OraInizio" class="form-control">
+                                    </div>
+                                </div>
 
-                        <!-- Form Modifica -->
-                        <form id="modifica" action="../backend/api-gestionePrenotazioni.php" method="post"
-                            style="display:none;">
-                            <input name="IDPrenotazione">ID prenotazione</textarea><br>
-                            <button class="green-button" type="submit" name="azione" value="modifica">Modifica</button>
-                            <button class="red-button" type="reset" name="azione">Annulla</button>
-                        </form>
+                                <div class="row mb-3">
+                                    <label class="col-sm-3 col-form-label">Ora di fine</label>
+                                    <div class="col-sm-9">
+                                        <input type="time" name="OraFine" class="form-control">
+                                    </div>
+                                </div>
 
-                        <!-- Form Elimina -->
-                        <form id="elimina" action="../backend/api-gestionePrenotazioni.php" method="post"
-                            style="display:none;">
-                            <input name="IDPrenotazione">ID prenotazione</textarea><br>
-                            <button class="green-button" type="submit" name="azione" value="elimina">Elimina</button>
-                            <button class="red-button" type="reset" name="azione">Annulla</button>
-                        </form>
+                                <div class="row mb-3">
+                                    <label class="col-sm-3 col-form-label">Numero aula</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" name="NumAula" class="form-control">
+                                    </div>
+                                </div>
 
-                        <script>
-                            function mostraForm(idForm) {
-                                // Nasconde tutte le form
-                                document.querySelectorAll('form').forEach(f => f.style.display = 'none');
-                                // Mostra solo quella selezionata
-                                document.getElementById(idForm).style.display = 'block';
-                            }
-                        </script>
+                                <div class="row mb-3">
+                                    <label class="col-sm-3 col-form-label">Attività</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" name="Attivita" class="form-control">
+                                    </div>
+                                </div>
 
+                                <button class="green-button" type="submit" name="azione" value="crea">Crea</button>
+                                <button class="red-button" type="reset" onclick="mostraForm('')">Annulla</button>
+                            </div>
+
+                        </form><br>
                     </div>
+
+                    <div style="margin-top: 30px;">
+                        <h5>Prenotazioni effettuate</h5>
+                        <div id="lista-prenotazioni"">
+                            Caricamento...
+                        </div>
+
+                        <div id="azioni-prenotazione" style="margin-top:15px; display:none;">
+                            <h6 id="info-pren"></h6>
+
+                            <form action="../backend/api-gestionePrenotazioni.php" method="post" style="display:inline;">
+                                <input type="hidden" name="IDPrenotazione" id="id-mod">
+                                <button class="green-button" type="submit" name="azione" value="modifica" onclick="mostraForm('modifica')">Modifica</button>
+                            </form>
+
+                            <form action="../backend/api-gestionePrenotazioni.php" method="post" style="display:inline;">
+                                <input type="hidden" name="IDPrenotazione" id="id-del">
+                                <button class="red-button" type="submit" name="azione" value="elimina" onclick="mostraForm('')">Elimina</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <script>
+                        function mostraForm(idForm) {
+                            // Nasconde tutte le form
+                            document.querySelectorAll('form').forEach(f => f.style.display = 'none');
+                            // Mostra solo quella selezionata
+                            document.getElementById(idForm).style.display = 'block';
+                        }
+                    </script>
                 </div>
             </div>
-
         </div>
-
     </div>
-    <script href="../js/gestionePrenotazioni.js"></script>
-
-
-
+    <script src="../js/gestionePrenotazioni.js"></script>
 
     <?php
     include "../common/footer.php";
     ?>
-
 
 </body>
 

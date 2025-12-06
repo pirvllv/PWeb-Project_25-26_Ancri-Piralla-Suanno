@@ -1,27 +1,80 @@
 <?php
+
+require_once "../common/connection.php";
+
+$cid = connessione($hostname, $username, $password, $dbname);
+
+$responsabile_email = "mario.rossi@email.com";
+
+
+/* 
 if (!isset($_SESSION['ResponsabileEmail'])) {
     echo "<script>alert('Accesso negato');</script>";
     return;
+} 
+*/
+
+if(!$cid) {
+    echo "<script>alert('Connessione al database non riuscita');</script>";
 }
 
 if (isset($_POST['selPrenot'])){
     $data = $_POST['datiPren'];
-    switch ($_POST) {
+    switch ($_POST['selPrenot']) {
             case 'create':
-                createReservation($pdo, $input);
+                createReservation($cid, $input);
                 break;
             case 'update':
-                updateReservation($pdo, $input);
+                updateReservation($cid, $input);
                 break;
             case 'delete':
-                deleteReservation($pdo, $input);
+                deleteReservation($cid, $input);
                 break;
             default:
                 echo "<script>alert('Azione non valida');</script>";
     }
 }
 
-function createReservation($pdo, $data) {
+if (isset($_POST['azione']) && $_POST['azione'] === 'mostraPren') {
+
+    $sql = "SELECT IDPrenotazione, DataPren, OraInizio, OraFine, NumAula, Attivita
+            FROM Prenotazione
+            WHERE ResponsabileEmail = ?
+            ORDER BY DataPren, OraInizio";
+
+    $stmt = $cid->prepare($sql);
+    $stmt->bind_param("s", $responsabile_email);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows === 0) {
+        echo "<p>Nessuna prenotazione trovata.</p>";
+        exit;
+    }
+
+    // output HTML diretto
+    while ($row = $result->fetch_assoc()) {
+
+        // ogni prenotazione genera un DIV cliccabile
+        echo "
+        <div class='pren-item' 
+             data-id='{$row['IDPrenotazione']}'
+             data-data='{$row['DataPren']}'
+             data-ora-inizio='{$row['OraInizio']}'
+             data-ora-fine='{$row['OraFine']}'
+             data-aula='{$row['NumAula']}'
+             data-attivita='{$row['Attivita']}'
+             style='padding:8px; border-bottom:1px solid #ddd; cursor:pointer;'>
+             
+             {$row['IDPrenotazione']} | {$row['DataPren']} {$row['OraInizio']}-{$row['OraFine']} | Aula {$row['NumAula']}
+        </div>
+        ";
+    }
+
+    exit;
+}
+
+function createReservation($cid, $data) {
     $sala = $data['NumAula'];
     $responsabile_email = $_SESSION['ResponsabileEmail'];
     $data_pren = $data['DataPren'];
@@ -36,7 +89,7 @@ function createReservation($pdo, $data) {
     }
 
     $stmt = "SELECT MAX(IDPrenotazione) AS max_id FROM Prenotazione";
-    $res = $pdo->query($stmt);
+    $res = $cid->query($stmt);
     $row = $res->fetch_assoc();
     $id_max = $row['max_id'];
 
@@ -50,7 +103,7 @@ function createReservation($pdo, $data) {
                  )";
 
     
-    $stmtCheck = $pdo->prepare($sqlCheck);
+    $stmtCheck = $cid->prepare($sqlCheck);
     $stmtCheck->execute([
         ':sala' => $sala,
         ':data_pren' => $data_pren,
@@ -65,10 +118,10 @@ function createReservation($pdo, $data) {
 
     
 
-    $sqlInsert = "INSERT INTO Prenotazioni (IDPrenotazione, DataPren, OraInizio, OraFine, Attivita, NumAula, ResponsabileEmail) 
+    $sqlInsert = "INSERT INTO Prenotazione (IDPrenotazione, DataPren, OraInizio, OraFine, Attivita, NumAula, ResponsabileEmail) 
                   VALUES (:id_pren, :data_pren, :ora_inizio, :ora_fine, :attivita, :sala, :responsabile_email)";
     
-    $stmtInsert = $pdo->prepare($sqlInsert);
+    $stmtInsert = $cid->prepare($sqlInsert);
     $stmtInsert->execute([
         ':sala' => $sala,
         ':id_pren' => $id_max +1,
@@ -82,7 +135,7 @@ function createReservation($pdo, $data) {
     echo "<script>alert('Prenotazione avvenuta con successo');</script>";
 }
 
-function updateReservation($pdo, $data) {
+function updateReservation($cid, $data) {
     $id_prenotazione = $data['IDPrenotazione'];
     $sala = $data['NumAula'];
     $responsabile_email = $_SESSION['ResponsabileEmail'];
@@ -106,12 +159,14 @@ function updateReservation($pdo, $data) {
                     OR OraInizio >= :OraFine
                  )";
                  
-    $stmtCheck = $pdo->prepare($sqlCheck);
+    $stmtCheck = $cid->prepare($sqlCheck);
     $stmtCheck->execute([
+        ':id_pren' => $id_prenotazione,
         ':sala' => $sala,
         ':data_pren' => $data_pren,
         ':ora_inizio' => $ora_inizio,
-        ':ora_fine' => $ora_fine
+        ':ora_fine' => $ora_fine,
+        ':attivita' => $attivita
     ]);
 
     if ($stmtCheck->fetch()['occupata'] > 0) {
@@ -119,15 +174,15 @@ function updateReservation($pdo, $data) {
         return;
     }
 
-    $sqlUpdate = "UPDATE prenotazioni 
-                  SET sala_id = :sala, 
-                      data_prenotazione = :data_pren, 
-                      ora_inizio = :ora_inizio, 
-                      durata = :durata, 
-                      attivita = :attivita 
-                  WHERE id = :id_pren AND responsabile_email = :resp_id";
+    $sqlUpdate = "UPDATE Prenotazione 
+                  SET NumAula = :sala, 
+                      DataPren = :data_pren, 
+                      OraInizio = :ora_inizio, 
+                      OraFine = ::OraFine, 
+                      Attivita = :attivita 
+                  WHERE IDPrenotazione = :id_pren AND ResponsabileEmail = :resp_id";
     
-    $stmtUpdate = $pdo->prepare($sqlUpdate);
+    $stmtUpdate = $cid->prepare($sqlUpdate);
     $stmtUpdate->execute([
         ':sala' => $sala,
         ':data_pren' => $data_pren,
@@ -141,15 +196,15 @@ function updateReservation($pdo, $data) {
     echo "<p>Modifica avvenuta con successo</p>";
 }
 
-function deleteReservation($pdo, $data) {
-    $id_prenotazione = $data['IDPrenotazione'];
+function deleteReservation($cid, $data) {
+    $id_pren = $data['IDPrenotazione'];
     $responsabile_email = $_SESSION['ResponsabileEmail'];
 
-    $sqlDelete = "DELETE FROM prenotazioni WHERE id = :id AND ResponsabileEmail = :resp_id";
+    $sqlDelete = "DELETE FROM Prenotazione WHERE IDPrenotazione = :id AND ResponsabileEmail = :resp_id";
     
-    $stmtDelete = $pdo->prepare($sqlDelete);
+    $stmtDelete = $cid->prepare($sqlDelete);
     $stmtDelete->execute([
-        ':id' => $id_prenotazione,
+        ':id' => $id_pren,
         ':resp_id' => $responsabile_email
     ]);
 

@@ -1,3 +1,5 @@
+USE playroomplanner;
+
 CREATE TABLE Iscritto (
     Email VARCHAR(255) NOT NULL PRIMARY KEY,
     Cognome VARCHAR(100) NOT NULL,
