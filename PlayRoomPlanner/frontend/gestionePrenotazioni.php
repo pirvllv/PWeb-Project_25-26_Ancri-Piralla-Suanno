@@ -11,7 +11,7 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="it">
 
 <head>
     <meta charset="utf-8">
@@ -43,7 +43,7 @@
 <body>
 
     <?php
-    include "../common/navbar.php";
+        include "../common/navbar.php";
     ?>
 
     <div class="page-heading chi-siamo-header">
@@ -61,92 +61,96 @@
 
     <div class="container" style="margin-top: 50px; margin-bottom: 50px;" name="container-prenotazioni">
         <h4 class="section-heading">Seleziona azione</h4>
-        <div class="section">
+        <div class="section-prenotazioni">
             <div class="form-prenotazioni">
-                <div class="form-prenotazioni">
-                    <div class="crea-prenotazione">
-                        <button class="orange-button" style="margin-bottom: 30px;" onclick="mostraForm('crea')">Crea prenotazione</button>
-                        <form id="crea" action="../backend/api-gestionePrenotazioni.php" method="post" style="display:none;">
-                            <div class="container">
-                                <div class="row mb-3">
-                                    <label class="col-sm-3 col-form-label">Data di prenotazione</label>
-                                    <div class="col-sm-9">
-                                        <input type="date" name="DataPren" class="form-control">
-                                    </div>
+                <div class="crea-prenotazione">
+                    <button class="orange-button" style="margin-bottom: 30px;" onclick="mostraForm('crea')">Crea prenotazione</button>
+                    <form id="crea" action="../backend/api-gestionePrenotazioni.php" method="post" style="display:none;">
+                        <div class="container">
+                            <div class="row mb-3">
+                                <label class="col-sm-3 col-form-label">Data di prenotazione</label>
+                                <div class="col-sm-9">
+                                    <input type="date" name="DataPren" class="form-control">
                                 </div>
-
-                                <div class="row mb-3">
-                                    <label class="col-sm-3 col-form-label">Ora di inizio</label>
-                                    <div class="col-sm-9">
-                                        <input type="time" name="OraInizio" class="form-control">
-                                    </div>
-                                </div>
-
-                                <div class="row mb-3">
-                                    <label class="col-sm-3 col-form-label">Ora di fine</label>
-                                    <div class="col-sm-9">
-                                        <input type="time" name="OraFine" class="form-control">
-                                    </div>
-                                </div>
-
-                                <div class="row mb-3">
-                                    <label class="col-sm-3 col-form-label">Numero aula</label>
-                                    <div class="col-sm-9">
-                                        <input type="text" name="NumAula" class="form-control">
-                                    </div>
-                                </div>
-
-                                <div class="row mb-3">
-                                    <label class="col-sm-3 col-form-label">Attività</label>
-                                    <div class="col-sm-9">
-                                        <input type="text" name="Attivita" class="form-control">
-                                    </div>
-                                </div>
-
-                                <button class="green-button" type="submit" name="azione" value="crea">Crea</button>
-                                <button class="red-button" type="reset" onclick="mostraForm('')">Annulla</button>
                             </div>
 
-                        </form><br>
-                    </div>
+                            <div class="row mb-3">
+                                <label class="col-sm-3 col-form-label">Ora di inizio</label>
+                                <div class="col-sm-9">
+                                    <select name="OraInizio" class="form-control">
+                                        <?php
+                                        $start = strtotime("09:00");
+                                        $end = strtotime("22:30");
 
-                    <div style="margin-top: 30px;">
-                        <h5>Prenotazioni effettuate</h5>
-                        <div id="lista-prenotazioni"">
-                            Caricamento...
+                                        for ($t = $start; $t <= $end; $t += 1800) {
+                                            $time = date("H:i", $t);
+                                            echo "<option value='$time'>$time</option>";
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label class="col-sm-3 col-form-label">Ora di fine</label>
+                                <div class="col-sm-9">
+                                    <select name="OraFine" class="form-control">
+                                        <?php
+                                        $start = strtotime("09:30");
+                                        $end = strtotime("23:00");
+
+                                        for ($t = $start; $t <= $end; $t += 1800) {
+                                            $time = date("H:i", $t);
+                                            echo "<option value='$time'>$time</option>";
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label class="col-sm-3 col-form-label">Numero aula</label>
+                                <div class="col-sm-9">
+                                    <input type="text" name="NumAula" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label class="col-sm-3 col-form-label">Attività</label>
+                                <div class="col-sm-9">
+                                    <input type="text" name="Attivita" class="form-control">
+                                </div>
+                            </div>
+
+                            <button class="green-button" type="submit" name="selPrenot" value="crea" onclick="mostraForm('')">Crea</button>
+                            <button class="red-button" type="reset" onclick="mostraForm('')">Annulla</button>
                         </div>
 
-                        <div id="azioni-prenotazione" style="margin-top:15px; display:none;">
-                            <h6 id="info-pren"></h6>
-
-                            <form action="../backend/api-gestionePrenotazioni.php" method="post" style="display:inline;">
-                                <input type="hidden" name="IDPrenotazione" id="id-mod">
-                                <button class="green-button" type="submit" name="azione" value="modifica" onclick="mostraForm('modifica')">Modifica</button>
-                            </form>
-
-                            <form action="../backend/api-gestionePrenotazioni.php" method="post" style="display:inline;">
-                                <input type="hidden" name="IDPrenotazione" id="id-del">
-                                <button class="red-button" type="submit" name="azione" value="elimina" onclick="mostraForm('')">Elimina</button>
-                            </form>
-                        </div>
-                    </div>
-
-                    <script>
-                        function mostraForm(idForm) {
-                            // Nasconde tutte le form
-                            document.querySelectorAll('form').forEach(f => f.style.display = 'none');
-                            // Mostra solo quella selezionata
-                            document.getElementById(idForm).style.display = 'block';
-                        }
-                    </script>
+                    </form><br>
                 </div>
+
+                <div style="margin-top: 30px;">
+                    <h5>Prenotazioni effettuate</h5>
+                    <?php
+                        $_POST['azione'] = "mostraPren";
+                        include "../backend/api-gestionePrenotazioni.php";
+                    ?>
+                </div>
+
+                <script>
+                    function mostraForm(idForm) {
+                        // Nasconde tutte le form
+                        document.querySelectorAll('form').forEach(f => f.style.display = 'none');
+                        // Mostra solo quella selezionata
+                        document.getElementById(idForm).style.display = 'block';
+                    }
+                </script>
             </div>
         </div>
     </div>
-    <script src="../js/gestionePrenotazioni.js"></script>
 
     <?php
-    include "../common/footer.php";
+        include "../common/footer.php";
     ?>
 
 </body>

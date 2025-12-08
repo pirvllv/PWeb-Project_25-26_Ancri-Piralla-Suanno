@@ -19,16 +19,15 @@ if(!$cid) {
 }
 
 if (isset($_POST['selPrenot'])){
-    $data = $_POST['datiPren'];
     switch ($_POST['selPrenot']) {
-            case 'create':
-                createReservation($cid, $input);
+            case 'crea':
+                createReservation($cid, $_POST);
                 break;
-            case 'update':
-                updateReservation($cid, $input);
+            case 'modifica':
+                updateReservation($cid, $_POST);
                 break;
-            case 'delete':
-                deleteReservation($cid, $input);
+            case 'elimina':
+                deleteReservation($cid, $_POST);
                 break;
             default:
                 echo "<script>alert('Azione non valida');</script>";
@@ -49,7 +48,7 @@ if (isset($_POST['azione']) && $_POST['azione'] === 'mostraPren') {
 
     if ($result->num_rows === 0) {
         echo "<p>Nessuna prenotazione trovata.</p>";
-        exit;
+        return;
     }
 
     // output HTML diretto
@@ -57,7 +56,7 @@ if (isset($_POST['azione']) && $_POST['azione'] === 'mostraPren') {
 
         // ogni prenotazione genera un DIV cliccabile
         echo "
-        <div class='pren-item' 
+        <div class='row mb-3' 
              data-id='{$row['IDPrenotazione']}'
              data-data='{$row['DataPren']}'
              data-ora-inizio='{$row['OraInizio']}'
@@ -66,82 +65,122 @@ if (isset($_POST['azione']) && $_POST['azione'] === 'mostraPren') {
              data-attivita='{$row['Attivita']}'
              style='padding:8px; border-bottom:1px solid #ddd; cursor:pointer;'>
              
-             {$row['IDPrenotazione']} | {$row['DataPren']} {$row['OraInizio']}-{$row['OraFine']} | Aula {$row['NumAula']}
+            <div class='col-sm-9'>
+                {$row['IDPrenotazione']} | {$row['DataPren']} {$row['OraInizio']}-{$row['OraFine']} | Aula {$row['NumAula']}
+            </div>
+
+                <div id='azioni-prenotazione' style='margin-top:15px;' class='col-sm-3'>
+
+                    <form action='../backend/api-gestionePrenotazioni.php' method='post' style='display:inline;'>
+                    
+                        <button class='green-button' style='padding: 8px 18px;' type='submit' name='azione' value='modifica' onclick='mostraForm('modifica')'>Modifica</button>
+                    </form>
+
+                    <form action='../backend/api-gestionePrenotazioni.php' method='post' style='display:inline;'>
+                        <button class='red-button' style='padding: 8px 18px;' type='submit' name='azione' value='elimina' onclick='mostraForm('')'>Elimina</button>
+                    </form>
+                </div>
+            </div>
+
         </div>
         ";
     }
 
-    exit;
+    return;
 }
 
 function createReservation($cid, $data) {
+    
     $sala = $data['NumAula'];
-    $responsabile_email = $_SESSION['ResponsabileEmail'];
     $data_pren = $data['DataPren'];
-    $ora_inizio = (int)$data['OraInizio'];
-    $ora_fine = (int)$data['OraFine'];
     $attivita = $data['Attivita'];
 
-    $durata = $ora_fine - $ora_inizio;
+    
+    $ora_inizio = strtotime($data['OraInizio']);
+    $ora_fine   = strtotime($data['OraFine']);
 
-    if ($ora_inizio < 9 || $ora_fine > 23 || $durata <= 0) {
+    $durata = ($ora_fine - $ora_inizio) / 60;
+
+    $limite_start = strtotime("09:00");
+    $limite_end   = strtotime("23:00");
+
+    if ($ora_inizio < $limite_start || $ora_fine > $limite_end || $ora_fine <= $ora_inizio) {
         echo "<script>alert('Orario non valido');</script>";
+        return;
     }
 
-    $stmt = "SELECT MAX(IDPrenotazione) AS max_id FROM Prenotazione";
-    $res = $cid->query($stmt);
-    $row = $res->fetch_assoc();
+    $stmt = $cid->query("SELECT MAX(IDPrenotazione) AS max_id FROM Prenotazione");
+    $row = $stmt->fetch_assoc();
     $id_max = $row['max_id'];
-
-    $sqlCheck = "SELECT COUNT(*) as occupata 
-                 FROM Prenotazione 
-                 WHERE NumSal = :sala 
-                 AND DataPren = :data_pren
-                 AND NOT (
-                    OraFine <= :OraInizio
-                    OR OraInizio >= :OraFine
-                 )";
-
     
+    $new_id = $id_max + 1;
+
+    $sqlCheck = "
+        SELECT COUNT(*) AS occupata
+        FROM Prenotazione
+        WHERE NumAula = ?
+          AND DataPren = ?
+          AND NOT (
+                OraFine <= ?
+            OR  OraInizio >= ?
+          )
+    ";
+
     $stmtCheck = $cid->prepare($sqlCheck);
-    $stmtCheck->execute([
-        ':sala' => $sala,
-        ':data_pren' => $data_pren,
-        ':ora_inizio' => $ora_inizio,
-        ':ora_fine' => $ora_fine,
-    ]);
-    
-    if ($stmtCheck->fetch()['occupata'] > 0) {
+    $ora_inizio_str = date("H:i", $ora_inizio);
+    $ora_fine_str   = date("H:i", $ora_fine);
+
+    $stmtCheck->bind_param(
+        "ssss",
+        $sala,
+        $data_pren,
+        $ora_inizio_str,
+        $ora_fine_str
+    );
+
+    $stmtCheck->execute();
+    $resCheck = $stmtCheck->get_result()->fetch_assoc();
+
+    if ($resCheck['occupata'] > 0) {
         echo "<script>alert('Sala già occupata');</script>";
         return;
     }
 
-    
+    $sqlInsert = "
+        INSERT INTO Prenotazione 
+        (IDPrenotazione, DataPren, OraInizio, OraFine, Attivita, NumAula, ResponsabileEmail)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+    ";
 
-    $sqlInsert = "INSERT INTO Prenotazione (IDPrenotazione, DataPren, OraInizio, OraFine, Attivita, NumAula, ResponsabileEmail) 
-                  VALUES (:id_pren, :data_pren, :ora_inizio, :ora_fine, :attivita, :sala, :responsabile_email)";
-    
     $stmtInsert = $cid->prepare($sqlInsert);
-    $stmtInsert->execute([
-        ':sala' => $sala,
-        ':id_pren' => $id_max +1,
-        ':resp_id' => $responsabile_email,
-        ':data_pren' => $data_pren,
-        ':ora_inizio' => $ora_inizio,
-        ':durata' => $durata,
-        ':attivita' => $attivita
-    ]);
+
+    global $responsabile_email;
+
+    $stmtInsert->bind_param(
+        "issssss",
+        $new_id,
+        $data_pren,
+        $ora_inizio_str,
+        $ora_fine_str,
+        $attivita,
+        $sala,
+        $responsabile_email
+    );
+
+
+    $stmtInsert->execute();
 
     echo "<script>alert('Prenotazione avvenuta con successo');</script>";
 }
 
+
 function updateReservation($cid, $data) {
     $id_prenotazione = $data['IDPrenotazione'];
     $sala = $data['NumAula'];
-    $responsabile_email = $_SESSION['ResponsabileEmail'];
+    // $responsabile_email = $_SESSION['ResponsabileEmail'];
     $data_pren = $data['DataPren'];
-    $ora_inizio = (int)$data['OraInizio'];
-    $ora_fine = (int)$data['OraFine'];
+    $ora_inizio = (int)$data['OraInizio'];  // Converte "09:30" a 0 (int conversion di stringa)
+    $ora_fine = (int)$data['OraFine'];      // Stesso problema
     $attivita = $data['Attivita'];
 
     $durata = $ora_fine - $ora_inizio;
@@ -198,7 +237,7 @@ function updateReservation($cid, $data) {
 
 function deleteReservation($cid, $data) {
     $id_pren = $data['IDPrenotazione'];
-    $responsabile_email = $_SESSION['ResponsabileEmail'];
+    // $responsabile_email = $_SESSION['ResponsabileEmail'];
 
     $sqlDelete = "DELETE FROM Prenotazione WHERE IDPrenotazione = :id AND ResponsabileEmail = :resp_id";
     
