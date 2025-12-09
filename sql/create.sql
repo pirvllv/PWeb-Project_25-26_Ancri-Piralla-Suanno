@@ -1,5 +1,6 @@
 CREATE TABLE Iscritto (
     Email VARCHAR(255) NOT NULL PRIMARY KEY,
+    Password VARCHAR(255) NOT NULL,
     Cognome VARCHAR(100) NOT NULL,
     Nome VARCHAR(100) NOT NULL,
     DataNascita DATE NOT NULL,

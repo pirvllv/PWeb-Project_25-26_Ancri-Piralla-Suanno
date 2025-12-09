@@ -1,12 +1,12 @@
-INSERT INTO Iscritto (Email, Cognome, Nome, DataNascita, Foto, Ruolo) VALUES
-('mario.rossi@email.com', 'Rossi', 'Mario', '1980-05-15', 'path/to/foto_mr.jpg', 'docente'),
-('anna.verdi@email.com', 'Verdi', 'Anna', '1985-09-20', 'path/to/foto_av.jpg', 'docente'),
-('luca.bianchi@email.com', 'Bianchi', 'Luca', '2002-11-30', 'path/to/foto_lb.jpg', 'studente'),
-('sara.neri@email.com', 'Neri', 'Sara', '2003-03-10', 'path/to/foto_sn.jpg', 'studente'),
-('paolo.gialli@email.com', 'Gialli', 'Paolo', '2001-07-25', 'path/to/foto_pg.jpg', 'studente'),
-('elisa.bruni@email.com', 'Bruni', 'Elisa', '1990-01-18', 'path/to/foto_eb.jpg', 'tecnico'),
-('giulia.russo@email.com', 'Russo', 'Giulia', '2004-02-14', 'path/to/foto_gr.jpg', 'studente'),
-('davide.romano@email.com', 'Romano', 'Davide', '1975-12-05', 'path/to/foto_dr.jpg', 'docente');
+INSERT INTO Iscritto (Email, Password, Cognome, Nome, DataNascita, Foto, Ruolo) VALUES
+('mario.rossi@email.com', 'qwerty','Rossi', 'Mario', '1980-05-15', 'path/to/foto_mr.jpg', 'docente'),
+('anna.verdi@email.com', 'qwerty', 'Verdi', 'Anna', '1985-09-20', 'path/to/foto_av.jpg', 'docente'),
+('luca.bianchi@email.com', 'qwerty', 'Bianchi', 'Luca', '2002-11-30', 'path/to/foto_lb.jpg', 'studente'),
+('sara.neri@email.com', 'qwerty', 'Neri', 'Sara', '2003-03-10', 'path/to/foto_sn.jpg', 'studente'),
+('paolo.gialli@email.com', 'qwerty', 'Gialli', 'Paolo', '2001-07-25', 'path/to/foto_pg.jpg', 'studente'),
+('elisa.bruni@email.com', 'qwerty', 'Bruni', 'Elisa', '1990-01-18', 'path/to/foto_eb.jpg', 'tecnico'),
+('giulia.russo@email.com', 'qwerty', 'Russo', 'Giulia', '2004-02-14', 'path/to/foto_gr.jpg', 'studente'),
+('davide.romano@email.com', 'qwerty', 'Romano', 'Davide', '1975-12-05', 'path/to/foto_dr.jpg', 'docente');
 
 INSERT INTO Responsabile (ResponsabileEmail, InizioIncarico) VALUES
 ('mario.rossi@email.com', '2015-09-01'),

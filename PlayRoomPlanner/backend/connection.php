@@ -1,13 +1,12 @@
 <?php
-
-$hostname = 'localhost';
-$username = 'root';
-$password = '';
-$dbname = 'playroomplanner';
-
-
-function connessione($hostname, $username, $password, $dbname)
+function connessione()
 {
+
+  $hostname = "localhost";
+  $username = "root";
+  $password = "";
+  $dbname   = "test";
+  
   try {
     $cid = new mysqli($hostname, $username, $password, $dbname);
     if ($cid->connect_error) {
@@ -19,8 +18,5 @@ function connessione($hostname, $username, $password, $dbname)
   }
   return $cid;
 }
-
-$cid = connessione($hostname, $username, $password, $dbname);
-
 
 ?>
