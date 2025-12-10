@@ -5,7 +5,7 @@ function connessione()
   $hostname = "localhost";
   $username = "root";
   $password = "";
-  $dbname   = "test";
+  $dbname   = "playroomplanner";
   
   try {
     $cid = new mysqli($hostname, $username, $password, $dbname);

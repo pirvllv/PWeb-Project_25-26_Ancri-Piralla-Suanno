@@ -2,7 +2,6 @@
 <html>
     <head>
       <title>Home page</title>
-      <link href="css/style.css" rel="stylesheet">
       <link href="css/custom_style.css" rel="stylesheet">
       <link rel="stylesheet" href="css\fontawesome.css">
       <link rel="stylesheet" href="css/templatemo-574-mexant.css">

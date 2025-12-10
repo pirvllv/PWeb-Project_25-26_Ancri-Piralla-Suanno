@@ -7,7 +7,7 @@ CREATE TABLE Iscritto (
     Foto VARCHAR(500), -- URL o path
     Ruolo VARCHAR(30) NOT NULL,
 
-    CONSTRAINT chk_Ruolo CHECK (Ruolo IN ('studente', 'docente', 'tecnico'))
+    CONSTRAINT chk_Ruolo CHECK (Ruolo IN ('studente', 'docente', 'tecnico', 'responsabile'))
 );
 
 CREATE TABLE Responsabile (

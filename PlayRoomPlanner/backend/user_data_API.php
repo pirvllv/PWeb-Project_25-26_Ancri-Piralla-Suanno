@@ -1,7 +1,9 @@
 <?php
     require_once("connection.php");
     require_once("../Common/functions.php");
+
     $cid = connessione();
+    if(!$cid) {die("Errore di connessione al database");}
     
     $nome = esiste("name", $_POST);
     $cognome = esiste("surname", $_POST);
@@ -14,6 +16,7 @@
 
     $query = "";
     if ($azione=="") {
+        $cid->close();
         die("Non c'è azione legata ai dati");
         
     } else if ($azione=="elimina") {
@@ -36,9 +39,13 @@
         
     }
 
-    if ($query == -1) {die("Errore nella costruzione della query");}
+    if ($query == -1) {
+        $cid->close();
+        die("Errore nella costruzione della query");
+    }
     
     echo "query: ".$query;
+
     try { 
         $result = $cid->query($query);
         echo "Query eseguita correttamente: ".$result;
@@ -46,6 +53,5 @@
         $errorMessage = $e->getMessage();
         echo "Errore: ".$errorMessage;
     }
-    
     $cid->close();
 ?>
