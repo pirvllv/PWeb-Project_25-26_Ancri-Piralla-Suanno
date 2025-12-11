@@ -15,11 +15,7 @@ ORDER BY p.IDPrenotazione;
 -- Contare il numero di prenotazioni che sono state organizzate, per giorno e per sala di prova.
 SELECT DataPren, NumAula, COUNT(IDPrenotazione)
 FROM Prenotazione AS p
-WHERE p.IDPrenotazione IN (
-    SELECT p.IDPrenotazione -- elenco ID prenotazioni organizzate da responsabile
-    FROM Prenotazione AS p
-    WHERE ResponsabileEmail = ?
-)
+WHERE p.ResponsabileEmail = ?
 GROUP BY DataPren, NumAula
 ORDER BY DataPren, NumAula;
 ------------------------------------------------------- b-1 end

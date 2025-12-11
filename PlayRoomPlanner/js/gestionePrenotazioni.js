@@ -78,7 +78,8 @@ function visualizzaPrenotazioni(prenotazioni) {
                         </div>
                     </div>
                     <div style='display: flex; gap: 8px; flex-direction: column;'>
-                        <button class='green-button' style='padding: 8px 16px; white-space: nowrap;' onclick="caricaModifica(${p.IDPrenotazione}, '${p.DataPren}', '${p.OraInizio}', '${p.OraFine}', '${p.NumAula}', '${p.Attivita}')">Modifica</button>
+                        <button class='green-button' style='padding: 8px 16px; white-space: nowrap;'>Invita</button>
+                        <button class='orange-button' style='padding: 8px 16px; white-space: nowrap;' onclick="caricaModifica(${p.IDPrenotazione}, '${p.DataPren}', '${p.OraInizio}', '${p.OraFine}', '${p.NumAula}', '${p.Attivita}')">Modifica</button>
                         <button class='red-button' style='padding: 8px 16px; white-space: nowrap;' onclick="eliminaPrenotazione(${p.IDPrenotazione})">Elimina</button>
                     </div>
                 </div>

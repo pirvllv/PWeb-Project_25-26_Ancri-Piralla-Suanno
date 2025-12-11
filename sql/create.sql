@@ -6,23 +6,15 @@ CREATE TABLE Iscritto (
     Nome VARCHAR(100) NOT NULL,
     DataNascita DATE NOT NULL,
     Foto VARCHAR(500), -- URL o path
-    Ruolo VARCHAR(30) NOT NULL
-);
-
-CREATE TABLE Responsabile (
-    ResponsabileEmail VARCHAR(255) NOT NULL, -- vincolo solo docente può essere responsabile espresso in backend
-    InizioIncarico DATE NOT NULL,
-
-    FOREIGN KEY (ResponsabileEmail) REFERENCES Iscritto(Email)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE
+    Ruolo VARCHAR(30) NOT NULL,
+    Password VARCHAR(8) NOT NULL CHECK (Password REGEXP '^[a-z0-9]{8}$')
 );
 
 CREATE TABLE Settore (
     Nome VARCHAR(50) NOT NULL PRIMARY KEY,
     Tipologia VARCHAR(50) NOT NULL,
     ResponsabileEmail VARCHAR(255),
-    FOREIGN KEY (ResponsabileEmail) REFERENCES Responsabile(ResponsabileEmail)
+    FOREIGN KEY (ResponsabileEmail) REFERENCES Iscritto(Email)
         ON DELETE SET NULL
         ON UPDATE CASCADE
 );
@@ -70,7 +62,7 @@ CREATE TABLE Prenotazione (     -- il vincolo di non sovrapposizione verrà impo
     NumAula VARCHAR(50) NOT NULL,
     ResponsabileEmail VARCHAR(255) NOT NULL,
 
-    FOREIGN KEY (ResponsabileEmail) REFERENCES Responsabile(ResponsabileEmail)
+    FOREIGN KEY (ResponsabileEmail) REFERENCES Iscritto(Email)
         ON UPDATE CASCADE
         ON DELETE CASCADE,
     FOREIGN KEY (NumAula) REFERENCES SalaProve(NumAula)
