@@ -7,7 +7,7 @@ CREATE TABLE Iscritto (
     DataNascita DATE NOT NULL,
     Foto VARCHAR(500), -- URL o path
     Ruolo VARCHAR(30) NOT NULL,
-    Password VARCHAR(8) NOT NULL CHECK (Password REGEXP '^[a-z0-9]{8}$')
+    Password VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE Settore (
