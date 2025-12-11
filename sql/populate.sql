@@ -18,11 +18,6 @@ INSERT INTO Iscritto (Email, Cognome, Nome, DataNascita, Foto, Ruolo, Password) 
 ('giovanni.riva@email.com', 'Riva', 'Giovanni', '2002-10-05', 'path/to/foto_gr2.jpg', 'studente', 'giovanni9'),
 ('daniela.marchetti@email.com', 'Marchetti', 'Daniela', '1993-07-14', 'path/to/foto_dm.jpg', 'tecnico', 'daniela0');
 
-INSERT INTO Responsabile (ResponsabileEmail, InizioIncarico) VALUES
-('mario.rossi@email.com', '2015-09-01'),
-('anna.verdi@email.com', '2018-03-10'),
-('davide.romano@email.com', '2012-11-01');
-
 INSERT INTO Settore (Nome, Tipologia, ResponsabileEmail) VALUES
 ('Musica Classica', 'musica', 'mario.rossi@email.com'),
 ('Danza Moderna', 'danza', 'anna.verdi@email.com'),
