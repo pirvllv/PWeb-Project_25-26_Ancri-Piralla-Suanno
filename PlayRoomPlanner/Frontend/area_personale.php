@@ -100,7 +100,7 @@ $weekdays = array("Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "
                     Gestione account</a>
             </div>
             <div class="orange-button" style="grid-area: 2/2/span 1/span 1;">
-                <a href="..\inde.php" id="gestione-button" style="width:100%; place-content: center;">
+                <a href="../Frontend/gestionePrenotazioni.php" id="gestione-button" style="width:100%; place-content: center;">
                     Gestione prenotazioni</a>
             </div>
         </section>

@@ -45,6 +45,9 @@ function esiste($var, &$arr) {
     return "";
 }
 
-//Funzioni dell'area personale
+function getWeekdays() {
+
+    return array("Lun", "Mar", "Mer", "Gio", "Ven", "Sab", "Dom");
+}
 
 ?>

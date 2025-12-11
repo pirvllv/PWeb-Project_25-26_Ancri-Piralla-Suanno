@@ -1,6 +1,34 @@
 <?php
 
 require_once("../Common/functions.php");
+require_once("../backend/connection.php");
+
+$cid = connessione();
+
+if (!$cid) {
+    echo json_encode(['success' => false, 'message' => 'Connessione al database non riuscita']);
+    exit;
+}
+
+//print_r($_GET);
+$mondayStamp = getMondayStamp($_GET["monday"]);
+$week = array();
+$weekdays = getWeekdays();
+for ($g = 0; $g < count($weekdays); $g++) {
+    
+    $week[$weekdays[$g]] = date("d", strtotime("+".$g." days", $mondayStamp));
+    
+}
+$monday = date("d/m/Y", $mondayStamp);
+$dati = array("week" => $week);
+$dati["weekstart"] = date("d/m/Y", $mondayStamp);
+
+$inviti = get_bookings($_GET["primkey"], $mondayStamp, $_GET["type"]);
+$dati["inviti"] = $inviti;
+$sched = get_room_schedule($inviti);
+$dati["sched"] = $sched;
+
+echo json_encode(["success" => true, "dati" => $dati]);
 
 function getMondayStamp($stamp) {
 
@@ -73,10 +101,11 @@ function user_invites_query(string $email, int $data) {
     //$domenica = date("Y-m-d", strtotime("+6 days", $data));
     $query = "SELECT Attivita, DataPren, OraInizio, OraFine, Accettazione
             FROM prenotazione INNER JOIN invito
-            ON (prenotazione.IDPrenotazione = invito.IDPrenotazione AND \"";
-    $query .= $lunedi."\" <= prenotazione.DataPren";
+            ON (prenotazione.IDPrenotazione = invito.IDPrenotazione";
+    //$query .= " AND \"".$lunedi."\" <= prenotazione.DataPren";
     //$query .= " AND prenotazione.DataPren <= \"".$domenica;
-    $query .= " AND invito.IscrittoEmail=\"".$email."\")";
+    $query .= " AND invito.IscrittoEmail=\"".$email."\"";
+    $query .= ")";
     $query .= " ORDER BY DataPren";
 
     return $query;
@@ -89,8 +118,10 @@ function room_bookings_query(string $room, int $data) {
     //$domenica = date("Y-m-d", strtotime("+6 days", $data));
     $query = "SELECT Attivita, DataPren, OraInizio, OraFine
             FROM prenotazione";
-    $query .= " WHERE (\"".$lunedi."\" <= DataPren";
-    $query .= " AND NumAula=\"".$room."\")";
+    $query .= " WHERE (";
+    //$query .= "\"".$lunedi."\" <= DataPren AND ";
+    $query .= "NumAula=\"".$room."\"";
+    $query .= ")";
     $query .= " ORDER BY DataPren";
 
     return $query;
@@ -109,7 +140,7 @@ function get_bookings(string $primaryKey, int $data, string $action) {
     }
     
 
-    //echo $query;
+    //return $query;
 
     try {
         $result = $cid->query($query);
