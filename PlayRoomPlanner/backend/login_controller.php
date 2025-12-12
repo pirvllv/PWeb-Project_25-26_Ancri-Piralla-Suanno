@@ -1,0 +1,54 @@
+<?php
+require_once '../common/connection.php';
+
+if (session_status() === PHP_SESSION_NONE) {
+  session_start();
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  $email = $_POST['email'];
+  $password = $_POST['password'];
+
+  $cid = connessione($hostname, $username, $password_db, $dbname);
+
+  if ($cid) {
+    $stmt = $cid->prepare("SELECT Email, Nome, Cognome, Ruolo, Password FROM Iscritto WHERE Email = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows == 1) {
+      $row = $result->fetch_assoc();
+
+      // da modificare con riga sotto perchè non terremo nel db le password in chiaro
+      // if (password_verify($password, $row['Password'])) {
+      if ($password === $row['Password']) {
+        $_SESSION['logged_in'] = true;
+        $_SESSION['email'] = $row['Email'];
+        $_SESSION['nome'] = $row['Nome'];
+        $_SESSION['cognome'] = $row['Cognome'];
+        $_SESSION['ruolo'] = $row['Ruolo'];
+
+        if (isset($_SESSION['redirect_to'])) {
+          $redirect_url = $_SESSION['redirect_to'];
+          unset($_SESSION['redirect_to']);
+          header("Location: " . $redirect_url);
+        } else {
+            header("Location: /PlayRoomPlanner/index.php");
+        }
+        exit;
+      } else {
+        $error = "Password non corretta.";
+      }
+    } else {
+      $error = "Email non trovata.";
+    }
+    $cid->close();
+  } else {
+    $error = "Errore di connessione al database.";
+  }
+
+  header("Location: /PlayRoomPlanner/frontend/login.php?error=" . urlencode($error));
+  exit;
+}
+?>
