@@ -51,7 +51,6 @@
 }
 
 #area-personale .page-heading, #gestione-account .page-heading, #prenotazioni-aula .page-heading{
-  background-image: url(../immagini/heading-bg.jpg);
   padding: calc(var(--navheight) + 80px) 0px 80px 0px;
 }
 
@@ -72,7 +71,7 @@
 body {
 
     background-color: white !important;
-    padding-top: calc(var(--navheight) + 30px);
+    /* padding-top: calc(var(--navheight) + 30px); */
     margin: 0;
 
 }

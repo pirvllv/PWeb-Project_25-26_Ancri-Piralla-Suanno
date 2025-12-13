@@ -1354,7 +1354,7 @@ page heading
 */
 
 .page-heading {
-  background-image: url(../images/heading-bg.jpg);
+  background-color: rgb(33, 39, 65);
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
