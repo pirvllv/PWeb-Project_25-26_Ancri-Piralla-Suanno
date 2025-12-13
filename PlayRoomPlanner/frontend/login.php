@@ -54,7 +54,7 @@ session_start();
           </div>
         </div>
         <div class="col-lg-10">
-          <form id="contact" action="../backend/login_controller.php" method="post">
+          <form id="contact" action="/PlayRoomPlanner/backend/login_controller.php" method="post">
             <div class="row">
               <div class="col-lg-6">
                 <fieldset>
@@ -72,7 +72,7 @@ session_start();
                 </fieldset>
               </div>
               <div class="col-lg-12 mt-3 text-center">
-                <p>Non hai un account? <a href="register.php">Registrati qui</a></p>
+                <p>Non hai un account? <a href="#">Registrati qui</a></p>
               </div>
             </div>
           </form>
