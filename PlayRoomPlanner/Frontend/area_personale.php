@@ -1,18 +1,8 @@
 <!DOCTYPE html>
 <?php
 require_once("../Common/functions.php");
-require_once("../backend/bookings_API.php");
-$todaystamp = strtotime("10 november 2025", time());
-$mondayStamp = getMondayStamp($todaystamp);
 
-$inviti = get_bookings("luca.bianchi@email.com", $mondayStamp, "user");
-$sched = get_user_schedule($inviti);
-
-$a = strtotime("03-04-2025"); $b = 3600; 
-//print_r($sched);
-//die(date("d-m-Y H:i", $a + $b));
-
-$weekdays = array("Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato", "Domenica");
+$user = "chiara.lombardi@email.com"
 ?>
 <html>
     <head>
@@ -24,8 +14,10 @@ $weekdays = array("Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "
         <link rel="stylesheet" href="..\css\animate.css">
         
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+        <script src="../js/calendarManager.js"></script>
     </head>
-    <body class="area-personale">
+    <body id="area-personale">
         <?php
         include '../common/navbar.php'
         ?>
@@ -35,6 +27,7 @@ $weekdays = array("Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "
                     <div class="col-lg-12">
                         <div class="header-text">
                             <h2>Area personale</h2>
+                            <h2 id="username"><?php echo $user ?></h2>
                             <div class="div-dec"></div>
                         </div>
                     </div>
@@ -43,55 +36,24 @@ $weekdays = array("Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "
         </div>
         <section class="services">
             <div class="schedule service-item" style="grid-area: 1/1/span 2/1;">
-                <div style="grid-area: 1/1/span 1/1;">
-                    <h4>Impegni settimanali</h4>
+                <div style="display:flex; sgrid-area: 1/1/span 1/1;">
+                    <button onclick="changeWeek(-1)">-1</button>
+                    <h4>Settimana <span id="weekname"></span></h4>
+                    <button onclick="changeWeek(1)">+1</button>
                 </div>
-                <div style="grid-area: 1/3/span 1/3;">
+                <div style="grid-area: 1/2/span 1/2;">
                     <h4 style="text-align: center;">Inviti</h4>
                 </div>
-                <div class="timetable" >
+                <div class="timetable" id="timetbl">
                     <?php
-                    for ($g = 0; $g < count($weekdays); $g++) {
-
-                        echo "<div class=\"cell index\"; style=\"grid-area: 1 / ".($g+2)."/ 3 / span 1;\">".$weekdays[$g]."</div>";
-                        //<div class="cell index" style="grid-area: 1/2">Lunedì</div>
-
-                    }
-
-                    for ($h = 0; $h < 11; $h++) {
-
-                        echo "<div class=\"cell index\"; style=\"grid-area: ".(2*($h+1)+1)."/"."1/ span 2 /1;\">".($h+8).":00</div>";
-                            //<div class="cell index" style="grid-area: 1/2">Lunedì</div>
-
-                    }
-                    echo(table_from_schedule($sched, 8, 18));
+                    getIndexes();
                     ?>
                 </div>
-                <!--div class="scroll-sched" style= "grid-area: 2/2/2/2;">
+                <div class="scroll-invites" id="scroll" style= "grid-area: 2/2/2/2;">
                     <?php
-                            //print_r($sched);
-                            foreach ($sched as $g => $day) {
-                                echo "<div class=\"cell index\">".$weekdays[$g]."</div>";
-                                foreach ($sched[$g] as $att) {
-                                    echo "<div class=\"cell ".$att["stato"]."\">";
-                                    echo $att["orainizio"]." - ".$att["attivita"]."</div>";
-                                }
-                                echo "<br>";
-
-                            }
-                    ?>
-            </div-->
-                <div class="scroll-invites" style= "grid-area: 2/3/2/3;">
-                    <?php
-                            //print_r($sched);
-                            foreach ($inviti as $g => $day) {
-                                echo "<div class=\"cell index\">".$weekdays[$g]."</div>";
-                                foreach ($inviti[$g] as $att) {
-                                    echo displayAtt($att);
-                                }
-                                echo "<br>";
-
-                            }
+                    foreach (getWeekdays() as $g => $day) {
+                        echo "<div id=\"".$day."-cont\"></div><br>";
+                    }
                     ?>
                 </div>
             </div>

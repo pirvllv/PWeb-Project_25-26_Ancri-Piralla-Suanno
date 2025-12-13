@@ -1,19 +1,9 @@
 <!DOCTYPE html>
 <?php
 require_once("../Common/functions.php");
-//require_once("../backend/bookings_API.php");
-//$todaystamp = strtotime("10 november 2025", time());
-//$mondayStamp = getMondayStamp($todaystamp);
 
-$aula = "T01";
-//$inviti = get_bookings($aula, $mondayStamp, "room");
-//$sched = get_room_schedule($inviti);
-
-$a = strtotime("03-04-2025"); $b = 3600; 
-//print_r($sched);
-//die(date("d-m-Y H:i", $a + $b));
-
-$weekdays = getWeekdays();
+if (!isset($_GET["aula"])) {header("Location: http://localhost/Frontend/prenotazioni_aula.php?aula=T01");}
+$aula = $_GET["aula"];
 ?>
 <html>
     <head>
@@ -28,7 +18,7 @@ $weekdays = getWeekdays();
 
         <script src="../js/calendarManager.js"></script>
     </head>
-    <body class="prenotazioni-aula">
+    <body id="prenotazioni-aula">
         <?php
         include '../common/navbar.php'
         ?>
@@ -37,7 +27,7 @@ $weekdays = getWeekdays();
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="header-text">
-                            <h2>Prenotazioni aula <span id="roomname"><?php echo $_GET["aula"] ?></span></h2>
+                            <h2>Prenotazioni aula <span id="roomname"><?php echo $aula ?></span></h2>
                             <div class="div-dec"></div>
                         </div>
                     </div>
@@ -47,38 +37,15 @@ $weekdays = getWeekdays();
         <section class="services">
             <div class="schedule service-item" style="grid-area: 1/1/span 2/1;">
                 <div style="display: flex; grid-area: 1/1/span 1/1;">
-                    <h4>Settimana del <span id="weekname"></span></h4>
+                    <button onclick="changeWeek(-1)">-1</button>
+                    <h4>Settimana <span id="weekname"></span></h4>
+                    <button onclick="changeWeek(1)">+1</button>
                 </div>
                 <div class="timetable" id="timetbl">
                     <?php
-                    for ($g = 0; $g < count($weekdays); $g++) {
-
-                        echo "<div class=\"cell index\"; style=\"grid-area: 1 / ".($g+2)."/ 3 / span 1;\">".$weekdays[$g]." <span id=\"".$weekdays[$g]."\"></span>"."</div>";
-                        //<div class="cell index" style="grid-area: 1/2">Lunedì</div>
-
-                    }
-
-                    for ($h = 0; $h < 11; $h++) {
-
-                        echo "<div class=\"cell index\"; style=\"grid-area: ".(2*($h+1)+1)."/"."1/ span 2 /1;\">".($h+8).":00</div>";
-                            //<div class="cell index" style="grid-area: 1/2">Lunedì</div>
-
-                    }
+                    getIndexes();
                     ?>
                 </div>
-                <!--div class="scroll-sched" style= "grid-area: 2/2/2/2;">
-                    <?php
-                            //print_r($sched);
-                            foreach ($sched as $g => $day) {
-                                echo "<div class=\"cell index\">".$weekdays[$g]."</div>";
-                                foreach ($sched[$g] as $att) {
-                                    echo displayAtt($att);
-                                }
-                                echo "<br>";
-
-                            }
-                    ?>
-                </div-->
             </div>
             </div>
             <div class="orange-button" style="grid-area: 2/2/span 1/span 1;">

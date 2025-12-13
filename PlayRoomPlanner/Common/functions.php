@@ -41,13 +41,31 @@ function delete_query($table, $entry_id, $entry_id_name) {
 }
 
 function esiste($var, &$arr) {
-    if (isset($arr["$var"])) {return $_POST["$var"];}
+    //print($var);
+    if (isset($arr[$var])) {return $arr[$var];}
     return "";
 }
 
 function getWeekdays() {
 
     return array("Lun", "Mar", "Mer", "Gio", "Ven", "Sab", "Dom");
+}
+
+function getIndexes() {
+
+    $weekdays = getWeekdays();
+    for ($g = 0; $g < count($weekdays); $g++) {
+
+        echo "<div class=\"".$weekdays[$g]." cell index\"; style=\"grid-area: 1 / ".($g+2)."/ 3 / span 1;\"></div>";
+
+    }
+
+    for ($h = 0; $h < 11; $h++) {
+
+        echo "<div class=\"cell index\"; style=\"grid-area: ".(2*($h+1)+1)."/"."1/ span 2 /1;\">".($h+8).":00</div>";
+
+    }
+    
 }
 
 ?>

@@ -44,30 +44,30 @@
     /* border: 1px solid green; */
 }
 
-.gestione-account fieldset {
+#gestione-account fieldset {
 
     border:none;
     
 }
 
-.area-personale .page-heading, .gestione-account .page-heading, .prenotazioni-aula .page-heading{
+#area-personale .page-heading, #gestione-account .page-heading, #prenotazioni-aula .page-heading{
   background-image: url(../immagini/heading-bg.jpg);
   padding: calc(var(--navheight) + 80px) 0px 80px 0px;
 }
 
-.area-personale section, .gestione-account section, .prenotazioni-aula section{
+#area-personale section, #gestione-account section, #prenotazioni-aula section{
     margin: 30px 20px 50px 20px !important;
     /* display: grid; */
 }
 
-.area-personale .service-item, .gestione-account .service-item, .prenotazioni-aula .service-item {
+#area-personale .service-item, #gestione-account .service-item, #prenotazioni-aula .service-item {
     display: grid;
     padding-top: var(--navheight);
     /* max-width: 1000px; */
     min-width: 600px;
 }
 
-.gestione-account .service-item {max-width: 50vw;margin-left: 300px !important;}
+#gestione-account .service-item {max-width: 50vw;margin-left: 300px !important;}
 
 body {
 
@@ -136,6 +136,5 @@ div.cell:hover {
 
 .attNeutra {
 
-    background-color: rgb(12 101 102);
-    
+background-color: rgb(12 101 102);
 }
