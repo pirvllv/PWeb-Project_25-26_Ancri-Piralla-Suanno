@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <?php
-require_once("../Common/functions.php");
+require_once("../common/functions.php");
 require_once("../backend/connection.php");
 
 session_start();
-$cid = connessione();
+// $cid = connessione();
 ?>
 <html>
     <head>
@@ -38,7 +38,7 @@ $cid = connessione();
                 <div class="row">
                     <div class="col-lg-6 offset-lg-3">
                       <div class="section-heading">
-                        <h6>Ciao [nome]</h6>
+                        <h6>Ciao <?php echo $_SESSION['user']?></h6>
                         <h4>I tuoi dati</h4>
                       </div>
                     </div>

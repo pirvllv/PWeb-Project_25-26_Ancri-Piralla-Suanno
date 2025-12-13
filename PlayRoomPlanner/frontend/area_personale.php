@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <?php
-require_once("../Common/functions.php");
-
-$user = "chiara.lombardi@email.com"
+require_once("../common/functions.php");
 ?>
 <html>
     <head>
@@ -27,7 +25,7 @@ $user = "chiara.lombardi@email.com"
                     <div class="col-lg-12">
                         <div class="header-text">
                             <h2>Area personale</h2>
-                            <h2 id="username"><?php echo $user ?></h2>
+                            <h2 id="username"><?php echo $_SESSION['user']?></h2>
                             <div class="div-dec"></div>
                         </div>
                     </div>
@@ -58,11 +56,11 @@ $user = "chiara.lombardi@email.com"
                 </div>
             </div>
             <div class="green-button" style="grid-area: 1/2/span 1/span 1;">
-                <a href="..\Frontend\gestione_account.php" id="gestione-button" style="width:100%; place-content: center;">
+                <a href="..\frontend\gestione_account.php" id="gestione-button" style="width:100%; place-content: center;">
                     Gestione account</a>
             </div>
             <div class="orange-button" style="grid-area: 2/2/span 1/span 1;">
-                <a href="../Frontend/gestionePrenotazioni.php" id="gestione-button" style="width:100%; place-content: center;">
+                <a href="../frontend/gestionePrenotazioni.php" id="gestione-button" style="width:100%; place-content: center;">
                     Gestione prenotazioni</a>
             </div>
         </section>

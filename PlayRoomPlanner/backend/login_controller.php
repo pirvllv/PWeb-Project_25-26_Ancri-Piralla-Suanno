@@ -1,19 +1,19 @@
 <?php
-require_once '../common/connection.php';
+require_once '../backend/connection.php';
 
 if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  $email = $_POST['email'];
+  $user = $_POST['email'];
   $password = $_POST['password'];
 
   $cid = connessione($hostname, $username, $password_db, $dbname);
 
   if ($cid) {
     $stmt = $cid->prepare("SELECT Email, Nome, Cognome, Ruolo, Password FROM Iscritto WHERE Email = ?");
-    $stmt->bind_param("s", $email);
+    $stmt->bind_param("s", $user);
     $stmt->execute();
     $result = $stmt->get_result();
 
@@ -24,7 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       // if (password_verify($password, $row['Password'])) {
       if ($password === $row['Password']) {
         $_SESSION['logged_in'] = true;
-        $_SESSION['email'] = $row['Email'];
+        $_SESSION['user'] = $row['Email'];
         $_SESSION['nome'] = $row['Nome'];
         $_SESSION['cognome'] = $row['Cognome'];
         $_SESSION['ruolo'] = $row['Ruolo'];

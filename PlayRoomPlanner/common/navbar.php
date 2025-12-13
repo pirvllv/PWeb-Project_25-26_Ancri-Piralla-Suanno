@@ -1,3 +1,8 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+  session_start();
+}
+?>
 <header class="header-area header-sticky">
   <div class="container">
     <div class="row">
@@ -17,15 +22,13 @@
                 <li><a href="#">Contattaci</a></li>
               </ul>
             </li>
-            <?php if (isset($_SESSION['user_id'])): ?>
+            <?php if (isset($_SESSION['user'])): ?>
               <li><a href="/PlayRoomPlanner/frontend/area_personale.php">Area Personale</a></li>
+              <li><a href="/PlayRoomPlanner/backend/logout.php">Logout</a></li>
             <?php else: ?>
-              <li><a href="/PlayRoomPlanner/frontend/area_personale.php">Login</a></li>
+              <li><a href="/PlayRoomPlanner/frontend/login.php">Login</a></li>
             <?php endif; ?>
           </ul>
-          <a class='menu-trigger'>
-            <span>Menu</span>
-          </a>
         </nav>
       </div>
     </div>

@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 
 <?php
-require_once '../common/connection.php';
-session_start();
+require_once '../backend/connection.php';
+// session_start();
 ?>
 
 <html lang="it">

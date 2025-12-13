@@ -1,9 +1,9 @@
 <?php
 
-require_once("../Common/functions.php");
+require_once("../common/functions.php");
 require_once("../backend/connection.php");
 
-$cid = connessione();
+// $cid = connessione();
 $qry = "";
 
 if (!$cid) { fail("Connessione al database non riuscita"); }
@@ -55,7 +55,7 @@ function displayAtt($att) {
         $html .= "<div class=\"cell ".$att["stato"]."\">";
         $html .= date("H:i",$att["orainizio"]+$att["data"])." - ".$att["attivita"]."</div>";
         
-    } catch (excetion $e) {
+    } catch (exception $e) {
 
         return "<div class=\"cell\">Attività errata</div>";
         

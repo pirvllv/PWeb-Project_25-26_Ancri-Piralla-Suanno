@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <?php
-require_once("../Common/functions.php");
+require_once("../common/functions.php");
 
-if (!isset($_GET["aula"])) {header("Location: http://localhost/Frontend/prenotazioni_aula.php?aula=T01");}
+if (!isset($_GET["aula"])) {header("Location: http://localhost/frontend/prenotazioni_aula.php?aula=T01");}
 $aula = $_GET["aula"];
 ?>
 <html>

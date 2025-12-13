@@ -1,6 +1,6 @@
 <?php
     require_once("connection.php");
-    require_once("../Common/functions.php");
+    require_once("../common/functions.php");
 
     $cid = connessione();
     if(!$cid) {die("Errore di connessione al database");}
