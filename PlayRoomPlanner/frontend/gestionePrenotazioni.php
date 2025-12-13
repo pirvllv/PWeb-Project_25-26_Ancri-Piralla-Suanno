@@ -45,10 +45,10 @@
         <div class="section-prenotazioni">
             <div class="form-prenotazioni">
                 <div class="crea-prenotazione">
-                    <button class="orange-button" style="margin-bottom: 20px;" onclick="mostraForm('crea')">Crea
+                    <button class="orange-button" style="margin-bottom: 20px;">Crea
                         prenotazione</button>
 
-                    <form id="crea" style="display:none;">
+                    <form id="crea" style="display:none; padding-top: 80px;">
                         <div class="container">
                             <h5 style="margin-bottom: 20px;">Crea prenotazione</h5>
                             <div class="row mb-3">
@@ -106,7 +106,7 @@
                         </div>
                     </form>
 
-                    <form id="modifica" style="display:none;">
+                    <form id="modifica" style="display:none; padding-top: 80px;">
                         <input type="hidden" id="modifica-id" name="IDPrenotazione">
                         <div class="container">
                             <h5 style="margin-bottom: 20px;">Modifica prenotazione</h5>
@@ -165,6 +165,30 @@
                             </div>
                             <button class="green-button" type="submit">Salva modifiche</button>
                             <button class="red-button" type="reset" onclick="mostraForm(null)">Annulla</button>
+                        </div>
+                    </form>
+
+                    <form id="invita" style="display:none; padding-top: 80px;">
+                        <div class="row mb-3">
+                            <label class="col-sm-3 col-form-label">E-mail utente</label>
+                            <div class="col-sm-6">
+                                <input type="text" id="invito-email" name="Email-utente" class="form-control">
+                            </div>
+                            <div class="col-sm-3">
+                                <button type="button" class="orange-button" onclick="controllaUtente('invito-email')">Aggiungi</button>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-12" style="margin-bottom: 20px; padding: 10px; background-color: #f5f5f5; border-radius: 4px;">
+                                <small id="lista-invitati"></small>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-9">
+                                <button class="green-button" type="submit" onclick="mostraForm(null)">Invita</button>
+                                <button class="orange-button" type="reset" onclick="svuotaLista()">Resetta</button>
+                                <button class="red-button" type="reset" onclick="mostraForm(null); svuotaLista()">Annulla</button>
+                            </div>
                         </div>
                     </form>
 

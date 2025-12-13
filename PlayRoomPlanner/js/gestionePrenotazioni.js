@@ -1,19 +1,28 @@
 function mostraForm(formId) {
     const creaForm = document.getElementById('crea');
     const modificaForm = document.getElementById('modifica');
+    const invitaForm = document.getElementById('invita');
     
     switch (formId) {
         case 'crea':
             if (creaForm) creaForm.style.display = creaForm.style.display === 'none' ? 'block' : 'none';
             if (modificaForm) modificaForm.style.display = 'none';
+            if (invitaForm) invitaForm.style.display = 'none';
             break;
         case 'modifica':
             if (modificaForm) modificaForm.style.display = 'block';
             if (creaForm) creaForm.style.display = 'none';
+            if (invitaForm) invitaForm.style.display = 'none';
+            break;
+        case 'invita':
+            if (invitaForm) invitaForm.style.display = 'block';
+            if (creaForm) creaForm.style.display = 'none';
+            if (modificaForm) modificaForm.style.display = 'none';
             break;
         default:
             if (creaForm) creaForm.style.display = 'none';
             if (modificaForm) modificaForm.style.display = 'none';
+            if (invitaForm) invitaForm.style.display = 'none';
             break;
     }
 }
@@ -78,7 +87,7 @@ function visualizzaPrenotazioni(prenotazioni) {
                         </div>
                     </div>
                     <div style='display: flex; gap: 8px; flex-direction: column;'>
-                        <button class='green-button' style='padding: 8px 16px; white-space: nowrap;'>Invita</button>
+                        <button class='green-button' style='padding: 8px 16px; white-space: nowrap;' onclick="mostraForm('invita')">Invita</button>
                         <button class='orange-button' style='padding: 8px 16px; white-space: nowrap;' onclick="caricaModifica(${p.IDPrenotazione}, '${p.DataPren}', '${p.OraInizio}', '${p.OraFine}', '${p.NumAula}', '${p.Attivita}')">Modifica</button>
                         <button class='red-button' style='padding: 8px 16px; white-space: nowrap;' onclick="eliminaPrenotazione(${p.IDPrenotazione})">Elimina</button>
                     </div>
@@ -167,9 +176,71 @@ function eliminaPrenotazione(id) {
     .catch(error => console.error('Errore:', error));
 }
 
+const listaInviti = [];
+
+function controllaUtente(inputId) {
+    const email = document.getElementById(inputId).value;
+    
+    if (!email) {
+        alert('Inserisci un\'email');
+        return;
+    }
+    
+    const formData = new FormData()
+    formData.append('emailInvitato', email);
+    formData.append('azione', 'checkValidEmail');
+    fetch('../backend/api-gestionePrenotazioni.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (!data.success) {
+            alert(data.message);
+        } else {
+            if (!listaInviti.includes(email)) {
+                listaInviti.push(email);
+                mostraListaInviti();
+                document.getElementById(inputId).value = "";
+                
+            } else {
+                alert("Utente già inserito");
+            }
+        }
+    })
+    .catch(error => console.error('Errore: ', error));
+}
+
+function mostraListaInviti() {
+    const container = document.getElementById('lista-invitati');
+
+    if (listaInviti.length == 0) {
+        container.innerHTML = "<p>Nessun utente aggiunto</p>";
+        return;
+    }
+
+    let html = '<p>'
+
+    listaInviti.forEach( (i, index) => {
+        if (listaInviti.length -1 == index) {
+            html += `${i}</p>`
+        } else {
+            html += `${i}, `
+        }
+    });
+
+    container.innerHTML = html;
+}
+
+function svuotaLista() {
+    listaInviti.length = 0;
+    mostraListaInviti();
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     caricaAule();
     caricaPrenotazioni();
+    mostraListaInviti();
     
     const formCrea = document.getElementById('crea');
     if (formCrea) {
@@ -186,4 +257,13 @@ document.addEventListener('DOMContentLoaded', function() {
             inviaForm(this, 'modifica');
         });
     }
+
+    const formInvita = document.getElementById('invita');
+    document.getElementById("invito-email").addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      controllaUtente('invito-email');
+                alert('Utente aggiunto alla lista inviti');
+    }
+  });
 });

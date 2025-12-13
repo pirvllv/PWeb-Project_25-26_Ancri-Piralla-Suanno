@@ -30,6 +30,9 @@ switch ($action) {
     case 'getAule':
         getAule($cid);
         break;
+    case 'checkValidEmail':
+        checkValidEmail($cid, $_POST);
+        break;
     default:
         echo json_encode(['success' => false, 'message' => 'Azione non valida']);
 }
@@ -196,5 +199,24 @@ function getAule($cid) {
     }
 
     echo json_encode(['success' => true, 'data' => $aule]);
+}
+
+function checkValidEmail($cid, $data) {
+    $emailInvitato = $data['emailInvitato'];
+
+    $sql = "SELECT COUNT(*) AS conteggio
+            FROM Iscritto
+            WHERE Iscritto.Email = ?";
+
+    $stmt = $cid->prepare($sql);
+    $stmt->bind_param("s", $emailInvitato);
+    $stmt->execute();
+    $resCheck = $stmt->get_result()->fetch_assoc();
+
+    if ($resCheck['conteggio'] > 0) {
+        echo json_encode(['success' => true, 'message' => 'Utente iscritto']);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Utente non iscritto']);
+    }
 }
 ?>
