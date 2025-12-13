@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <?php
+require_once("../backend/auth_check.php");
 require_once("../common/functions.php");
 require_once("../backend/connection.php");
 

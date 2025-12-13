@@ -1,7 +1,8 @@
-<!DOCTYPE html>
 <?php
+require_once("../backend/auth_check.php");
 require_once("../common/functions.php");
 ?>
+<!DOCTYPE html>
 <html>
     <head>
         <title>Area personale</title>

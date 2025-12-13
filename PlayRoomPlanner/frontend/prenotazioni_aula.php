@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <?php
+require_once("../backend/auth_check.php");
 require_once("../common/functions.php");
 
 if (!isset($_GET["aula"])) {header("Location: http://localhost/frontend/prenotazioni_aula.php?aula=T01");}
