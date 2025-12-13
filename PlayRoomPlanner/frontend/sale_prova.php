@@ -1,48 +1,6 @@
 <?php
 require_once '../backend/connection.php';
-
-function mostraSale($cid, $tipologia)
-{
-  $sql = "SELECT SP.NumAula, SP.Capienza, SP.SettoreNome 
-            FROM SalaProve SP 
-            JOIN Settore S ON SP.SettoreNome = S.Nome 
-            WHERE S.Tipologia = '$tipologia'
-            ORDER BY SP.NumAula ASC";
-
-  $result = $cid->query($sql);
-
-  if ($result && $result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-      $numAula = htmlspecialchars($row["NumAula"]);
-      $capienza = htmlspecialchars($row["Capienza"]);
-      $nomeSettore = htmlspecialchars($row["SettoreNome"]);
-
-      echo <<<HTML
-            <div class="col-lg-12">
-						  <div class="service-item">
-							  <div class="row">
-								  <div class="col-lg-4">
-									  <div class="icon">
-										  <img src="/PlayRoomPlanner/immagini/{$tipologia}_{$numAula}.jpg" alt="Sala Prova {$numAula}">
-					  				</div>
-					  			</div>
-						  		<div class="col-lg-8">
-							  		<div class="right-content">
-								  		<h4>Sala Prova {$numAula}</h4>
-                      <p><strong>Tipologia:</strong> {$tipologia}</p>
-                      <p><strong>Capienza:</strong> {$capienza} persone</p>
-                      <p><strong>Settore:</strong> {$nomeSettore}</p>
-									  </div>
-								  </div>
-							  </div>
-						  </div>
-				    </div>
-HTML;
-    }
-  } else {
-    echo '<div class="row"><div class="col-12"><p class="text-center text-muted">Nessuna sala disponibile per questa categoria al momento.</p></div></div>';
-  }
-}
+require_once '../common/functions.php';
 ?>
 
 <!DOCTYPE html>
