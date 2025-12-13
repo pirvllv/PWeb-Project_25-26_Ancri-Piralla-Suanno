@@ -1,0 +1,140 @@
+/*nav {
+    height: var(--navheight);
+    line-height: var(--navheight);
+    background-color: rgb(64, 190, 253);
+    text-align: center;
+    top: 0;
+    width: 100%;
+    z-index: 10000;
+    border-top: 5px solid blue;
+    border-bottom: 5px solid blue;
+}*/
+
+/*nav > .home-title {
+
+    vertical-align: middle;
+    display: inline-block;
+
+}*/
+
+#gestione-button {
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-top: 10px;
+    /* border: 1px solid black; */
+    height: 70%;
+    text-align: center;
+    font-size: large;
+    /* max-width: 50vw; */
+}
+
+.scroll-sched, .scroll-invites {
+    overflow: auto;
+    /*border: 1px solid #000000;*/
+    background-color: #ffffff;
+    padding-left: 10px;
+}
+
+.schedule {
+    display: grid;
+    /* grid-template-columns: 75% 25%; */
+    height: 80vh;
+    /* width: 75vw; */
+    padding-left: 10px;
+    /* border: 1px solid green; */
+}
+
+#gestione-account fieldset {
+
+    border:none;
+    
+}
+
+#area-personale .page-heading, #gestione-account .page-heading, #prenotazioni-aula .page-heading{
+  background-image: url(../immagini/heading-bg.jpg);
+  padding: calc(var(--navheight) + 80px) 0px 80px 0px;
+}
+
+#area-personale section, #gestione-account section, #prenotazioni-aula section{
+    margin: 30px 20px 50px 20px !important;
+    /* display: grid; */
+}
+
+#area-personale .service-item, #gestione-account .service-item, #prenotazioni-aula .service-item {
+    display: grid;
+    padding-top: var(--navheight);
+    /* max-width: 1000px; */
+    min-width: 600px;
+}
+
+#gestione-account .service-item {max-width: 50vw;margin-left: 300px !important;}
+
+body {
+
+    background-color: white !important;
+    padding-top: calc(var(--navheight) + 30px);
+    margin: 0;
+
+}
+
+.timetable {
+    display: grid;
+    /*border: 1px solid black;*/
+    grid-area: 2/1/2/1;
+    overflow:  hidden;
+}
+
+:root {
+
+    --navheight: 50px;
+
+}
+
+div.cell.index {
+    text-align: center;
+    vertical-align: middle;
+    color: black;
+    padding: 2px;
+    background-color: whitesmoke;
+}
+
+div.cell {
+    margin: 1px;
+    padding-left: 5px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    color: white;
+    box-shadow: 0px 2px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%);
+    border-radius: 4px;
+    transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    cursor: pointer;
+}
+
+div.cell:hover {
+    overflow: visible;
+    color:black;
+    transition: 300ms;
+}
+
+.attAccettata {
+
+    background-color: #005d00;
+
+}
+
+.attRifiutata {
+
+    background-color: #970000;
+
+}
+
+.attInSospeso {
+    
+    background-color: #6a6a6a;
+
+}
+
+.attNeutra {
+
+background-color: rgb(12 101 102);
+}
