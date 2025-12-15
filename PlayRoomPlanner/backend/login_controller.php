@@ -29,6 +29,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION['cognome'] = $row['Cognome'];
         $_SESSION['ruolo'] = $row['Ruolo'];
 
+        $sql = "SELECT COUNT (*) as isResp
+                FROM Settore
+                WHERE ResponsabileEmail = ?";
+
+        $stmt = $cid->prepare($sql);
+        $stmt->bind_param("s", $_SESSION['user']);
+        $stmt->execute();
+        $respCheck = $stmt->get_result()->fetch_assoc();
+
+        if ($respCheck['isResp'] > 0) {
+          $_SESSION['responsabile'] = true;
+        } else {
+          $_SESSION['responsabile'] = false;
+        }
+
+
         if (isset($_SESSION['redirect_to'])) {
           $redirect_url = $_SESSION['redirect_to'];
           unset($_SESSION['redirect_to']);
