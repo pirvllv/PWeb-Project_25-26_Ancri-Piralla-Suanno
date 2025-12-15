@@ -1,4 +1,6 @@
 <?php
+
+session_start();
 require_once("../backend/auth_check.php");
 
     ini_set('display_errors', 1);
@@ -7,6 +9,23 @@ require_once("../backend/auth_check.php");
 
 ?>
 
+<?php
+if(!isset($_SESSION) || $_SESSION['logged_in'] == false || $_SESSION['responsabile'] == false) {
+    http_response_code(403);
+    ?>
+<!DOCTYPE html>
+<html lang="it">
+    <head>
+        <title>403 Forbidden</title>
+    </head>
+    <body>
+        <h2>Errore 403: Forbidden</h2>
+        <p>Non hai i permessi necessari per visualizzare la pagina.</p>
+        <a href="../index.php">Torna alla home</a>
+    </body>
+<?php
+} else {
+?>
 <!DOCTYPE html>
 <html lang="it">
 
@@ -29,6 +48,7 @@ require_once("../backend/auth_check.php");
 <body>
     <?php include "../common/navbar.php"; ?>
 
+
     <div class="page-heading chi-siamo-header">
         <div class="container">
             <div class="row">
@@ -46,7 +66,7 @@ require_once("../backend/auth_check.php");
         <div class="section-prenotazioni">
             <div class="form-prenotazioni">
                 <div class="crea-prenotazione">
-                    <button class="orange-button" style="margin-bottom: 20px;">Crea
+                    <button class="orange-button" style="margin-bottom: 20px;" onclick="mostraForm('crea')">Crea
                         prenotazione</button>
 
                     <form id="crea" style="display:none; padding-top: 80px;">
@@ -206,3 +226,4 @@ require_once("../backend/auth_check.php");
 </body>
 
 </html>
+<?php } ?>

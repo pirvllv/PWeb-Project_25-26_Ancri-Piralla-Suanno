@@ -1,5 +1,13 @@
 <?php
 
+session_start();
+
+if(!isset($_SESSION) || $_SESSION['logged_in'] == false || $_SESSION['responsabile'] == false) {
+    http_response_code(403);
+    echo "Error 403: forbidden";
+    exit;
+}
+
 require_once "../backend/connection.php";
 
 header('Content-Type: application/json');
