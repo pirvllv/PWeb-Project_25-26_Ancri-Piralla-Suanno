@@ -38,6 +38,8 @@ switch ($action) {
     case 'getAule':
         getAule($cid);
         break;
+    case 'getInviti':
+        getInviti($cid, $_POST);
     case 'checkValidEmail':
         checkValidEmail($cid, $_POST);
         break;
@@ -226,5 +228,28 @@ function checkValidEmail($cid, $data) {
     } else {
         echo json_encode(['success' => false, 'message' => 'Utente non iscritto']);
     }
+}
+
+function getInviti($cid, $data) {
+    $id_prenotazione = $data['id'];
+
+    $sql = "SELECT IscrittoEmail
+            FROM Invito
+            WHERE IDPrenotazione = ?";
+
+    $stmt = $cid->prepare($sql);
+    $stmt->bind_param("s", $id_prenotazione);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    $inviti = [];
+    while ($row = $result->fetch_assoc()) {
+        $inviti[] = $row['IscrittoEmail'];
+    }
+    echo json_encode(['success' => true, 'inviti' => $inviti]);
+}
+
+function invitaUtenti ($cid, $data) {
+
 }
 ?>

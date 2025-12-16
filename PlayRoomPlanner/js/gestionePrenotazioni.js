@@ -87,7 +87,7 @@ function visualizzaPrenotazioni(prenotazioni) {
                         </div>
                     </div>
                     <div style='display: flex; gap: 8px; flex-direction: column;'>
-                        <button class='green-button' style='padding: 8px 16px; white-space: nowrap;' onclick="mostraForm('invita')">Invita</button>
+                        <button class='green-button' style='padding: 8px 16px; white-space: nowrap;' onclick="mostraForm('invita'); caricaInviti(${p.IDPrenotazione})">Invita</button>
                         <button class='orange-button' style='padding: 8px 16px; white-space: nowrap;' onclick="caricaModifica(${p.IDPrenotazione}, '${p.DataPren}', '${p.OraInizio}', '${p.OraFine}', '${p.NumAula}', '${p.Attivita}')">Modifica</button>
                         <button class='red-button' style='padding: 8px 16px; white-space: nowrap;' onclick="eliminaPrenotazione(${p.IDPrenotazione})">Elimina</button>
                     </div>
@@ -178,6 +178,24 @@ function eliminaPrenotazione(id) {
 
 const listaInviti = [];
 
+function caricaInviti(IDPrenotazione) {   
+    const formData = new FormData();
+    formData.append('azione', 'getInviti');
+    formData.append('id', IDPrenotazione);
+
+    fetch("../backend/api-gestionePrenotazioni.php", {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if(data.success) {
+            listaInviti = data.inviti;
+        }
+    })
+    .catch(error => console.error('Errore:', error));
+}
+
 function controllaUtente(inputId) {
     const email = document.getElementById(inputId).value;
     
@@ -258,12 +276,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    const formInvita = document.getElementById('invita');
     document.getElementById("invito-email").addEventListener("keydown", function(event) {
     if (event.key === "Enter") {
-      event.preventDefault();
-      controllaUtente('invito-email');
-                alert('Utente aggiunto alla lista inviti');
+        event.preventDefault();
+        controllaUtente('invito-email');
+        alert('Utente aggiunto alla lista inviti');
     }
   });
 });
