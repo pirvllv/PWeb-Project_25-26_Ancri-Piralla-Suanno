@@ -1,6 +1,19 @@
 <?php
+include "../config.php";
+require_once $root."/backend/connection.php";
 
-include_once("../backend/connection.php");
+function getCss() {
+
+	echo '<link rel="stylesheet" href="/PlayRoomPlanner/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/PlayRoomPlanner/css/fontawesome.css">
+        <link rel="stylesheet" href="/PlayRoomPlanner/css/templatemo-574-mexant.css">
+        <link rel="stylesheet" href="/PlayRoomPlanner/css/owl.css">
+        <link rel="stylesheet" href="/PlayRoomPlanner/css/animate.css">
+		<link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css">
+        
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">';
+	
+}
 
 //Si aspetta un array associativo con coppie "nomeattributo" => "valoreattributo"
 function insert_query($values, $table) {
@@ -88,26 +101,24 @@ function mostraSale($cid, $tipologia)
 
       echo <<<HTML
             <div class="col-lg-12">
-                <a href="/PlayRoomPlanner/frontend/prenotazioni_aula.php?aula={$numAula}">
-					<div class="service-item">
-						<div class="row">
-							<div class="col-lg-4">
-								<div class="icon">
-									<img src="/PlayRoomPlanner/immagini/{$tipologia}_{$numAula}.jpg" alt="Sala Prova {$numAula}">
+						  <div class="service-item">
+							  <div class="row">
+								  <div class="col-lg-4">
+									  <div class="icon">
+										  <img src="/PlayRoomPlanner/immagini/{$tipologia}_{$numAula}.jpg" alt="Sala Prova {$numAula}">
+					  				</div>
 					  			</div>
-					  		</div>
-						  	<div class="col-lg-8">
-							  	<div class="right-content">
-								  	<h4>Sala Prova {$numAula}</h4>
-                                    <p><strong>Tipologia:</strong> {$tipologia}</p>
-                                    <p><strong>Capienza:</strong> {$capienza} persone</p>
-                                    <p><strong>Settore:</strong> {$nomeSettore}</p>
-								</div>
-							</div>
-						</div>
-					</div>
-                </a>
-			</div>
+						  		<div class="col-lg-8">
+							  		<div class="right-content">
+								  		<h4>Sala Prova {$numAula}</h4>
+                      <p><strong>Tipologia:</strong> {$tipologia}</p>
+                      <p><strong>Capienza:</strong> {$capienza} persone</p>
+                      <p><strong>Settore:</strong> {$nomeSettore}</p>
+									  </div>
+								  </div>
+							  </div>
+						  </div>
+				    </div>
 HTML;
     }
   } else {

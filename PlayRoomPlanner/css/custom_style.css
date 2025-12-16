@@ -17,6 +17,10 @@
 
 }*/
 
+.user-data-field.read-only {
+  color: grey !important;
+}
+
 #gestione-button {
     padding-left: 10px;
     padding-right: 10px;
@@ -50,23 +54,23 @@
     
 }
 
-#area-personale .page-heading, #gestione-account .page-heading, #prenotazioni-aula .page-heading{
+#area-personale .page-heading, #gestione-account .page-heading, #prenotazioni-aula .page-heading, #nuovo-account .page-heading{
   padding: calc(var(--navheight) + 80px) 0px 80px 0px;
 }
 
-#area-personale section, #gestione-account section, #prenotazioni-aula section{
+#area-personale section, #gestione-account section, #prenotazioni-aula section, #nuovo-account section{
     margin: 30px 20px 50px 20px !important;
     /* display: grid; */
 }
 
-#area-personale .service-item, #gestione-account .service-item, #prenotazioni-aula .service-item {
+#area-personale .service-item, #gestione-account .service-item, #prenotazioni-aula .service-item, #nuovo-account .service-item {
     display: grid;
     padding-top: var(--navheight);
     /* max-width: 1000px; */
     min-width: 600px;
 }
 
-#gestione-account .service-item {max-width: 50vw;margin-left: 300px !important;}
+#gestione-account .service-item, #nuovo-account .service-item {max-width: 50vw;margin-left: 300px !important;}
 
 body {
 

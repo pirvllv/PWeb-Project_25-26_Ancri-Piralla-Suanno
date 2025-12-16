@@ -1,10 +1,11 @@
 <?php
 
-require_once("../common/functions.php");
-require_once("../backend/connection.php");
+include "../config.php";
+require_once($root."/common/functions.php");
+require_once($root."/backend/connection.php");
 
-// $cid = connessione();
-$qry = "";
+$cid = connessione();
+//$qry = "";
 
 if (!$cid) { fail("Connessione al database non riuscita"); }
 //print_r($_GET);
@@ -18,7 +19,7 @@ $week = array();
 $weekdays = getWeekdays();
 for ($g = 0; $g < count($weekdays); $g++) {
     
-    $week[$weekdays[$g]] = date("d", strtotime("+".$g." days", $mondayStamp));
+    $week[$g] = array($weekdays[$g], date("j".($_GET["type"]=="invites"?"/m":""), strtotime("+".$g." days", $mondayStamp)));
     
 }
 
@@ -28,7 +29,7 @@ $dati["weekstart"] = date("d/m/Y", $mondayStamp);
 $bookings = get_bookings($_GET["primkey"], $mondayStamp, $_GET["type"]);
 
 $dati["bookings"] = $bookings;
-$dati["query"] = $qry;
+//$dati["query"] = $qry;
 /*$sched = get_room_schedule($inviti);
 $dati["sched"] = $sched;*/
 
@@ -65,40 +66,6 @@ function displayAtt($att) {
     
 }
 
-function get_user_schedule(&$invites) {
-
-    $schedule = array();
-    foreach ($invites as $i => $day) {
-
-        foreach ($day as $act) {
-        //echo "<p>".print_r($act)."<br></p>";
-            if ($act["stato"] == "attAccettata") { $schedule[$i][] = $act;}
-            
-        }
-        
-    }
-
-    return $schedule;
-
-}
-
-function get_room_schedule(&$invites) {
-
-    $schedule = array();
-    foreach ($invites as $i => $day) {
-
-        foreach ($day as $act) {
-        //echo "<p>".print_r($act)."<br></p>";
-            if ($act["stato"] == "attNeutra") { $schedule[$i][] = $act;}
-            
-        }
-        
-    }
-
-    return $schedule;
-
-}
-
 function user_invites_query(string $email, int $data1, int $data2) {
 
     $lunedi = date("Y-m-d", $data1);
@@ -111,7 +78,7 @@ function user_invites_query(string $email, int $data1, int $data2) {
         $query .= " AND prenotazione.DataPren <= \"".$domenica."\"";
     }
     $query .= " AND invito.IscrittoEmail=\"".$email."\"";
-    $query .= " AND invito.Accettazione ".($data2==-1?"!":"")."= 1";
+    $query .= " AND (invito.Accettazione ".($data2==-1?"IS NULL OR invito.Accettazione=0":"= 1").")";
     $query .= ")";
     $query .= " ORDER BY DataPren";
 
@@ -141,7 +108,8 @@ function get_bookings(string $primaryKey, int $data, string $action) {
     $cid = connessione();
     if(!$cid) {die("Errore di connessione al database");}
 
-    $todayStamp = strtotime("10-12-2025");
+    //$todayStamp = strtotime("10-11-2025");
+    $todayStamp = time();
     $query = "";
     switch ($action) {
         case "week": $query = user_invites_query($primaryKey, $data, strtotime("+6 days", $data)); break;
@@ -167,6 +135,7 @@ function get_bookings(string $primaryKey, int $data, string $action) {
             //echo "<p>".print_r($row)."<br></p>";
             //echo "\n\n";
             $dataPrenStamp = strtotime($row["DataPren"]);
+            //global $weekdays;
             $dayIdx = intval(date("N", $dataPrenStamp))-1;
             $status = "";
             if ($action=="invites") {
