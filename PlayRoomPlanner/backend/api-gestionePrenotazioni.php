@@ -2,6 +2,7 @@
 
 session_start();
 
+/* Controllo validita' utente */
 if(!isset($_SESSION) || $_SESSION['logged_in'] == false || $_SESSION['responsabile'] == false) {
     http_response_code(403);
     echo "Error 403: forbidden";
@@ -13,7 +14,7 @@ require_once "../backend/connection.php";
 header('Content-Type: application/json');
 
 $cid = connessione($hostname, $username, $password, $dbname);
-$responsabile_email = "anna.verdi@email.com";
+$responsabile_email = $_SESSION['user'];
 
 if (!$cid) {
     echo json_encode(['success' => false, 'message' => 'Connessione al database non riuscita']);
@@ -59,6 +60,7 @@ switch ($action) {
         echo json_encode(['success' => false, 'message' => 'Azione non valida']);
 }
 
+/* Restituisce la lista di prenotazioni relative allo specifico responsabile loggato */
 function mostraPrenotazioni($cid) {
     global $responsabile_email;
     
@@ -80,9 +82,12 @@ function mostraPrenotazioni($cid) {
     echo json_encode(['success' => true, 'data' => $prenotazioni]);
 }
 
+
+/* Crea una prenotazione a nome del responsabile attualmente loggato.
+Inoltre, invita il responsabile stesso alla prenotazione */
 function creaPrenotazione($cid, $data) {
     global $responsabile_email;
-    
+
     $sala = $data['NumAula'];
     $data_pren = $data['DataPren'];
     $attivita = $data['Attivita'];
@@ -95,6 +100,7 @@ function creaPrenotazione($cid, $data) {
     $limite_start = strtotime("09:00");
     $limite_end = strtotime("23:00");
 
+    /* Statements di controllo della validita' della prenotazione */
     if ($ora_inizio < $limite_start || $ora_fine > $limite_end || $ora_fine <= $ora_inizio) {
         echo json_encode(['success' => false, 'message' => 'Orario non valido']);
         return;
@@ -116,19 +122,47 @@ function creaPrenotazione($cid, $data) {
         return;
     }
 
-    $sqlInsert = "INSERT INTO Prenotazione (DataPren, OraInizio, OraFine, Attivita, NumAula, ResponsabileEmail)
-                  VALUES (?, ?, ?, ?, ?, ?)";
+    /* Creazione prenotazione */
+    $sqlInsertPren = "INSERT INTO Prenotazione
+        (DataPren, OraInizio, OraFine, Attivita, NumAula, ResponsabileEmail)
+        VALUES (?, ?, ?, ?, ?, ?)";
 
-    $stmtInsert = $cid->prepare($sqlInsert);
-    $stmtInsert->bind_param("ssssss", $data_pren, $ora_inizio_str, $ora_fine_str, $attivita, $sala, $responsabile_email);
+    $stmtInsertPren = $cid->prepare($sqlInsertPren);
+    $stmtInsertPren->bind_param(
+        "ssssss",
+        $data_pren,
+        $ora_inizio_str,
+        $ora_fine_str,
+        $attivita,
+        $sala,
+        $responsabile_email
+    );
 
-    if ($stmtInsert->execute()) {
-        echo json_encode(['success' => true, 'message' => 'Prenotazione creata con successo']);
-    } else {
+    if (!$stmtInsertPren->execute()) {
         echo json_encode(['success' => false, 'message' => 'Errore nella creazione']);
+        return;
     }
+
+    /* ID della prenotazione appena creata */
+    $id_pren = $cid->insert_id;
+
+    /* Auto-invito del responsabile */
+    $sqlInsertInvito = "INSERT INTO Invito
+        (IDPrenotazione, IscrittoEmail, Accettazione, Motivazione, DataRisposta)
+        VALUES (?, ?, 1, NULL, NOW())";
+
+    $stmtInsertInvito = $cid->prepare($sqlInsertInvito);
+    $stmtInsertInvito->bind_param("is", $id_pren, $responsabile_email);
+
+    if (!$stmtInsertInvito->execute()) {
+        echo json_encode(['success' => false, 'message' => 'Prenotazione creata ma errore invito responsabile']);
+        return;
+    }
+
+    echo json_encode(['success' => true, 'message' => 'Prenotazione creata con successo']);
 }
 
+/* Modifica di una prenotazione */
 function modificaPrenotazione($cid, $data) {
     global $responsabile_email;
     
@@ -142,6 +176,7 @@ function modificaPrenotazione($cid, $data) {
     $ora_inizio = strtotime($ora_inizio_str);
     $ora_fine = strtotime($ora_fine_str);
 
+    /* Statements di controllo della validita' della modifica */
     if ($ora_inizio >= $ora_fine) {
         echo json_encode(['success' => false, 'message' => 'Orario non valido']);
         return;
@@ -164,6 +199,7 @@ function modificaPrenotazione($cid, $data) {
         return;
     }
 
+    /* Modifica */
     $sqlUpdate = "UPDATE Prenotazione 
                   SET NumAula = ?, DataPren = ?, OraInizio = ?, OraFine = ?, Attivita = ?
                   WHERE IDPrenotazione = ? AND ResponsabileEmail = ?";
@@ -178,6 +214,7 @@ function modificaPrenotazione($cid, $data) {
     }
 }
 
+/* Eliminazione di una prenotazione */
 function eliminaPrenotazione($cid, $data) {
     global $responsabile_email;
     
@@ -196,6 +233,8 @@ function eliminaPrenotazione($cid, $data) {
     }
 }
 
+/* Restituisce la lista delle aule relativo al macrosettore (danza, musica, teatr) a cui
+il responsabile fa riferimento */
 function getAule($cid) {
     global $responsabile_email;
     
@@ -223,6 +262,7 @@ function getAule($cid) {
     echo json_encode(['success' => true, 'data' => $aule]);
 }
 
+/* Controlla l'esistenza di una e-mail (quindi di un utente) nel sistema */
 function checkValidEmail($cid, $data) {
     $emailInvitato = $data['emailInvitato'];
 
@@ -236,12 +276,13 @@ function checkValidEmail($cid, $data) {
     $resCheck = $stmt->get_result()->fetch_assoc();
 
     if ($resCheck['conteggio'] > 0) {
-        echo json_encode(['success' => true, 'message' => 'Utente iscritto']);
+        echo json_encode(['success' => true, 'message' => 'Utente registrato']);
     } else {
-        echo json_encode(['success' => false, 'message' => 'Utente non iscritto']);
+        echo json_encode(['success' => false, 'message' => 'Utente non registrato']);
     }
 }
 
+/* Restituisce la lista degli inviti a una specifica prenotazione, per chiamata fetch */
 function getInviti($cid, $data) {
     $id_prenotazione = $data['id'];
     $inviti = getInvitiPHP($cid, $id_prenotazione);
@@ -252,6 +293,7 @@ function getInviti($cid, $data) {
     ]);
 }
 
+/* Restituisce la lista degli inviti a una specifica prenotazione, per endpoint API */
 function getInvitiPHP($cid, $id_prenotazione) {
 
     $sql = "SELECT IscrittoEmail
@@ -270,6 +312,7 @@ function getInvitiPHP($cid, $id_prenotazione) {
     return $inviti;
 }
 
+/* Invita tutti gli utenti ancora non invitati a una specifica prenotazione */
 function invitaUtenti ($cid, $data) {
     $inviti = json_decode($data['inviti'], true);
     $id_pren = $data['IDPren'];
@@ -277,6 +320,7 @@ function invitaUtenti ($cid, $data) {
     $giaInvitati = getInvitiPHP($cid, $id_pren);
     $nuoviInviti = [];
 
+    /* Aggiunge gli utenti non ancora invitati alla lista da invitare alla prenotazione*/
     foreach ($inviti as $email) {
         if (!in_array($email, $giaInvitati)) {
             $nuoviInviti[] = $email;

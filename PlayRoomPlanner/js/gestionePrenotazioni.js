@@ -1,3 +1,4 @@
+/* Apre la form richiesta e chiude quella precedentemente aperta, o le chiude tutte se richiesto */
 function mostraForm(formId) {
     const creaForm = document.getElementById('crea');
     const modificaForm = document.getElementById('modifica');
@@ -27,6 +28,7 @@ function mostraForm(formId) {
     }
 }
 
+/* Ottiene la lista di tutte le prenotazioni a nome del responsabile loggato */
 function caricaPrenotazioni() {
     fetch('/PlayRoomPlanner/backend/api-gestionePrenotazioni.php?azione=mostraPren')
         .then(response => response.json())
@@ -40,6 +42,7 @@ function caricaPrenotazioni() {
         .catch(error => console.error('Errore:', error));
 }
 
+/* Ottiene la lista di tutte le aule facenti riferimento al macrosettore del responsabile loggato */
 function caricaAule() {
     fetch('/PlayRoomPlanner/backend/api-gestionePrenotazioni.php?azione=getAule')
         .then(response => response.json())
@@ -53,6 +56,7 @@ function caricaAule() {
         .catch(error => console.error('Errore:', error));
 }
 
+/* Visualizza la lista di tutte le prenotazioni a nome del responsabile loggato */
 function visualizzaPrenotazioni(prenotazioni) {
     const container = document.getElementById('lista-prenotazioni');
     
@@ -99,6 +103,7 @@ function visualizzaPrenotazioni(prenotazioni) {
     container.innerHTML = html;
 }
 
+/* Aggiunge alle select delle form di creazione e modifica solo le aule prenotabili dal responsabile */
 function visualizzaAule(aule) {
     const selectCrea = document.getElementById('crea-aula');
     const selectModifica = document.getElementById('modifica-aula');
@@ -121,6 +126,7 @@ function visualizzaAule(aule) {
     }
 }
 
+/* Invia form di creazione e modifica */
 function inviaForm(form, azione) {
     const formData = new FormData(form);
     formData.append('azione', azione);
@@ -141,6 +147,7 @@ function inviaForm(form, azione) {
     .catch(error => console.error('Errore:', error));
 }
 
+/* Mostra i dati attuali di una prenotazione nel form di modifica */
 function caricaModifica(id, data, oraInizio, oraFine, aula, attivita) {
     const oraInizioFormattata = oraInizio.substring(0, 5);
     const oraFineFormattata = oraFine.substring(0, 5);
@@ -155,6 +162,7 @@ function caricaModifica(id, data, oraInizio, oraFine, aula, attivita) {
     mostraForm('modifica');
 }
 
+/* Elimina una prenotazione */
 function eliminaPrenotazione(id) {
     if (!confirm('Sei sicuro di voler eliminare questa prenotazione?')) return;
 
@@ -176,8 +184,12 @@ function eliminaPrenotazione(id) {
     .catch(error => console.error('Errore:', error));
 }
 
+/* Sezione inviti */
+
+/* Lista globale degli utenti invitati (e da invitare) a una prenotazione */
 let listaInviti = [];
 
+/* Ottiene la lista degli utenti gia' invitati a una prenotazione */
 function caricaInviti(IDPrenotazione) {  
     document.getElementById('id-prenotazione-invito').value = IDPrenotazione; 
     const formData = new FormData();
@@ -198,6 +210,7 @@ function caricaInviti(IDPrenotazione) {
     .catch(error => console.error('Errore:', error));
 }
 
+/* Controlla la presenza di un utente nel sistema */
 function controllaUtente(inputId) {
     const email = document.getElementById(inputId).value;
     
@@ -232,6 +245,8 @@ function controllaUtente(inputId) {
     .catch(error => console.error('Errore: ', error));
 }
 
+/* Visualizza la lista degli utenti invitati (e da invitare)
+in un oggetto <small> della form inviti */
 function mostraListaInviti() {
     const container = document.getElementById('lista-invitati');
 
@@ -253,11 +268,13 @@ function mostraListaInviti() {
     container.innerHTML = html;
 }
 
+/* Svuota la lista globale degli inviti alla chiusura della form, al reset o alla submit degli inviti */
 function svuotaLista() {
     listaInviti.length = 0;
     mostraListaInviti();
 }
 
+/* Invita gli utenti */
 function invitaUtenti(IDPrenotazione) {
     const formData = new FormData();
     formData.append('IDPren', IDPrenotazione);
@@ -281,11 +298,13 @@ function invitaUtenti(IDPrenotazione) {
     .catch(error => console.error('Errore: ', error));
 }
 
+/* Azioni eseguite solo a contenuti caricati */
 document.addEventListener('DOMContentLoaded', function() {
     caricaAule();
     caricaPrenotazioni();
     mostraListaInviti();
     
+    /* Attende submit del pulsante crea prenotazione */
     const formCrea = document.getElementById('crea');
     if (formCrea) {
         formCrea.addEventListener('submit', function(e) {
@@ -294,6 +313,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    /* Attende submit del pulsante modifica prenotazione */
     const formModifica = document.getElementById('modifica');
     if (formModifica) {
         formModifica.addEventListener('submit', function(e) {
@@ -302,6 +322,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    /* Consente di aggiungere alla lista invitati premendo Invio */
     document.getElementById("invito-email").addEventListener("keydown", function(event) {
         if (event.key === "Enter") {
             event.preventDefault();
