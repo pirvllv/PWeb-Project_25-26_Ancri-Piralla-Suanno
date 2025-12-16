@@ -26,23 +26,35 @@ switch ($action) {
     case 'crea':
         creaPrenotazione($cid, $_POST);
         break;
+
     case 'modifica':
         modificaPrenotazione($cid, $_POST);
         break;
+
     case 'elimina':
         eliminaPrenotazione($cid, $_POST);
         break;
+
     case 'mostraPren':
         mostraPrenotazioni($cid);
         break;
+
     case 'getAule':
         getAule($cid);
         break;
+
     case 'getInviti':
         getInviti($cid, $_POST);
+        break;
+    
+    case 'invita':
+        invitaUtenti($cid, $_POST);
+        break;
+
     case 'checkValidEmail':
         checkValidEmail($cid, $_POST);
         break;
+        
     default:
         echo json_encode(['success' => false, 'message' => 'Azione non valida']);
 }
@@ -232,13 +244,22 @@ function checkValidEmail($cid, $data) {
 
 function getInviti($cid, $data) {
     $id_prenotazione = $data['id'];
+    $inviti = getInvitiPHP($cid, $id_prenotazione);
+
+    echo json_encode([
+        'success' => true,
+        'inviti' => $inviti
+    ]);
+}
+
+function getInvitiPHP($cid, $id_prenotazione) {
 
     $sql = "SELECT IscrittoEmail
             FROM Invito
             WHERE IDPrenotazione = ?";
 
     $stmt = $cid->prepare($sql);
-    $stmt->bind_param("s", $id_prenotazione);
+    $stmt->bind_param("i", $id_prenotazione);
     $stmt->execute();
     $result = $stmt->get_result();
 
@@ -246,10 +267,48 @@ function getInviti($cid, $data) {
     while ($row = $result->fetch_assoc()) {
         $inviti[] = $row['IscrittoEmail'];
     }
-    echo json_encode(['success' => true, 'inviti' => $inviti]);
+    return $inviti;
 }
 
 function invitaUtenti ($cid, $data) {
+    $inviti = json_decode($data['inviti'], true);
+    $id_pren = $data['IDPren'];
 
+    $giaInvitati = getInvitiPHP($cid, $id_pren);
+    $nuoviInviti = [];
+
+    foreach ($inviti as $email) {
+        if (!in_array($email, $giaInvitati)) {
+            $nuoviInviti[] = $email;
+        }
+    }
+
+    if (empty($nuoviInviti)) {
+        echo json_encode([
+            'success' => false,
+            'message' => 'Nessun nuovo invito da inviare'
+        ]);
+        return;
+    }
+
+    foreach ($nuoviInviti as $email) {
+        $sqlInsert = "INSERT INTO Invito (IDPrenotazione, IscrittoEmail, Accettazione, Motivazione, DataRisposta)
+                      VALUES (?, ?, 0, NULL, NULL)";
+        $stmtInsert = $cid->prepare($sqlInsert);
+        $stmtInsert->bind_param("is", $id_pren, $email);
+
+        if (!$stmtInsert->execute()) {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Errore durante l\'invio degli inviti'
+            ]);
+            return;
+        }
+    }
+
+    echo json_encode([
+        'success' => true,
+        'message' => 'Inviti inviati con successo'
+    ]);
 }
 ?>

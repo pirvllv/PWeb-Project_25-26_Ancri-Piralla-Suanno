@@ -28,7 +28,7 @@ function mostraForm(formId) {
 }
 
 function caricaPrenotazioni() {
-    fetch('../backend/api-gestionePrenotazioni.php?azione=mostraPren')
+    fetch('/PlayRoomPlanner/backend/api-gestionePrenotazioni.php?azione=mostraPren')
         .then(response => response.json())
         .then(data => {
             if (data.success) {
@@ -41,7 +41,7 @@ function caricaPrenotazioni() {
 }
 
 function caricaAule() {
-    fetch('../backend/api-gestionePrenotazioni.php?azione=getAule')
+    fetch('/PlayRoomPlanner/backend/api-gestionePrenotazioni.php?azione=getAule')
         .then(response => response.json())
         .then(data => {
             if (data.success) {
@@ -125,7 +125,7 @@ function inviaForm(form, azione) {
     const formData = new FormData(form);
     formData.append('azione', azione);
 
-    fetch('../backend/api-gestionePrenotazioni.php', {
+    fetch('/PlayRoomPlanner/backend/api-gestionePrenotazioni.php', {
         method: 'POST',
         body: formData
     })
@@ -162,7 +162,7 @@ function eliminaPrenotazione(id) {
     formData.append('azione', 'elimina');
     formData.append('IDPrenotazione', id);
 
-    fetch('../backend/api-gestionePrenotazioni.php', {
+    fetch('/PlayRoomPlanner/backend/api-gestionePrenotazioni.php', {
         method: 'POST',
         body: formData
     })
@@ -176,14 +176,15 @@ function eliminaPrenotazione(id) {
     .catch(error => console.error('Errore:', error));
 }
 
-const listaInviti = [];
+let listaInviti = [];
 
-function caricaInviti(IDPrenotazione) {   
+function caricaInviti(IDPrenotazione) {  
+    document.getElementById('id-prenotazione-invito').value = IDPrenotazione; 
     const formData = new FormData();
     formData.append('azione', 'getInviti');
     formData.append('id', IDPrenotazione);
 
-    fetch("../backend/api-gestionePrenotazioni.php", {
+    fetch("/PlayRoomPlanner/backend/api-gestionePrenotazioni.php", {
         method: 'POST',
         body: formData
     })
@@ -191,6 +192,7 @@ function caricaInviti(IDPrenotazione) {
     .then(data => {
         if(data.success) {
             listaInviti = data.inviti;
+            mostraListaInviti();
         }
     })
     .catch(error => console.error('Errore:', error));
@@ -207,7 +209,8 @@ function controllaUtente(inputId) {
     const formData = new FormData()
     formData.append('emailInvitato', email);
     formData.append('azione', 'checkValidEmail');
-    fetch('../backend/api-gestionePrenotazioni.php', {
+
+    fetch('/PlayRoomPlanner/backend/api-gestionePrenotazioni.php', {
         method: 'POST',
         body: formData
     })
@@ -255,6 +258,29 @@ function svuotaLista() {
     mostraListaInviti();
 }
 
+function invitaUtenti(IDPrenotazione) {
+    const formData = new FormData();
+    formData.append('IDPren', IDPrenotazione);
+    formData.append('inviti', JSON.stringify(listaInviti));
+    formData.append('azione', 'invita');
+
+    fetch('/PlayRoomPlanner/backend/api-gestionePrenotazioni.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if(data.success) {
+            alert(data.message);
+            mostraListaInviti();
+        }
+        else {
+            alert(data.message)
+        }
+    })
+    .catch(error => console.error('Errore: ', error));
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     caricaAule();
     caricaPrenotazioni();
@@ -277,10 +303,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     document.getElementById("invito-email").addEventListener("keydown", function(event) {
-    if (event.key === "Enter") {
-        event.preventDefault();
-        controllaUtente('invito-email');
-        alert('Utente aggiunto alla lista inviti');
-    }
-  });
+        if (event.key === "Enter") {
+            event.preventDefault();
+            controllaUtente('invito-email');
+            alert('Utente aggiunto alla lista inviti');
+        }
+    });
 });

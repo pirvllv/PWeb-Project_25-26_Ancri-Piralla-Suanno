@@ -190,6 +190,7 @@ if(!isset($_SESSION) || $_SESSION['logged_in'] == false || $_SESSION['responsabi
                     </form>
 
                     <form id="invita" style="display:none; padding-top: 80px;">
+                        <input type="hidden" id="id-prenotazione-invito">
                         <div class="row mb-3">
                             <label class="col-sm-3 col-form-label">E-mail utente</label>
                             <div class="col-sm-6">
@@ -206,7 +207,7 @@ if(!isset($_SESSION) || $_SESSION['logged_in'] == false || $_SESSION['responsabi
                         </div>
                         <div class="row mb-3">
                             <div class="col-sm-9">
-                                <button class="green-button" type="submit" onclick="mostraForm(null)">Invita</button>
+                                <button class="green-button" type="button" onclick="mostraForm(null); invitaUtenti(document.getElementById('id-prenotazione-invito').value)">Invita</button>
                                 <button class="orange-button" type="reset" onclick="svuotaLista()">Resetta</button>
                                 <button class="red-button" type="reset" onclick="mostraForm(null); svuotaLista()">Annulla</button>
                             </div>
