@@ -88,24 +88,26 @@ function mostraSale($cid, $tipologia)
 
       echo <<<HTML
             <div class="col-lg-12">
-						  <div class="service-item">
-							  <div class="row">
-								  <div class="col-lg-4">
-									  <div class="icon">
-										  <img src="/PlayRoomPlanner/immagini/{$tipologia}_{$numAula}.jpg" alt="Sala Prova {$numAula}">
-					  				</div>
+                <a href="/PlayRoomPlanner/frontend/prenotazioni_aula.php?aula={$numAula}">
+					<div class="service-item">
+						<div class="row">
+							<div class="col-lg-4">
+								<div class="icon">
+									<img src="/PlayRoomPlanner/immagini/{$tipologia}_{$numAula}.jpg" alt="Sala Prova {$numAula}">
 					  			</div>
-						  		<div class="col-lg-8">
-							  		<div class="right-content">
-								  		<h4>Sala Prova {$numAula}</h4>
-                      <p><strong>Tipologia:</strong> {$tipologia}</p>
-                      <p><strong>Capienza:</strong> {$capienza} persone</p>
-                      <p><strong>Settore:</strong> {$nomeSettore}</p>
-									  </div>
-								  </div>
-							  </div>
-						  </div>
-				    </div>
+					  		</div>
+						  	<div class="col-lg-8">
+							  	<div class="right-content">
+								  	<h4>Sala Prova {$numAula}</h4>
+                                    <p><strong>Tipologia:</strong> {$tipologia}</p>
+                                    <p><strong>Capienza:</strong> {$capienza} persone</p>
+                                    <p><strong>Settore:</strong> {$nomeSettore}</p>
+								</div>
+							</div>
+						</div>
+					</div>
+                </a>
+			</div>
 HTML;
     }
   } else {

@@ -23,7 +23,7 @@ if (session_status() === PHP_SESSION_NONE) {
                   }
                 ?>
                 <li><a href="/PlayRoomPlanner/frontend/chi_siamo.php">Chi siamo</a></li>
-                <li><a href="#">Contattaci</a></li>
+                <li><a href="/PlayRoomPlanner/frontend/contattaci.php">Contattaci</a></li>
               </ul>
             </li>
             <?php if (isset($_SESSION['user'])): ?>
