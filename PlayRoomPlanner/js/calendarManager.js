@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     todayStamp = Date.now()/1000;
     weekOffset = 0;
-    APIurl = "/PlayRoomPlanner/backend/bookings_API.php?";
+    APIurl = "../backend/bookings_API.php?";
     primkey="";
     if (document.body.id=="area-personale") {
 

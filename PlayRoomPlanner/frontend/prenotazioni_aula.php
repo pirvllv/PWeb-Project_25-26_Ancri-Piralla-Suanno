@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <?php
-include "../config.php";
-require_once $root."/backend/auth_check.php";
-require_once $root."/common/functions.php";
+require_once "../backend/auth_check.php";
+require_once "../common/functions.php";
 
-if (!isset($_GET["aula"])) {header("Location: /PlayRoomPlanner/frontend/prenotazioni_aula.php?aula=T01");}
+if (!isset($_GET["aula"])) {header("Location: ../frontend/prenotazioni_aula.php?aula=T01");}
 if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
@@ -13,10 +12,10 @@ $_SESSION["aula"] = $_GET["aula"];
 <html>
     <head>
         <title>Aula <?php echo $_SESSION['aula'] ?></title>
-        <link href="/PlayRoomPlanner/css/custom_style.css" rel="stylesheet">
+        <link href="../css/custom_style.css" rel="stylesheet">
         <?php getCss(); ?>
 
-        <script src="/PlayRoomPlanner/js/calendarManager.js"></script>
+        <script src="../js/calendarManager.js"></script>
         <script>
             window.sessionData = {
             aula: "<?php echo $_SESSION['aula']; ?>"
@@ -25,7 +24,7 @@ $_SESSION["aula"] = $_GET["aula"];
     </head>
     <body id="prenotazioni-aula">
         <?php
-        include $root."/common/navbar.php";
+        include "../common/navbar.php";
         ?>
         <div class="page-heading">
             <div class="container">
@@ -54,12 +53,12 @@ $_SESSION["aula"] = $_GET["aula"];
             </div>
             </div>
             <div class="orange-button" style="grid-area: 2/2/span 1/span 1;">
-                <a href="/PlayRoomPlanner/frontend/gestionePrenotazioni.php" id="gestione-button" style="width:100%; place-content: center;">
+                <a href="../frontend/gestionePrenotazioni.php" id="gestione-button" style="width:100%; place-content: center;">
                     Gestione prenotazioni</a>
             </div>
         </section>
         <?php
-        include $root."/common/footer.php";
+        include "../common/footer.php";
         ?>
     </body>
 </html>

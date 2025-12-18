@@ -1,10 +1,9 @@
 <?php
 
-include "../config.php";
-require_once($root."/common/functions.php");
-require_once($root."/backend/connection.php");
+require_once("../common/functions.php");
+require_once("../backend/connection.php");
 
-$cid = connessione();
+$cid = connessione($hostname, $username, $password, $dbname);
 //$qry = "";
 
 if (!$cid) { fail("Connessione al database non riuscita"); }
@@ -105,7 +104,8 @@ function room_bookings_query(string $room, int $data) {
 
 function get_bookings(string $primaryKey, int $data, string $action) {
 
-    $cid = connessione();
+    global $hostname, $username, $password, $dbname;
+    $cid = connessione($hostname, $username, $password, $dbname);
     if(!$cid) {die("Errore di connessione al database");}
 
     //$todayStamp = strtotime("10-11-2025");

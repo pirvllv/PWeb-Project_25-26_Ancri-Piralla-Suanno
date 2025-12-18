@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function() {
 
-    APIurl = "/PlayRoomPlanner/backend/user_data_API.php";
+    APIurl = "../backend/user_data_API.php";
     roles = document.getElementsByName("role")
     fields = document.getElementsByClassName("user-data-field");
     passEl = document.getElementById("password");
@@ -17,11 +17,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
 function logout() {
 
-    fetch("/PlayRoomPlanner/backend/logout.php", {
+    fetch("../backend/logout.php", {
         method: "POST",
         credential: "include"
     }).catch(error => console.error('Errore:' + error));
-    window.location.href = "/PlayRoomPlanner/index.php";
+    window.location.href = "../index.php";
     
 }
 
@@ -183,7 +183,7 @@ function crea_account() {
         //console.log("ciao");
         if (data.success) {
             alert(data.message);
-            window.location.href = "/PlayRoomPlanner/frontend/login.php";
+            window.location.href = "../frontend/login.php";
         } else {
             alert(data.message);
         }
@@ -231,7 +231,7 @@ function conferma_modifica() {
         }
     }
 
-    if(logout) {
+    if(logoutBool) {
         confMess += " Stai modificando dati sensibili. Verrà effettuato il logout";
     }
     

@@ -1,9 +1,8 @@
 <?php
-include "../config.php";
-require_once $root."/backend/connection.php";
-require_once $root."/common/functions.php";
+require_once "../backend/connection.php";
+require_once "../common/functions.php";
 
-$cid = connessione();
+$cid = connessione($hostname, $username, $password, $dbname);
 if(!$cid) {fail("Errore di connessione al database");}
 
 $azione = "";

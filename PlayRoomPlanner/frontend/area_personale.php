@@ -1,7 +1,6 @@
 <?php
-include "../config.php";
-require_once $root."/backend/auth_check.php";
-require_once $root."/common/functions.php";
+require_once "../backend/auth_check.php";
+require_once "../common/functions.php";
 if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
@@ -13,9 +12,9 @@ if (session_status() === PHP_SESSION_NONE) {
         <title>Area personale</title>
 
         <?php getCss(); ?>
-        <link rel="stylesheet" href="/PlayRoomPlanner/css/custom_style.css">
+        <link rel="stylesheet" href="../css/custom_style.css">
 
-        <script src="/PlayRoomPlanner/js/calendarManager.js"></script>
+        <script src="../js/calendarManager.js"></script>
         <script>
           window.sessionData = {
             username: "<?php echo $_SESSION['user']; ?>"
@@ -24,7 +23,7 @@ if (session_status() === PHP_SESSION_NONE) {
     </head>
     <body id="area-personale">
         <?php
-        include $root."/common/navbar.php"; 
+        include "../common/navbar.php"; 
         ?>
         <div class="page-heading">
             <div class="container">
@@ -63,16 +62,16 @@ if (session_status() === PHP_SESSION_NONE) {
                 </div>
             </div>
             <div class="green-button" style="grid-area: 1/2/span 1/span 1;">
-                <a href="/PlayRoomPlanner/frontend/gestione_account.php" id="gestione-button" style="width:100%; place-content: center;">
+                <a href="../frontend/gestione_account.php" id="gestione-button" style="width:100%; place-content: center;">
                     Gestione account</a>
             </div>
             <div class="orange-button" style="grid-area: 2/2/span 1/span 1;">
-                <a href="/PlayRoomPlanner/frontend/gestionePrenotazioni.php" id="gestione-button" style="width:100%; place-content: center;">
+                <a href="../frontend/gestionePrenotazioni.php" id="gestione-button" style="width:100%; place-content: center;">
                     Gestione prenotazioni</a>
             </div>
         </section>
         <?php
-        include $root."/common/footer.php"; 
+        include "../common/footer.php"; 
         ?>
     </body>
 </html>
