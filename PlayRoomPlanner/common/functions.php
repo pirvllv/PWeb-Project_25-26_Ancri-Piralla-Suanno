@@ -14,6 +14,59 @@ function getCss() {
 	
 }
 
+function update_session() {
+
+    $hostname = 'localhost';
+    $username = 'root';
+    $password_db = '';
+    $dbname = 'playroomplanner';
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }   
+
+    $cid = connessione($hostname, $username, $password_db, $dbname);
+    $error = "";
+    if ($cid) {
+        $stmt = $cid->prepare("SELECT Email, Nome, Cognome, Ruolo FROM Iscritto WHERE Email = ?");
+        $user = $_SESSION["user"];
+        $stmt->bind_param("s", $user);
+        try { 
+            $stmt->execute();
+        } catch (mysqli_sql_exception $e) {
+            return "Errore nella query di aggiornamento sessione";
+        }
+        $result = $stmt->get_result();
+
+        if ($result->num_rows == 1) {
+            $row = $result->fetch_assoc();
+
+            $_SESSION['user'] = $row['Email'];
+            $_SESSION['nome'] = $row['Nome'];
+            $_SESSION['cognome'] = $row['Cognome'];
+            $_SESSION['ruolo'] = $row['Ruolo'];
+
+            $sql = "SELECT COUNT(*) as isResp
+                FROM Settore
+                WHERE ResponsabileEmail = ?";
+
+            $stmt = $cid->prepare($sql);
+            $stmt->bind_param("s", $_SESSION['user']);
+            $stmt->execute();
+            $respCheck = $stmt->get_result()->fetch_assoc();
+
+            $_SESSION['responsabile'] = ($respCheck['isResp'] > 0);
+            
+        } else {
+            $error = "Email non trovata.";
+        }
+        $cid->close();
+    } else {
+        $error = "Errore di connessione al database.";
+    }
+
+    return $error;
+}
+
 //Si aspetta un array associativo con coppie "nomeattributo" => "valoreattributo"
 function insert_query($values, $table) {
     

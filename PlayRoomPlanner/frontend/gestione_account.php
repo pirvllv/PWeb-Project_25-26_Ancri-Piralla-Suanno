@@ -13,6 +13,7 @@ if (session_status() === PHP_SESSION_NONE) {
         <link href="../css/custom_style.css" rel="stylesheet">
         <?php getCss(); ?>
         <script src="../js/userData.js"></script>
+        <script src="../common/functions.js"></script>
         <script>
           window.sessionData = {
             username: "<?php echo $_SESSION['user']; ?>"
