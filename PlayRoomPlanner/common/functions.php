@@ -105,7 +105,7 @@ function mostraSale($cid, $tipologia)
 							  <div class="row">
 								  <div class="col-lg-4">
 									  <div class="icon">
-										  <img src="/PlayRoomPlanner/immagini/{$tipologia}_{$numAula}.jpg" alt="Sala Prova {$numAula}">
+										  <img src="../immagini/{$tipologia}_{$numAula}.jpg" alt="Sala Prova {$numAula}">
 					  				</div>
 					  			</div>
 						  		<div class="col-lg-8">
