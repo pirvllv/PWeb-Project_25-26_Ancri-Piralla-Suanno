@@ -13,16 +13,15 @@ require_once '../backend/connection.php';
 
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap">
-  <link rel="stylesheet" href="/PlayRoomPlanner/css/bootstrap.min.css">
-  <link rel="stylesheet" href="/PlayRoomPlanner/css/fontawesome.css">
-  <link rel="stylesheet" href="/PlayRoomPlanner/css/templatemo-574-mexant.css?v=<?php echo time(); ?>">
-  <link rel="stylesheet" href="/PlayRoomPlanner/css/owl.css">
-  <link rel="stylesheet" href="/PlayRoomPlanner/css/animate.css">
+  <link rel="stylesheet" href="../css/bootstrap.min.css">
+  <link rel="stylesheet" href="../css/fontawesome.css">
+  <link rel="stylesheet" href="../css/templatemo-574-mexant.css?v=<?php echo time(); ?>">
+  <link rel="stylesheet" href="../css/owl.css">
+  <link rel="stylesheet" href="../css/animate.css">
   <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css">
 
   <!-- NOME DEL FILE DA CAMBIARE DOPO MERGE -->
-  <link rel="stylesheet" href="/PlayRoomPlanner/css/custom_style_carlo.css">
-
+  <link rel="stylesheet" href="../css/custom_style_carlo.css">
   <title>PlayRoomPlanner - Login</title>
 </head>
 
@@ -54,7 +53,7 @@ require_once '../backend/connection.php';
           </div>
         </div>
         <div class="col-lg-10">
-          <form id="contact" action="/PlayRoomPlanner/backend/login_controller.php" method="post">
+          <form id="contact" action="../backend/login_controller.php" method="post">
             <div class="row">
               <div class="col-lg-6">
                 <fieldset>
