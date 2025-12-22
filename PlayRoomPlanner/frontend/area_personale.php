@@ -54,12 +54,20 @@ if (session_status() === PHP_SESSION_NONE) {
                 <div style="grid-area: 1/2/span 1/2;">
                     <h4 style="text-align: center;">Inviti</h4>
                 </div>
-                <div class="timetable" id="timetbl">
+                <div id="timetbl">
                     <?php
                     getIndexes();
                     ?>
                 </div>
-                <div class="scroll-invites" id="scroll" style= "grid-area: 2/2/2/2;"></div>
+                <div id="scroll-cont" style= "grid-area: 2/2/2/2;">
+                    <div id="scroll"></div>
+                    <div id="scroll-buttons-cont">
+                        <button type="button" id="show-red" class="orange-button" onclick="mostra_rossi()" >
+                        Rifiutate</button>
+                        <button type="button" id="show-grey" class="orange-button" onclick="mostra_grigi()" >
+                        In attesa</button>
+                    </div>
+                </div>
             </div>
             <div class="green-button" style="grid-area: 1/2/span 1/span 1;">
                 <a href="../frontend/gestione_account.php" id="gestione-button" style="width:100%; place-content: center;">
