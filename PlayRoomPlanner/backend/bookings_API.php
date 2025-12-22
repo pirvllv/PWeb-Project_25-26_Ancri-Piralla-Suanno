@@ -14,20 +14,25 @@ if (esiste("today", $_GET)=="" || esiste("primkey", $_GET)=="" || esiste("type",
 if($_GET["type"]!="week" && $_GET["type"]!="room" && $_GET["type"]!="invites") {fail("Tipo incorretto di chiamata API");}
 
 $mondayStamp = getMondayStamp($_GET["today"]);
-$week = array();
 $weekdays = getWeekdays();
-for ($g = 0; $g < count($weekdays); $g++) {
-    
-    $week[$g] = array($weekdays[$g], date("j".($_GET["type"]=="invites"?"/m":""), strtotime("+".$g." days", $mondayStamp)));
-    
-}
-
-$dati = array("week" => $week);
-$dati["weekstart"] = date("d/m/Y", $mondayStamp);
-
+$dati = array();
 $bookings = get_bookings($_GET["primkey"], $mondayStamp, $_GET["type"]);
 
+
+if ($_GET["type"]!="invites") {
+    $week = array();
+    
+    for ($g = 0; $g < count($weekdays); $g++) {
+        
+        $week[$g] = array($weekdays[$g], date("j".($_GET["type"]=="invites"?"/m":""), strtotime("+".$g." days", $mondayStamp)));
+        
+    }
+    $dati["week"] = $week;
+    $dati["weekstart"] = date("d/m/Y", $mondayStamp);
+}
+
 $dati["bookings"] = $bookings;
+
 //$dati["query"] = $qry;
 /*$sched = get_room_schedule($inviti);
 $dati["sched"] = $sched;*/
@@ -137,51 +142,38 @@ function get_bookings(string $primaryKey, int $data, string $action) {
             $dataPrenStamp = strtotime($row["DataPren"]);
             //global $weekdays;
             $dayIdx = intval(date("N", $dataPrenStamp))-1;
-            $status = "";
-            if ($action=="invites") {
-                switch ($row["Accettazione"]) {
-                    case "": $status="attInSospeso"; break;
-                    case "0": $status="attRifiutata"; break;
-                    //case "1": $status="attAccettata"; break;
-                }
-            } else if ($action=="week") {$status = "attAccettata";}
-            else { $status = "attNeutra";}         
-            
+            $status = "attNeutra";
+
             $initAr = explode(":", $row["OraInizio"]);
             $init = $initAr[0]*3600+1800*(int)($initAr[1]/30);
 
             $endAr = explode(":", $row["OraFine"]);
             $end = $endAr[0]*3600+1800*(int)($endAr[1]/30);
+
+            if ($action=="invites") {
+
+                switch ($row["Accettazione"]) {
+                    case "": $status="attInSospeso"; break;
+                    case "0": $status="attRifiutata"; break;
+                    //case "1": $status="attAccettata"; break;
+                }
+
+                global $weekdays;
+                $bookings[$dataPrenStamp]["wkday"] = $weekdays[date("w",$dataPrenStamp)]." ".date("d/m",$dataPrenStamp);
+                $bookings[$dataPrenStamp]["attivita"][] = creaAtt(date("d/m",$dataPrenStamp), $dataPrenStamp, $status, $init, $end);
+            } else {
+
+                if ($action=="week") {$status = "attAccettata";}
+                $bookings[$dayIdx][] = creaAtt($row["Attivita"], $dataPrenStamp, $status, $init, $end);
+        }    
+            }
+            
             //echo "<p>".$init."<br></p>";
             
-            $bookings[$dayIdx][] = creaAtt($row["Attivita"], $dataPrenStamp, $status, $init, $end);
-        }
+            
     }
 
     return $bookings;
-
-}
-
-function table_from_schedule($sched, $hmin, $hmax) {
-
-    $table = "";
-    foreach ($sched as $g => $day) {
-
-        foreach($day as $att) {
-
-            if ($att["orafine"]<=$att["orainizio"]) {continue;}
-
-            $column = $g+2;
-            $row = 2*($att["orainizio"]/3600-$hmin+1)+1;
-            $span = ($att["orafine"]-$att["orainizio"])/1800;
-            
-            $table = $table."\n<div class=\"cell ".$att["stato"]."\" style=\"grid-area: ".$row."/".$column."/ span ".$span."/".$column.";\">".$att["attivita"]."</div>";
-
-        }
-
-    }
-
-    return $table;
 
 }
 

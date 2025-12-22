@@ -59,13 +59,7 @@ if (session_status() === PHP_SESSION_NONE) {
                     getIndexes();
                     ?>
                 </div>
-                <div class="scroll-invites" id="scroll" style= "grid-area: 2/2/2/2;">
-                    <?php
-                    foreach (getWeekdays() as $g => $day) {
-                        echo "<div id=\"".$day."-cont\"></div>";
-                    }
-                    ?>
-                </div>
+                <div class="scroll-invites" id="scroll" style= "grid-area: 2/2/2/2;"></div>
             </div>
             <div class="green-button" style="grid-area: 1/2/span 1/span 1;">
                 <a href="../frontend/gestione_account.php" id="gestione-button" style="width:100%; place-content: center;">

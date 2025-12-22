@@ -55,12 +55,12 @@ function table_from_schedule(sched, hmin, hmax) {
 
 }
 
-function setWeekdays(week, sfx) {
+function setWeekdays(week) {
     
     for (const d in week) {
 
         //console.log(week[d][0]);
-        let days = document.getElementsByClassName(week[d][0]+sfx);
+        let days = document.getElementsByClassName(week[d][0]);
         for (let i = 0; i < days.length; i++) {
             days[i].innerHTML = week[d][0] + " " + week[d][1];
         }
@@ -90,11 +90,11 @@ function showBookings(oggi, type) {
                 if (type!="invites") {
                     clearTable();
                     timetable.innerHTML += table_from_schedule(data.dati.bookings, 8, 18);
-                    setWeekdays(data.dati.week, "");
-                    //console.log(data.dati.bookings);
+                    setWeekdays(data.dati.week);
+                    
                 } else {
-                    scroll_from_invites(data.dati.bookings, data.dati.week);
-                    setWeekdays(data.dati.week, "-const");
+                    scroll_from_invites(data.dati.bookings);
+                    console.log(data.dati.bookings);
                 }
             } else {
                 alert(data.message);
@@ -118,22 +118,25 @@ function displayAtt(att) {
     
 }
 
-function scroll_from_invites(inviti, week) {
+function scroll_from_invites(inviti) {
 
     //console.log(week);
     //console.log(inviti);
+    let scroll = document.getElementById("scroll");
     for (const g in inviti) {
         //console.log(week[g]);
-        let daycont = document.getElementById(week[g][0]+"-cont");
-        daycont.innerHTML += "<div class=\""+week[g][0]+"-const cell index\"></div>";
-        for (const attIdx in inviti[g]) {
-            daycont.innerHTML += displayAtt(inviti[g][attIdx]);
+        let daycont = document.createElement('div');
+        daycont.setAttribute("id", g);
+        daycont.innerHTML += "<div class=\"cell index\">"+inviti[g]["wkday"]+"</div>";
+        for (const attIdx in inviti[g]["attivita"]) {
+            daycont.innerHTML += displayAtt(inviti[g]["attivita"][attIdx]);
         }
+        scroll.appendChild(daycont);
         //daycont.innerHTML += "<br>";
 
     }
-
-    return scroll;
+    //console.log(scroll.innerHTML);
+    return;
     
 }
 
