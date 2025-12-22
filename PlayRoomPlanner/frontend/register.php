@@ -1,26 +1,27 @@
 <!DOCTYPE html>
 <?php
-require_once "../backend/auth_check.php";
-require_once "../common/functions.php";
+require_once ("../common/functions.php");
+
 if (session_status() === PHP_SESSION_NONE) {
   session_start();
+}
+
+if (isset($_SESSION['logged_in'])) {
+  if ($_SESSION['logged_in'] === true) {
+    header("Location: ../index.php");
+    exit;
+  }
 }
 
 ?>
 <html>
     <head>
-        <title>Gestione account</title>
+        <title>Nuovo account</title>
         <link href="../css/custom_style.css" rel="stylesheet">
         <?php getCss(); ?>
         <script src="../js/userData.js"></script>
-        <script src="../common/functions.js"></script>
-        <script>
-          window.sessionData = {
-            username: "<?php echo $_SESSION['user']; ?>"
-          };
-        </script>
     </head>
-    <body id="gestione-account">
+    <body id="nuovo-account">
         <?php
         include "../common/navbar.php";
         ?>
@@ -29,7 +30,7 @@ if (session_status() === PHP_SESSION_NONE) {
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="header-text">
-                            <h2>Gestione account</h2>
+                            <h2>Nuovo account</h2>
                             <div class="div-dec"></div>
                         </div>
                     </div>
@@ -41,12 +42,11 @@ if (session_status() === PHP_SESSION_NONE) {
                 <div class="row">
                     <div class="col-lg-6 offset-lg-3">
                       <div class="section-heading">
-                        <h6>Ciao <?php echo $_SESSION['nome']?></h6>
-                        <h4>I tuoi dati</h4>
+                        <h4>Nuovo utente</h4>
                       </div>
                     </div>
                     <div class="col-lg-10 offset-lg-1">
-                      <?php getUserDataForm("account"); ?>
+                      <?php getUserDataForm("register"); ?>
                     </div>
                 </div>
             </div>

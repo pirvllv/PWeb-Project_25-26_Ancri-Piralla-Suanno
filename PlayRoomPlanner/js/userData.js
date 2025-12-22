@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function() {
 
-    APIurl = "/PlayRoomPlanner/backend/user_data_API.php";
+    APIurl = "../backend/user_data_API.php";
     roles = document.getElementsByName("role")
     fields = document.getElementsByClassName("user-data-field");
     passEl = document.getElementById("password");
@@ -14,16 +14,6 @@ document.addEventListener("DOMContentLoaded", function() {
     }
     
 }); 
-
-function logout() {
-
-    fetch("/PlayRoomPlanner/backend/logout.php", {
-        method: "POST",
-        credential: "include"
-    }).catch(error => console.error('Errore:' + error));
-    window.location.href = "/PlayRoomPlanner/index.php";
-    
-}
 
 function caricaCampi() {
     primkey = window.sessionData.username;
@@ -40,7 +30,6 @@ function caricaCampi() {
         .then(response => response.json())
         .then(data => {
             //console.log(data);
-            //console.log("ciao");
             if (data.success) {
 
                 datiCorrenti = data.dati;
@@ -59,8 +48,6 @@ function caricaCampi() {
                     }
                     
                 }
-                
-                
                 
             } else {
                 alert(data.message);
@@ -111,7 +98,6 @@ function elimina_account() {
     .then(response => response.json())
     .then(data => {
         console.log(data);
-        //console.log("ciao");
         if (data.success) {
             alert(data.message);
             logout();
@@ -180,7 +166,6 @@ function crea_account() {
     .then(response => response.json())
     .then(data => {
         console.log(data);
-        //console.log("ciao");
         if (data.success) {
             alert(data.message);
             window.location.href = "/PlayRoomPlanner/frontend/login.php";
@@ -217,6 +202,8 @@ function conferma_modifica() {
         logoutBool = true;
     }
 
+    //console.log(datiNuovi["DOB"]);
+
     for (let i = 0; i < fields.length; i++) {
         if (datiNuovi[fields[i].id] == "" && (fields[i].id!="photo")) {
             alert("Il campo "+fields[i].id+" non può essere vuoto.");
@@ -231,7 +218,7 @@ function conferma_modifica() {
         }
     }
 
-    if(logout) {
+    if(logoutBool) {
         confMess += " Stai modificando dati sensibili. Verrà effettuato il logout";
     }
     
@@ -262,15 +249,17 @@ function conferma_modifica() {
     .then(response => response.json())
     .then(data => {
         console.log(data);
-        //console.log("ciao");
         if (data.success) {
             alert(data.message);
             if(logoutBool) {
                 logout();
+                return;
+            } else {
+                aggiorna_info();
             }
-            annulla_modifica();
         } else {
             alert(data.message);
+            logout();
         }
     })
     .catch(error => console.error('Errore:' + error));
@@ -302,4 +291,5 @@ function abilita_modifica() {
     document.getElementById("account-data-submit").style.display = "inline-block";
     
 }
+
 

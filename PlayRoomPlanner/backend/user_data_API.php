@@ -1,9 +1,8 @@
 <?php
-include "../config.php";
-require_once $root."/backend/connection.php";
-require_once $root."/common/functions.php";
+require_once "../backend/connection.php";
+require_once "../common/functions.php";
 
-$cid = connessione();
+$cid = connessione($hostname, $username, $password, $dbname);
 if(!$cid) {fail("Errore di connessione al database");}
 
 $azione = "";
@@ -14,7 +13,7 @@ if(esiste("action", $_POST)=="") {
     $azione = $_POST["action"];
 }
 
-if ($azione != "inserisci") {
+if ($azione != "inserisci" && $azione != "aggiorna") {
     if(esiste("primkey", $_POST)=="") {
     fail("Chiave mancante per completare la query");
     } else {
@@ -28,6 +27,14 @@ if ($azione=="") {
     $cid->close();
     fail("Non c'è azione legata ai dati");
     
+} else if ($azione=="aggiorna") {
+        $err = update_session();
+        if ($err!=""){
+            fail("Aggiornamento dati - ".$err);
+        } else {
+            echo json_encode(["success" => true, "message" => "Sessione aggiornata"]);
+            exit();
+        }
 } else if ($azione=="elimina") {
         $query = delete_query("Iscritto", $primkey, "Email");
 } else if ($azione=="getData") {
@@ -58,8 +65,6 @@ if ($query == -1) {
     fail("Cambia almeno un campo");
 }
 
-//echo "query: ".$query;
-
 try { 
     $result = $cid->query($query);
     $outMsg =  "Query eseguita correttamente";
@@ -75,6 +80,7 @@ try {
     
         default:
             $errorMessage = "Errore nell'esecuzione della richiesta al database.";
+            fail($query);
             break;
     }
     fail($errorMessage);
@@ -105,7 +111,7 @@ if ($azione == "getData") {
 
 function fail($message) {
 
-    echo json_encode(['success' => false, 'message' => $message]);
+    echo json_encode(['success' => false, 'message' => "UDAPI - ".$message]);
     exit();
 }
 
