@@ -97,8 +97,8 @@ if (session_status() === PHP_SESSION_NONE) {
                               <label for="tecnico">Tecnico</label>
                               <input class="user-data-role" type="radio" id="docente" name="role" value="docente" disabled>
                               <label for="docente">Docente</label>
-                              <input class="user-data-role" type="radio" id="responsabile" name="role" value="responsabile" disabled>
-                              <label for="responsabile">Responsabile</label>
+                              <!--input class="user-data-role" type="radio" id="responsabile" name="role" value="responsabile" disabled>
+                              <label for="responsabile">Responsabile</label-->
                             </fieldset>
                           </div>
                           <div class="col-lg-12">

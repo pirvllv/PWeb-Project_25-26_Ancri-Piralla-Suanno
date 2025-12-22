@@ -202,6 +202,8 @@ function conferma_modifica() {
         logoutBool = true;
     }
 
+    //console.log(datiNuovi["DOB"]);
+
     for (let i = 0; i < fields.length; i++) {
         if (datiNuovi[fields[i].id] == "" && (fields[i].id!="photo")) {
             alert("Il campo "+fields[i].id+" non può essere vuoto.");

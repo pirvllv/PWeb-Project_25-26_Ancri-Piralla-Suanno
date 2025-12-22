@@ -66,7 +66,7 @@ if (session_status() === PHP_SESSION_NONE) {
                     Gestione account</a>
             </div>
             <?php
-            if ($_SESSION["ruolo"]=="responsabile") {
+            if ($_SESSION["responsabile"]) {
                 echo '<div class="orange-button" style="grid-area: 2/2/span 1/span 1;">
                             <a href="../frontend/gestionePrenotazioni.php" id="gestione-button" style="width:100%; place-content: center;">
                             Gestione prenotazioni</a>

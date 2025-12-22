@@ -99,8 +99,8 @@ if (isset($_SESSION['logged_in'])) {
                               <label for="tecnico">Tecnico</label>
                               <input class="user-data-role" type="radio" id="docente" name="role" value="docente">
                               <label for="docente">Docente</label>
-                              <input class="user-data-role" type="radio" id="responsabile" name="role" value="responsabile">
-                              <label for="responsabile">Responsabile</label>
+                              <!--input class="user-data-role" type="radio" id="responsabile" name="role" value="responsabile">
+                              <label for="responsabile">Responsabile</label-->
                             </fieldset>
                           </div>
                           <div class="col-lg-12">
