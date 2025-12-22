@@ -72,7 +72,7 @@ require_once '../backend/connection.php';
                 </fieldset>
               </div>
               <div class="col-lg-12 mt-3 text-center">
-                <p>Non hai un account? <a href="#">Registrati qui</a></p>
+                <p>Non hai un account? <a href="./register.php">Registrati qui</a></p>
               </div>
             </div>
           </form>
