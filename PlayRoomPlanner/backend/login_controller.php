@@ -46,7 +46,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           unset($_SESSION['redirect_to']);
           header("Location: " . $redirect_url);
         } else {
-            header("Location: ../index.php");
+          header("Location: ../frontend/area_personale.php");
         }
         exit;
       } else {
