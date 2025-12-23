@@ -46,7 +46,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           unset($_SESSION['redirect_to']);
           header("Location: " . $redirect_url);
         } else {
-            header("Location: /PlayRoomPlanner/index.php");
+          header("Location: ../frontend/area_personale.php");
         }
         exit;
       } else {
@@ -60,7 +60,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $error = "Errore di connessione al database.";
   }
 
-  header("Location: /PlayRoomPlanner/frontend/login.php?error=" . urlencode($error));
+  header("Location: ../frontend/login.php?error=" . urlencode($error));
   exit;
 }
 ?>
