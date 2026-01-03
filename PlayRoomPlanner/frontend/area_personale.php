@@ -62,10 +62,8 @@ if (session_status() === PHP_SESSION_NONE) {
                 <div id="scroll-cont" style= "grid-area: 2/2/2/2;">
                     <div id="scroll"></div>
                     <div id="scroll-buttons-cont">
-                        <button type="button" id="show-red" class="orange-button" onclick="mostra_rossi()" >
-                        Rifiutate</button>
-                        <button type="button" id="show-grey" class="orange-button" onclick="mostra_grigi()" >
-                        In attesa</button>
+                        <button type="button" id="toggle-red" class="orange-button" onclick="toggle_rossi(1)" >
+                        Inviti rifiutati</button>
                     </div>
                 </div>
             </div>

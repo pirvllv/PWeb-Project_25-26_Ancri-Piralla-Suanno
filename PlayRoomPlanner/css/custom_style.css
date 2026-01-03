@@ -133,7 +133,14 @@ div.cell:hover {
 .attRifiutata {
 
     background-color: #970000;
+    /*display: none;*/
 
+}
+
+#toggle-red {
+
+    border: 0;
+    
 }
 
 .attInSospeso {

@@ -19,6 +19,7 @@ document.addEventListener("DOMContentLoaded", function() {
         changeWeek(0, "room");
         
     }
+    toggle_rossi(0);
     
 }); 
 
@@ -110,7 +111,11 @@ function displayAtt(att) {
     //console.log(att);
     if (att["orafine"]<=att["orainizio"]) {return "";}
     
-    out += "<div class=\"cell " + att["stato"] + "\">";
+    out += "<div class=\"cell " + att["stato"]+ "\" ";
+    if(att["stato"]==="attRifiutata") {
+        out += "style='display: none;'";
+    }
+    out += ">";
     out += att["attivita"] + "</div>";
 
     //console.log("Att: "+out)
@@ -161,4 +166,34 @@ function clearTable() {
         activities[0].remove();
         
     }
+}
+
+function toggle_rossi(action) {
+
+    let butt = document.getElementById("toggle-red");
+    let reds = document.getElementsByClassName("attRifiutata");
+    if(action!=0) {
+        
+        for (let i = 0; i < reds.length; i++) {
+            reds[i].style.display = "block";
+        }
+        
+        
+        butt.style.color = "white";
+        butt.style.backgroundColor = "#970000";
+        //butt.innerHTML = "Nascondi inviti rifiutati";
+        butt.setAttribute('onclick','toggle_rossi(0)');
+    } else {
+
+        for (let i = 0; i < reds.length; i++) {
+            reds[i].style.display = "none";
+        }
+        
+        butt.style.color = "white";
+        butt.style.backgroundColor = "#955656ff";
+        //butt.innerHTML = "Mostra inviti rifiutati";
+        butt.setAttribute('onclick','toggle_rossi(1)');
+
+    }
+
 }

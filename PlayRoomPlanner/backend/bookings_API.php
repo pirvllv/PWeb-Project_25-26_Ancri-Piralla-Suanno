@@ -160,7 +160,11 @@ function get_bookings(string $primaryKey, int $data, string $action) {
 
                 global $weekdays;
                 $bookings[$dataPrenStamp]["wkday"] = $weekdays[date("w",$dataPrenStamp)]." ".date("d/m",$dataPrenStamp);
-                $bookings[$dataPrenStamp]["attivita"][] = creaAtt(date("d/m",$dataPrenStamp), $dataPrenStamp, $status, $init, $end);
+                $bookings[$dataPrenStamp]["attivita"][] = creaAtt($row["Attivita"], $dataPrenStamp, $status, $init, $end);
+                /*$bookings[$dataPrenStamp]["attivita"][] = creaAtt($row["Attivita"], $dataPrenStamp, $status, $init, $end);
+                $bookings[$dataPrenStamp]["attivita"][] = creaAtt($row["Attivita"], $dataPrenStamp, $status, $init, $end);
+                $bookings[$dataPrenStamp]["attivita"][] = creaAtt($row["Attivita"], $dataPrenStamp, $status, $init, $end);
+                $bookings[$dataPrenStamp]["attivita"][] = creaAtt($row["Attivita"], $dataPrenStamp, $status, $init, $end);*/
             } else {
 
                 if ($action=="week") {$status = "attAccettata";}
