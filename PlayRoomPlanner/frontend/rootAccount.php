@@ -1,18 +1,18 @@
 <?php
 
 session_start();
-require_once("../backnd/auth_check.php");
+require_once("../backend/auth_check.php");
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
 
 ?>
 
 <?php
-if(!isset($_SESSION) || $_SESSION['logged_in'] == false /*|| $_SESSION['root'] == false*/) {
+if(!isset($_SESSION) || $_SESSION['logged_in'] == false || $_SESSION['responsabile'] == false) {
     http_response_code(403);
-?>
+    ?>
 <!DOCTYPE html>
 <html lang="it">
     <head>
@@ -23,8 +23,9 @@ if(!isset($_SESSION) || $_SESSION['logged_in'] == false /*|| $_SESSION['root'] =
         <p>Non hai i permessi necessari per visualizzare la pagina.</p>
         <a href="../index.php">Torna alla home</a>
     </body>
-</html>
-<?php } else { ?>
+<?php
+} else {
+?>
 <!DOCTYPE html>
 <html lang="it">
 
@@ -40,13 +41,14 @@ if(!isset($_SESSION) || $_SESSION['logged_in'] == false /*|| $_SESSION['root'] =
     <link rel="stylesheet" href="../css/animate.css">
     <link rel="stylesheet" href="../css/custom_style_carlo.css">
     <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css">
-    <script src="../js/rootAccount.js"></script>
-    <title>Root account</title>
+    <script src="../js/gestionePrenotazioni.js"></script>
+    <title>Account admin</title>
 </head>
 
 <body>
     <?php include "../common/navbar.php"; ?>
-    
+
+
     <div class="page-heading chi-siamo-header">
         <div class="container">
             <div class="row">
@@ -60,8 +62,25 @@ if(!isset($_SESSION) || $_SESSION['logged_in'] == false /*|| $_SESSION['root'] =
         </div>
     </div>
 
-    <div class="container" style="margin-top: 50px; margin-bottom: 50px;">
-        
+    <div class="container">
+        <div class="options bar" style="margin-top: 50px; margin-bottom: 50px;">
+            <div class="row mb-3">
+                <div class="col-sm-3">
+                    <a href="#" id="nav-resp">Responsabili corsi</a>
+                </div>
+                <div class="col-sm-3">
+                    <a href="#" id="nav-user">Dati utenti</a>
+                </div>
+                <div class="col-sm-3">
+                    <a href="#" id="nav-enrolls">Iscrizioni</a>
+                </div>
+                <div class="col-sm-3">
+                    <a href="#" id="nav-bookings">Prenotazioni</a>
+                </div>
+            </div>
+        </div>
+        <div class="container" id="admin-page-content">
+        </div>
     </div>
 
 </body>
