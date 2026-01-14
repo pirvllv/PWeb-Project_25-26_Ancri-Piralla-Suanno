@@ -13,6 +13,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
         <?php getCss(); ?>
         <link rel="stylesheet" href="../css/custom_style.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
 
         <script src="../js/calendarManager.js"></script>
         <script>
@@ -31,6 +32,7 @@ if (session_status() === PHP_SESSION_NONE) {
                     <div class="col-lg-12">
                         <div class="header-text">
                             <h2>Area personale</h2>
+                            
                             <h2><?php echo $_SESSION['nome']." ".$_SESSION['cognome']?></h2>
                             <div class="div-dec"></div>
                         </div>

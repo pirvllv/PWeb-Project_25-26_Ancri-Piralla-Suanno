@@ -132,6 +132,28 @@ div.cell:hover {
   display: inline-block;
 }
 
+#axptBtn, #dclnBtn {
+
+    border: 0;
+    background-color: inherit;
+    
+}
+#acceptInv, #declineInv {
+    color: black;
+    margin: 0 0 0 0;
+    font-size: 1em;
+}
+#acceptInv:hover {
+    color: rgb(0, 255, 0);
+    transition: 300ms;
+}
+
+#declineInv:hover {
+    color: red;
+    transition: 300ms;
+    
+}
+
 .attAccettata {
 
     background-color: #005d00;
@@ -161,11 +183,3 @@ div.cell:hover {
 
 background-color: rgb(12 101 102);
 }
-
-/*.material-symbols-outlined {
-  font-variation-settings:
-  'FILL' 0,
-  'wght' 400,
-  'GRAD' 0,
-  'opsz' 24
-}*/
