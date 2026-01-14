@@ -1,3 +1,4 @@
 Lea: Gestione dell'accettazione e rifiuto degli inviti
 
 Password criptate
+Feedback con un alert js per la pagina di login invece di errore mostrato nell'url
