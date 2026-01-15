@@ -45,7 +45,10 @@ function table_from_schedule(sched, hmin, hmax) {
             
             table += "\n<div class=\"cell att " + att["stato"];
             table += "\" style=\"grid-area: " + row + "/" + column + "/ span " + span + "/" + column + ";\">";
-            table += att["attivita"] + "</div>";
+            table += att["attivita"];
+            table += "<span class='invites-icons'>";
+            table += '<button class="dclnBtn" onclick="gestisciInvito(3,'+att["IDP"]+',\''+att["attivita"]+'\')"><i id="declineInv" class="bi bi-x-circle-fill"></i></button>';
+            table += "</span></div>";
 
         }
 
@@ -118,8 +121,12 @@ function displayAtt(att) {
     out += ">";
     out += att["attivita"];
     out += "<span class='invites-icons'>";
-    out += '<button id="axptBtn" onclick="accettaInvito()"><i id="acceptInv" class="bi bi-check-circle-fill"></i></button>';
-    if(att["stato"]!="attRifiutata") {out += '<button id="dclnBtn" onclick="rifiutaInvito()"><i id="declineInv" class="bi bi-x-circle-fill"></i></button>';}
+    out += '<button class="axptBtn" onclick="gestisciInvito('+(att['stato']=='attInSospeso'?0:2)+','+att["IDP"]+',\''+att["attivita"]+'\')">';
+    out += '<i id="acceptInv" class="bi bi-check-circle-fill"></i></button>';
+    if(att["stato"]=="attInSospeso") {
+        out += '<button class="dclnBtn" onclick="gestisciInvito(1,'+att["IDP"]+',\''+att["attivita"]+'\')">';
+        out+= '<i id="declineInv" class="bi bi-x-circle-fill"></i></button>';
+    }
     out += "</span></div>";
 
     console.log("Att: "+out)
@@ -208,14 +215,40 @@ function toggle_rossi(action) {
 
 }
 
-function accettaInvito() {
 
-    confirm("Vuoi davvero accettare l'invito?");
+function gestisciInvito(code, IDP, name) {
 
-}
+    //0: accetta da sospeso
+    //1: rifiuta da sospeso
+    //2: accetta da rifiutato
+    //3: rifiuta da accettato
 
-function rifiutaInvito() {
+    let msg = "";
+    let act = -1;
+    switch(code) {
+        case 0: msg = "Vuoi davvero accettare l'invito a " + name + "?"; act = 0; break;
+        case 1: msg = "Vuoi davvero rifiutare l'invito a " + name + "?"; act = 1; break;
+        case 2: msg = "Avevi rifiutato l'invito a " + name + ". Sei sicuro di voler cambiare?"; act = 0; break;
+        case 3: msg = "Vuoi davvero annullare la tua partecipazione a " + name + "?"; act = 1; break;
+    }
+    if(msg=="" || act==-1) {alert("Errore nel codice di accettazione/rifiuto inviti. Contatta un tecnico"); return;}
+    if(!confirm(msg)) {return;}
 
-    confirm("Vuoi davvero rifiutare l'invito?");
+    let url = APIurl+"primkey="+IDP;
+    url += "&type=change";
+    url += "&action="+act;
+    console.log(url);
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            //console.log(data);
+            //console.log("ciao");
+            if (data.success) {
+                alert(data.dati.yay);
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(error => console.error('Errore:' + error));
 
 }

@@ -120,7 +120,7 @@ div.cell {
 
 div.cell:hover {
     overflow: visible;
-    color:black;
+    color:rgb(0, 0, 0);
     transition: 300ms;
 }
 
@@ -132,7 +132,7 @@ div.cell:hover {
   display: inline-block;
 }
 
-#axptBtn, #dclnBtn {
+.axptBtn, .dclnBtn {
 
     border: 0;
     background-color: inherit;
@@ -175,7 +175,7 @@ div.cell:hover {
 
 .attInSospeso {
     
-    background-color: #6a6a6a;
+    background-color: #8f8f8f;
 
 }
 

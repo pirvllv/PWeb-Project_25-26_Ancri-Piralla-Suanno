@@ -6,32 +6,72 @@ require_once("../backend/connection.php");
 $cid = connessione($hostname, $username, $password, $dbname);
 //$qry = "";
 
-if (!$cid) { fail("Connessione al database non riuscita"); }
+if (!$cid) { fail("Connessione al database non riuscita. Contatta un tecnico"); }
 //print_r($_GET);
-if (esiste("today", $_GET)=="" || esiste("primkey", $_GET)=="" || esiste("type", $_GET)=="") {
-    fail('Non ci sono abbastanza dati per la chiamata API');
+if ((esiste("today", $_GET)=="" && esiste("type", $_GET)!="change") || esiste("primkey", $_GET)=="" || esiste("type", $_GET)=="") {
+    fail('Non ci sono abbastanza dati per la chiamata API. Contatta un tecnico');
 }
-if($_GET["type"]!="week" && $_GET["type"]!="room" && $_GET["type"]!="invites") {fail("Tipo incorretto di chiamata API");}
+if($_GET["type"]!="week" && $_GET["type"]!="room" && $_GET["type"]!="invites" && $_GET["type"]!="change") {fail("Tipo incorretto di chiamata API. Contatta un tecnico");}
 
-$mondayStamp = getMondayStamp($_GET["today"]);
-$weekdays = getWeekdays();
 $dati = array();
-$bookings = get_bookings($_GET["primkey"], $mondayStamp, $_GET["type"]);
+if($_GET["type"]!="change") {
+    $mondayStamp = getMondayStamp($_GET["today"]);
+    $weekdays = getWeekdays();
+
+    $bookings = get_bookings($_GET["primkey"], $mondayStamp, $_GET["type"]);
 
 
-if ($_GET["type"]!="invites") {
-    $week = array();
-    
-    for ($g = 0; $g < count($weekdays); $g++) {
+    if ($_GET["type"]!="invites") {
+        $week = array();
         
-        $week[$g] = array($weekdays[$g], date("j".($_GET["type"]=="invites"?"/m":""), strtotime("+".$g." days", $mondayStamp)));
-        
+        for ($g = 0; $g < count($weekdays); $g++) {
+            
+            $week[$g] = array($weekdays[$g], date("j".($_GET["type"]=="invites"?"/m":""), strtotime("+".$g." days", $mondayStamp)));
+            
+        }
+        $dati["week"] = $week;
+        $dati["weekstart"] = date("d/m/Y", $mondayStamp);
     }
-    $dati["week"] = $week;
-    $dati["weekstart"] = date("d/m/Y", $mondayStamp);
-}
 
-$dati["bookings"] = $bookings;
+    $dati["bookings"] = $bookings;
+} else {
+
+    if (esiste("primkey", $_GET)=="" || esiste("action", $_GET)=="") {
+        fail('Non ci sono abbastanza dati per la chiamata API. Contatta un tecnico');
+    }
+    if($_GET["action"]<0 || $_GET["action"]>1) {
+        fail("Codice incorretto di azione inviti. Contatta un tecnico");
+    }
+
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+
+
+    //Controllo della non sovrapposizione di un'invito che si sta accettando con altre attività
+    $sqlCheck = "SELECT COUNT(*) AS conflitto
+                 FROM prenotazione INNER JOIN invito
+                 ON (prenotazione.IDPrenotazione = invito.IDPrenotazione)
+                 WHERE invito.IscrittoEmail = ?
+                 AND DataPren = (SELECT DataPren
+                                FROM prenotazione 
+                                WHERE IDPrenotazione = ?)
+                 AND "; //Matematica qui: max(orainA, orafinA, orainB, orafinB) - min(orainA, orafinA, orainB, orafinB) < (durataA+durataB)
+
+    //Bozza da rouge:
+    /*$stmtCheck = $cid->prepare($sqlCheck);
+    $stmtCheck->bind_param("ssss", $sala, $data_pren, $ora_inizio_str, $ora_fine_str);
+    $stmtCheck->execute();
+    $resCheck = $stmtCheck->get_result()->fetch_assoc();
+
+    if ($resCheck['occupata'] > 0) {
+        echo json_encode(['success' => false, 'message' => 'Sala già occupata']);
+        return;
+    }*/
+
+    $dati["yay"] = "API funziona";
+
+}
 
 //$dati["query"] = $qry;
 /*$sched = get_room_schedule($inviti);
@@ -45,10 +85,10 @@ function getMondayStamp($stamp) {
     
 }
 
-function creaAtt(string $att, $data, string $stato, int $secinizio, float $secfine) {
+function creaAtt(string $att, $data, string $stato, int $secinizio, float $secfine, int $id) {
 
     //secinizio e secfine sono timestamp
-    return array("attivita"=>$att, "data" => $data, "stato"=>$stato, "orainizio"=>$secinizio, "orafine"=>$secfine);
+    return array("attivita"=>$att, "data" => $data, "stato"=>$stato, "orainizio"=>$secinizio, "orafine"=>$secfine, "IDP" => $id);
 
 }
 
@@ -74,7 +114,7 @@ function user_invites_query(string $email, int $data1, int $data2) {
 
     $lunedi = date("Y-m-d", $data1);
     $domenica = date("Y-m-d", $data2);
-    $query = "SELECT Attivita, DataPren, OraInizio, OraFine, Accettazione
+    $query = "SELECT invito.IDPrenotazione, Attivita, DataPren, OraInizio, OraFine, Accettazione
             FROM prenotazione INNER JOIN invito
             ON (prenotazione.IDPrenotazione = invito.IDPrenotazione";
     $query .= " AND \"".$lunedi."\" <= prenotazione.DataPren";
@@ -111,7 +151,7 @@ function get_bookings(string $primaryKey, int $data, string $action) {
 
     global $hostname, $username, $password, $dbname;
     $cid = connessione($hostname, $username, $password, $dbname);
-    if(!$cid) {die("Errore di connessione al database");}
+    if(!$cid) {die("Errore di connessione al database. Contatta un tecnico");}
 
     //$todayStamp = strtotime("10-11-2025");
     $todayStamp = time();
@@ -130,7 +170,7 @@ function get_bookings(string $primaryKey, int $data, string $action) {
         //echo "Query eseguita correttamente: ".$result;
     } catch (exception $e) {
         $errorMessage = $e->getMessage();
-        fail($errorMessage);
+        fail("Contatta un tecnico: ".$errorMessage);
     }
     $cid->close();
 
@@ -160,15 +200,11 @@ function get_bookings(string $primaryKey, int $data, string $action) {
 
                 global $weekdays;
                 $bookings[$dataPrenStamp]["wkday"] = $weekdays[date("w",$dataPrenStamp)]." ".date("d/m",$dataPrenStamp);
-                $bookings[$dataPrenStamp]["attivita"][] = creaAtt($row["Attivita"], $dataPrenStamp, $status, $init, $end);
-                /*$bookings[$dataPrenStamp]["attivita"][] = creaAtt($row["Attivita"], $dataPrenStamp, $status, $init, $end);
-                $bookings[$dataPrenStamp]["attivita"][] = creaAtt($row["Attivita"], $dataPrenStamp, $status, $init, $end);
-                $bookings[$dataPrenStamp]["attivita"][] = creaAtt($row["Attivita"], $dataPrenStamp, $status, $init, $end);
-                $bookings[$dataPrenStamp]["attivita"][] = creaAtt($row["Attivita"], $dataPrenStamp, $status, $init, $end);*/
+                $bookings[$dataPrenStamp]["attivita"][] = creaAtt($row["Attivita"], $dataPrenStamp, $status, $init, $end, $row["IDPrenotazione"]);
             } else {
 
                 if ($action=="week") {$status = "attAccettata";}
-                $bookings[$dayIdx][] = creaAtt($row["Attivita"], $dataPrenStamp, $status, $init, $end);
+                $bookings[$dayIdx][] = creaAtt($row["Attivita"], $dataPrenStamp, $status, $init, $end, $row["IDPrenotazione"]);
         }    
             }
             
