@@ -48,7 +48,37 @@
           </div>
         </div>
       </div>
-      <h1 style="text-align: center;">Sezione contatti ancora da implementare</h1>
+      <div class="row pb-5">
+        <div class="col-lg-6">
+          <div class="contact-info">
+            <div class="info-item">
+              <i class="fa fa-phone"></i>
+              <h4>Telefono</h4>
+              <p>+39 123 456 7890</p>
+            </div>
+            <div class="info-item">
+              <i class="fa fa-envelope"></i>
+              <h4>Email</h4>
+              <p>info@playroomplanner.it</p>
+            </div>
+            <div class="info-item">
+              <i class="fa fa-map-marker"></i>
+              <h4>Indirizzo</h4>
+              <p>Via Giovanni Celoria 18, Milano, Italia</p>
+            </div>
+            <div class="info-item">
+              <i class="fa fa-clock"></i>
+              <h4>Orari</h4>
+              <p>Lun - Ven: 09:00 - 18:00</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="right-image">
+            <img src="../immagini/contattaci.jpeg" alt="Contattaci Immagine" class="img-fluid rounded">
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
