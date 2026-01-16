@@ -24,21 +24,77 @@ if (!$cid) {
 $action = isset($_POST['azione']) ? $_POST['azione'] : (isset($_GET['azione']) ? $_GET['azione'] : '');
 
 switch ($action) {
+    case 'accettaIscrizione':
+        accettaIscrizione($cid, $_POST);
+        break;
     
+    case 'nominaResponsabile':
+        nominaResponsabile($cid, $_POST);
+        break;
 }
 
 function accettaIscrizione($cid, $data) {
     $email = $data['email'];
     $corso = $data['corso'];
 
+    $sqlCheck = "SELECT COUNT(*) as giaIscritto
+                 FROM Iscrizione
+                 WHERE IscrittoEmail = ?
+                 AND SettoreNome = ?";
+    $stmtCheck = $cid->prepare($sqlCheck);
+    $stmtCheck->bind_param("ss", $email, $corso);
+    $stmtCheck->execute();
+    $resCheck = $stmtCheck->get_result()->fetch_assoc();
+
+    if ($resCheck['giaIscritto'] > 0) {
+        echo json_encode(['success' => false, 'message' => 'Utente già iscritto al corso']);
+        return;
+    }
+    
+    $sqlIscrivi =  "UPDATE Iscrizione
+                    SET IscrittoEmail = ?, SettoreNome = ?";
+    $stmtIscrivi = $cid->prepare($sqlIscrivi);
+    $stmtIscrivi->bind_param("ss", $email, $corso);
+
+    if ($stmtIscrivi->execute()) {
+        echo json_encode(['success' => true, 'message' => 'Utente iscritto']);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Errore nell\'iscrizione']);
+    }
+    return;
 }
-
-
 
 function nominaResponsabile($cid, $data) {
     $email_resp = $data['email_resp'];
     $corso = $data['corso'];
+    
+    $sqlCheck = "SELECT COUNT(*) as giaResp
+                 FROM Settore
+                 WHERE ResponsabileEmail = ?";
+    
+    $stmtCheck = $cid->prepare($sqlCheck);
+    $stmtCheck->bind_param("s", $email_resp);
+    $stmtCheck->execute();
+    $resCheck = $stmtCheck->get_result()->fetch_assoc();
 
+    if($resCheck['giaResp'] > 0) {
+        echo json_encode(['success' => false, 'message' => 'Utente già responsabile']);
+        return;
+    }
+
+    $sqlUpdate = "UPDATE Settore
+                  SET ResponsabileEmail = ?
+                  WHERE Nome = ?";
+    $stmtUpdate = $cid->prepare($sqlUpdate);
+    $stmtUpdate->bind_param("ss", $email_resp, $corso);
+
+    if($stmtUpdate->execute()) {
+        echo json_encode(['success' => true, 'message' => 'Nuovo responsabile assegnato']);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Errore nell\'assegnamento del responsabile']);
+    }
+
+    return;
 }
 
 ?>
