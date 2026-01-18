@@ -9,7 +9,7 @@ $cid = connessione($hostname, $username, $password, $dbname);
 if (!$cid) { fail("Connessione al database non riuscita. Contatta un tecnico"); }
 //print_r($_GET);
 if ((esiste("today", $_GET)=="" && esiste("type", $_GET)!="change") || esiste("primkey", $_GET)=="" || esiste("type", $_GET)=="") {
-    fail('Non ci sono abbastanza dati per la chiamata API. Contatta un tecnico');
+    fail('Non ci sono abbastanza dati per la chiamata API (week/invites). Contatta un tecnico');
 }
 if($_GET["type"]!="week" && $_GET["type"]!="room" && $_GET["type"]!="invites" && $_GET["type"]!="change") {fail("Tipo incorretto di chiamata API. Contatta un tecnico");}
 
@@ -215,12 +215,6 @@ function get_bookings(string $primaryKey, int $data, string $action) {
 
     return $bookings;
 
-}
-
-function fail($message) {
-
-    echo json_encode(['success' => false, 'message' => $message]);
-    exit();
 }
 
 ?>

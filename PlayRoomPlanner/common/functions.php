@@ -101,6 +101,18 @@ function getUserDataForm($type) {
 
 }
 
+function fail($message) {
+
+    echo json_encode(['success' => false, 'message' => $message]);
+    exit();
+}
+
+function success($message) {
+
+    echo json_encode(['success' => true, 'message' => $message]);
+    exit();
+}
+
 function update_session() {
 
     $hostname = 'localhost';

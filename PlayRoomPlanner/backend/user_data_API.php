@@ -3,19 +3,19 @@ require_once "../backend/connection.php";
 require_once "../common/functions.php";
 
 $cid = connessione($hostname, $username, $password, $dbname);
-if(!$cid) {fail("Errore di connessione al database");}
+if(!$cid) {fail("Errore di connessione al database. Contatta un tecnico");}
 
 $azione = "";
 $primkey = "";
 if(esiste("action", $_POST)=="") {
-    fail("Azione mancante per completare la query");
+    fail("Azione mancante per completare la query. Contatta un tecnico");
 } else {
     $azione = $_POST["action"];
 }
 
 if ($azione != "inserisci" && $azione != "aggiorna") {
     if(esiste("primkey", $_POST)=="") {
-    fail("Chiave mancante per completare la query");
+    fail("Chiave mancante per completare la query. Contatta un tecnico");
     } else {
         $primkey = $_POST["primkey"];
     }
@@ -25,14 +25,14 @@ $query = "";
 $outMsg = "";
 if ($azione=="") {
     $cid->close();
-    fail("Non c'è azione legata ai dati");
+    fail("Non c'è azione legata ai dati. Contatta un tecnico");
     
 } else if ($azione=="aggiorna") {
         $err = update_session();
         if ($err!=""){
             fail("Aggiornamento dati - ".$err);
         } else {
-            echo json_encode(["success" => true, "message" => "Sessione aggiornata"]);
+            success("Sessione aggiornata");
             exit();
         }
 } else if ($azione=="elimina") {
@@ -67,7 +67,7 @@ if ($query == -1) {
 
 try { 
     $result = $cid->query($query);
-    $outMsg =  "Query eseguita correttamente";
+    //$outMsg =  "Query eseguita correttamente";
 } catch (mysqli_sql_exception $e) {
     //fail($e->getMessage());
     //fail($e->getCode());
@@ -79,7 +79,7 @@ try {
             break;
     
         default:
-            $errorMessage = "Errore nell'esecuzione della richiesta al database.";
+            $errorMessage = "Errore nell'esecuzione della richiesta al database. Contatta un tecnico";
             fail($query);
             break;
     }
@@ -102,17 +102,11 @@ if ($azione == "getData") {
         echo json_encode(["success" => true, "dati" => $dati]);
     } 
 } else if ($azione == "modifica") {
-    echo json_encode(["success" => true, "message" => "Modifiche eseguite con successo"]);
+    success("Modifiche eseguite con successo");
 } else if ($azione == "elimina") {
-    echo json_encode(["success" => true, "message" => "Account eliminato con successo"]);
+    success("Account eliminato con successo");
 } else if ($azione == "inserisci") {
-    echo json_encode(["success" => true, "message" => "Account creato con successo"]);
-}
-
-function fail($message) {
-
-    echo json_encode(['success' => false, 'message' => "UDAPI - ".$message]);
-    exit();
+    success("Account creato con successo");
 }
 
 ?>
