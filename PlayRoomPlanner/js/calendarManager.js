@@ -102,7 +102,7 @@ function showBookings(oggi, type) {
                 weekName.innerHTML = weekOffset==0?"Questa settimana":("Settimana del "+html);
                 
                 if (type!="invites") {
-                    clearTable();
+                    clearTable(type);
                     hmax = data.dati.hmax;
                     table_from_schedule(data.dati.bookings);
                     setWeekdays(data.dati.week);
@@ -191,11 +191,10 @@ function changeWeek(amt, type) {
     
 }
 
-function clearTable() {
+function clearTable(type) {
 
     //console.log("cleartable");
-
-    let activities = document.getElementsByClassName("attAccettata");
+    let activities = document.getElementsByClassName(type=="week"?"attAccettata":"attNeutra");
     //console.log(activities);
     while(activities.length != 0) {
         //console.log(i);

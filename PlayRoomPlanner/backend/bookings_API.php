@@ -157,7 +157,7 @@ function room_bookings_query(string $room, int $data) {
 
     $lunedi = date("Y-m-d", $data);
     $domenica = date("Y-m-d", strtotime("+6 days", $data));
-    $query = "SELECT Attivita, DataPren, OraInizio, OraFine
+    $query = "SELECT IDPrenotazione, Attivita, DataPren, OraInizio, OraFine
             FROM prenotazione";
     $query .= " WHERE (";
     $query .= "\"".$lunedi."\" <= DataPren";
