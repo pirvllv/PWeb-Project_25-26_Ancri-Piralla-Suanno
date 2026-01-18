@@ -28,9 +28,8 @@
  #scroll {
     overflow: auto;
     /*border: 1px solid #000000;*/
-    padding: 0 5px 5px 5px;
+    padding: 5px 5px 5px 5px;
     /* height: 60%; */
-    
 }
 
 #no-invites {
@@ -58,7 +57,7 @@
 
 .schedule {
     display: grid;
-    /* grid-template-columns: 75% 25%; */
+    grid-template-columns: 75% 25%;
     height: 80vh;
     /* width: 75vw; */
     padding-left: 10px;
@@ -176,7 +175,6 @@ div.cell:hover {
     margin-top: auto;
 }
 
-button#toggle-red {}
 #toggle-red.rossi-shown{
     
     background-color: #970000 !important;
