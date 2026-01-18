@@ -134,24 +134,6 @@ function creaAtt(string $att, $data, string $stato, int $secinizio, float $secfi
 
 }
 
-function displayAtt($att) {
-
-    $html = "";
-    try {
-
-        $html .= "<div class=\"cell ".$att["stato"]."\">";
-        $html .= date("H:i",$att["orainizio"]+$att["data"])." - ".$att["attivita"]."</div>";
-        
-    } catch (exception $e) {
-
-        return "<div class=\"cell\">Attività errata</div>";
-        
-    }
-
-    return $html;
-    
-}
-
 function user_invites_query(string $email, int $data1, int $data2) {
 
     $lunedi = date("Y-m-d", $data1);
