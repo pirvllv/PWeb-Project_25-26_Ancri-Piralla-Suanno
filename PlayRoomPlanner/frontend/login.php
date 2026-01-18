@@ -79,6 +79,13 @@ require_once '../backend/connection.php';
       </div>
     </div>
   </section>
+  
+  <?php
+  if (isset($_SESSION['login_error'])) {
+    echo "<script>alert('" . addslashes($_SESSION['login_error']) . "');</script>";
+    unset($_SESSION['login_error']);
+  }
+  ?>
 
   <?php
   include '../common/footer.php';
