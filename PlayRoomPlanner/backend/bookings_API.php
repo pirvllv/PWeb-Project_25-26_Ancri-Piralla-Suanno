@@ -232,6 +232,8 @@ function get_bookings(string $primaryKey, int $data, string $action) {
             $endAr = explode(":", $row["OraFine"]);
             $end = $endAr[0]*3600+1800*(int)($endAr[1]/30);
 
+            $orari = $initAr[0].":".$initAr[1]."-".$endAr[0].":".$endAr[1];
+
             if ($action=="invites") {
 
                 switch ($row["Accettazione"]) {
@@ -242,7 +244,7 @@ function get_bookings(string $primaryKey, int $data, string $action) {
 
                 global $weekdays;
                 $bookings[$dataPrenStamp]["wkday"] = $weekdays[date("w",$dataPrenStamp)]." ".date("d/m",$dataPrenStamp);
-                $bookings[$dataPrenStamp]["attivita"][] = creaAtt($row["Attivita"], $dataPrenStamp, $status, $init, $end, $row["IDPrenotazione"]);
+                $bookings[$dataPrenStamp]["attivita"][] = creaAtt($row["Attivita"]." (".$orari.")", $dataPrenStamp, $status, $init, $end, $row["IDPrenotazione"]);
             } else {
 
                 if ($action=="week") {$status = "attAccettata";}
