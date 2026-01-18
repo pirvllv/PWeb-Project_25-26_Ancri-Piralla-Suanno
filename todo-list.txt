@@ -3,4 +3,3 @@ Lea: in userdataAPI ci sono troppi if else, usa uno switch
 Lea: cambiare le query usando bindparam etcc
 
 Password criptate
-Feedback con un alert js per la pagina di login invece di errore mostrato nell'url
