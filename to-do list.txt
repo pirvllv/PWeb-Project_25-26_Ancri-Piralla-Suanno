@@ -1,3 +1,2 @@
 Lea: in userdataAPI ci sono troppi if else, usa uno switch
 Lea: cambiare le query usando bindparam etcc
-Lea: fare in modo che l'altezza del calendario cambi in base all'orario massimo delle prenotazioni che ci sono dentro
