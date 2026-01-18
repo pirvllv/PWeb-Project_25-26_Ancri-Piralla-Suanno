@@ -57,7 +57,7 @@ function table_from_schedule(sched, hmin, hmax) {
     }
 
     //console.log(table);
-    return table;
+    document.getElementById("timetbl").innerHTML += table;
 
 }
 
@@ -77,8 +77,8 @@ function setWeekdays(week) {
 
 function showBookings(oggi, type) {
 
-    const weekName = document.getElementById("weekname");
-    const timetable = document.getElementById("timetbl");
+    let weekName = document.getElementById("weekname");
+    
     //let monday = Date.now()/1000;
     let url = APIurl+"today="+oggi;
     url += "&primkey="+primkey;
@@ -95,9 +95,10 @@ function showBookings(oggi, type) {
                 
                 if (type!="invites") {
                     clearTable();
-                    timetable.innerHTML += table_from_schedule(data.dati.bookings, 8, 18);
+                    table_from_schedule(data.dati.bookings, 8, 18);
                     setWeekdays(data.dati.week);
                 } else {
+                    clearScroll();
                     scroll_from_invites(data.dati.bookings);
                     //check_vuoti();
                     //console.log(data.dati.bookings);
@@ -163,7 +164,7 @@ function scroll_from_invites(inviti) {
         //console.log(scroll.innerHTML);
 
     }
-    scroll.innerHTML = scrollhtml;
+    scroll.innerHTML += scrollhtml;
     toggle_rossi(rossiShown);
     //console.log("Invites fine");
     //console.log(scroll.innerHTML);
@@ -190,6 +191,15 @@ function clearTable() {
     while(activities.length != 0) {
         //console.log(i);
         activities[0].remove();
+        
+    }
+}
+
+function clearScroll() {
+
+    let conts = document.getElementsByClassName("daycont");
+    while(conts.length != 0) {
+        conts[0].remove();
         
     }
 }
@@ -225,19 +235,31 @@ function check_vuoti() {
 
     let dayconts = document.getElementsByClassName("daycont");
     //console.log(dayconts.length);
+    let countDay = dayconts.length;
     for (let i = 0; i < dayconts.length; i++) {
-        let count = 0;
+        let countAct = 0;
         let children = dayconts[i].children;
         
         for (let k = 0; k < children.length; k++) {
             
-            if (!children[k].classList.contains("index") && children[k].style.display != "none") {count++;}
+            if (!children[k].classList.contains("index") && children[k].style.display != "none") {countAct++;}
             //console.log(children[k]);
             
         }
         //console.log(dayconts[i].firstChild.textContent+ " - "+count);
-        if (count<1) {dayconts[i].style.display = "none";}
-        else {dayconts[i].style.display = "block";}
+        if (countAct<1) {
+            dayconts[i].style.display = "none";
+            countDay--;
+        }
+        else {
+            dayconts[i].style.display = "block";
+        }
+    }
+
+    if (countDay==0) {
+        document.getElementById("no-invites").style.display= "block";
+    } else {
+        document.getElementById("no-invites").style.display= "none";
     }
 
     //console.log("Check fine");
