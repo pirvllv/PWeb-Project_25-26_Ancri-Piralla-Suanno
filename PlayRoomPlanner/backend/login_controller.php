@@ -60,7 +60,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $error = "Errore di connessione al database.";
   }
 
-  header("Location: ../frontend/login.php?error=" . urlencode($error));
+  $_SESSION['login_error'] = $error;
+  header("Location: ../frontend/login.php");
   exit;
 }
 ?>
