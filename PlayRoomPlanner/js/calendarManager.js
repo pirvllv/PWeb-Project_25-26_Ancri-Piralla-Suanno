@@ -10,9 +10,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         primkey = window.sessionData.username;
         showBookings(todayStamp, "invites");
-        check_vuoti();
-        changeWeek(0, "week");
-        
+        changeWeek(0, "week"); 
         
     }
 
@@ -85,12 +83,12 @@ function showBookings(oggi, type) {
     let url = APIurl+"today="+oggi;
     url += "&primkey="+primkey;
     url += "&type="+type;
-    console.log(url);
+    //console.log(url);
     fetch(url)
         .then(response => response.json())
         .then(data => {
             //console.log(data);
-            //console.log("ciao");
+            //console.log("data arrived - "+type);
             if (data.success) {
                 let html = data.dati.weekstart;
                 weekName.innerHTML = weekOffset==0?"Questa settimana":("Settimana del "+html);
@@ -101,7 +99,8 @@ function showBookings(oggi, type) {
                     setWeekdays(data.dati.week);
                 } else {
                     scroll_from_invites(data.dati.bookings);
-                    console.log(data.dati.bookings);
+                    //check_vuoti();
+                    //console.log(data.dati.bookings);
                 }
                 
             } else {
@@ -109,6 +108,8 @@ function showBookings(oggi, type) {
             }
         })
         .catch(error => console.error('Errore:' + error));
+    
+    
     
 }
 
@@ -164,7 +165,7 @@ function scroll_from_invites(inviti) {
     }
     scroll.innerHTML = scrollhtml;
     toggle_rossi(rossiShown);
-    console.log("Invites fine");
+    //console.log("Invites fine");
     //console.log(scroll.innerHTML);
     return;
     
@@ -214,30 +215,32 @@ function toggle_rossi(shown) {
     for (let i = 0; i < reds.length; i++) {
         reds[i].style.display = disp;
     }
-
-    console.log("fine rossi");
+    
+    check_vuoti();
+    //console.log("fine rossi");
 
 }
 
 function check_vuoti() {
 
     let dayconts = document.getElementsByClassName("daycont");
-    console.log(dayconts.length);
-    let count = 0;
+    //console.log(dayconts.length);
     for (let i = 0; i < dayconts.length; i++) {
+        let count = 0;
         let children = dayconts[i].children;
         
         for (let k = 0; k < children.length; k++) {
             
-            if (!children[k].classList.contains("index") && children[k].style.display == "none") {count++;}
+            if (!children[k].classList.contains("index") && children[k].style.display != "none") {count++;}
+            //console.log(children[k]);
             
         }
-        
+        //console.log(dayconts[i].firstChild.textContent+ " - "+count);
         if (count<1) {dayconts[i].style.display = "none";}
         else {dayconts[i].style.display = "block";}
     }
 
-    console.log("Check fine");
+    //console.log("Check fine");
 
 }
 
@@ -277,7 +280,7 @@ function gestisciInvito(btnEl, code) {
         if(!confirm(msg)) {return;}
     }
 
-    console.log(url);
+    //console.log(url);
     fetch(url)
         .then(response => response.json())
         .then(data => {

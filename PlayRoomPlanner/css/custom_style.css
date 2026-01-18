@@ -28,9 +28,10 @@
  #scroll {
     overflow: auto;
     /*border: 1px solid #000000;*/
-    background-color: #ffffff;
-    padding-left: 10px;
-     max-height: 80%;
+    background-color: #e6e3e3;
+    padding: 0 5px 5px 5px; 
+    height: 60%;
+    border-radius: 7px;
 }
 
 #scroll-cont {
@@ -42,6 +43,10 @@
 #scroll-buttons-cont {
     
     display:flex;
+}
+
+.daycont {
+    padding-bottom: 10px;
 }
 
 .schedule {
@@ -160,10 +165,15 @@ div.cell:hover {
 .tgl-btn {
     
     background-color: #955656ff !important;
+    width: 100%;
 }
 .tgl-btn.rossi-shown{
     
     background-color: #970000 !important;
+}
+
+.attInSospeso, .attRifiutata {
+    margin: 0 5px 0 5px !important;
 }
 
 .attAccettata {
