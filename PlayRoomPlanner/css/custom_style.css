@@ -28,16 +28,23 @@
  #scroll {
     overflow: auto;
     /*border: 1px solid #000000;*/
-    background-color: #e6e3e3;
-    padding: 0 5px 5px 5px; 
-    height: 60%;
-    border-radius: 7px;
+    padding: 0 5px 5px 5px;
+    /* height: 60%; */
+    
+}
+
+#no-invites {
+    margin-top: 10px;
 }
 
 #scroll-cont {
     overflow: auto;
     display: flex;
+    background-color: #e6e3e3;
     flex-direction: column;
+    border-radius: 7px;
+    text-align: center;
+    margin-left: 7px;
 }
 
 #scroll-buttons-cont {
@@ -46,7 +53,7 @@
 }
 
 .daycont {
-    padding-bottom: 10px;
+    padding-bottom: 15px;
 }
 
 .schedule {
@@ -162,18 +169,21 @@ div.cell:hover {
     
 }
 
-.tgl-btn {
-    
+#toggle-red {
     background-color: #955656ff !important;
     width: 100%;
+    border: 0;
+    margin-top: auto;
 }
-.tgl-btn.rossi-shown{
+
+button#toggle-red {}
+#toggle-red.rossi-shown{
     
     background-color: #970000 !important;
 }
 
 .attInSospeso, .attRifiutata {
-    margin: 0 5px 0 5px !important;
+    margin: 3px 5px 0 5px !important;
 }
 
 .attAccettata {
@@ -187,12 +197,6 @@ div.cell:hover {
     background-color: #970000;
     /*display: none;*/
 
-}
-
-#toggle-red {
-
-    border: 0;
-    
 }
 
 .attInSospeso {

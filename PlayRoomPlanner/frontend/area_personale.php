@@ -62,11 +62,11 @@ if (session_status() === PHP_SESSION_NONE) {
                     ?>
                 </div>
                 <div id="scroll-cont" style= "grid-area: 2/2/2/2;">
-                    <div id="scroll"></div>
-                    <div id="scroll-buttons-cont">
-                        <button type="button" id="toggle-red" class="orange-button tgl-btn" onclick="toggle_rossi()" >
-                        Inviti rifiutati</button>
+                    <div id="scroll">
+                        <h5 id="no-invites" style="display: none;">Non hai inviti in sospeso</h5>
                     </div>
+                    <button type="button" id="toggle-red" class="orange-button" onclick="toggle_rossi()" >
+                    Inviti rifiutati</button>
                 </div>
             </div>
             <div class="green-button" style="grid-area: 1/2/span 1/span 1;">
