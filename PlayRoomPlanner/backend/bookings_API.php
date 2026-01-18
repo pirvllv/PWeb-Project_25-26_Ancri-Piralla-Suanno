@@ -35,41 +35,83 @@ if($_GET["type"]!="change") {
 
     $dati["bookings"] = $bookings;
 } else {
-
-    if (esiste("primkey", $_GET)=="" || esiste("action", $_GET)=="") {
-        fail('Non ci sono abbastanza dati per la chiamata API. Contatta un tecnico');
+    //fail($_GET);
+    $idp = $_GET["primkey"];
+    $action = esiste("action", $_GET);
+    $just = esiste("just", $_GET);
+    
+    if ($action=="" || $idp=="") {
+        fail('Non ci sono abbastanza dati per la chiamata API (change). Contatta un tecnico');
     }
-    if($_GET["action"]<0 || $_GET["action"]>1) {
+    if($action<0 || $action>1) {
         fail("Codice incorretto di azione inviti. Contatta un tecnico");
     }
 
     if (session_status() === PHP_SESSION_NONE) {
         session_start();
     }
+    $user = $_SESSION["user"];
 
+    if ($action == 1) {
+        
+        $just = NULL;
 
-    //Controllo della non sovrapposizione di un'invito che si sta accettando con altre attività
-    $sqlCheck = "SELECT COUNT(*) AS conflitto
-                 FROM prenotazione INNER JOIN invito
-                 ON (prenotazione.IDPrenotazione = invito.IDPrenotazione)
-                 WHERE invito.IscrittoEmail = ?
-                 AND DataPren = (SELECT DataPren
-                                FROM prenotazione 
-                                WHERE IDPrenotazione = ?)
-                 AND "; //Matematica qui: max(orainA, orafinA, orainB, orafinB) - min(orainA, orafinA, orainB, orafinB) < (durataA+durataB)
+        //Controllo della non sovrapposizione di un'invito che si sta accettando con altre attività
+        $sqlIF = "SELECT OraInizio, OraFine
+                    FROM prenotazione
+                    WHERE IDPrenotazione = ?";
 
-    //Bozza da rouge:
-    /*$stmtCheck = $cid->prepare($sqlCheck);
-    $stmtCheck->bind_param("ssss", $sala, $data_pren, $ora_inizio_str, $ora_fine_str);
-    $stmtCheck->execute();
-    $resCheck = $stmtCheck->get_result()->fetch_assoc();
+        $sqlCheck = "SELECT COUNT(*) AS conflitto
+                    FROM prenotazione INNER JOIN invito
+                    ON (prenotazione.IDPrenotazione = invito.IDPrenotazione)
+                    WHERE invito.IscrittoEmail = ?
+                    AND invito.Accettazione = 1
+                    AND DataPren = (SELECT DataPren
+                                    FROM prenotazione 
+                                    WHERE IDPrenotazione = ?)
+                    AND NOT (OraFine <= ? OR OraInizio >= ?);";
 
-    if ($resCheck['occupata'] > 0) {
-        echo json_encode(['success' => false, 'message' => 'Sala già occupata']);
-        return;
-    }*/
+        try {
+            $stmtIF = $cid->prepare($sqlIF);
+            $stmtIF->bind_param("i", $idp);
+            $stmtIF->execute();
+            $resIF = $stmtIF->get_result()->fetch_assoc();
 
-    $dati["yay"] = "API funziona";
+            $stmtCheck = $cid->prepare($sqlCheck);
+            $stmtCheck->bind_param("siss", $user, $idp, $resIF["OraInizio"], $resIF["OraFine"]);
+            $stmtCheck->execute();
+            $resCheck = $stmtCheck->get_result()->fetch_assoc();
+        } catch (exception $e) {
+            $errorMessage = $e->getMessage();
+            fail("Contatta un tecnico: ".$errorMessage);
+        }
+
+        if ($resCheck['conflitto'] > 0) {
+            fail("Questo invito è in conflitto con un'attività già in programma");
+        }
+    } else {
+        if ($just =="") {
+            fail("Nessuna giustificazione nella chiamata API. Contatta un tecnico");
+        }
+    }
+
+    //Modifica del campo "accettazione"
+    $sqlChange = "UPDATE invito
+                    SET Accettazione = ?, Motivazione = ?
+                    WHERE IDPrenotazione = ?
+                    AND IscrittoEmail = ?";
+
+    try {
+        $stmtChange = $cid->prepare($sqlChange);
+
+        $stmtChange->bind_param("isis", $action, $just, $idp, $user);
+        $stmtChange->execute();
+    } catch (exception $e) {
+        $errorMessage = $e->getMessage();
+        fail("Contatta un tecnico: ".$errorMessage);
+    }
+
+    success("Invito ".($action==1?"accettato":"rifiutato")." con successo");
 
 }
 

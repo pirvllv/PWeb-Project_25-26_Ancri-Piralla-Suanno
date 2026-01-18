@@ -2,13 +2,17 @@ document.addEventListener("DOMContentLoaded", function() {
 
     todayStamp = Date.now()/1000;
     weekOffset = 0;
+    rossiShown = false;
     APIurl = "../backend/bookings_API.php?";
     primkey="";
+
     if (document.body.id=="area-personale") {
 
         primkey = window.sessionData.username;
         showBookings(todayStamp, "invites");
+        check_vuoti();
         changeWeek(0, "week");
+        
         
     }
 
@@ -19,7 +23,6 @@ document.addEventListener("DOMContentLoaded", function() {
         changeWeek(0, "room");
         
     }
-    toggle_rossi(0);
     
 }); 
 
@@ -43,11 +46,12 @@ function table_from_schedule(sched, hmin, hmax) {
             //console.log("col: "+column);
             //console.log("span: "+span);
             
-            table += "\n<div class=\"cell att " + att["stato"];
+            table += "\n<div id='"+att["IDP"]+"' class=\"cell att " + att["stato"];
             table += "\" style=\"grid-area: " + row + "/" + column + "/ span " + span + "/" + column + ";\">";
             table += att["attivita"];
             table += "<span class='invites-icons'>";
-            table += '<button class="dclnBtn" onclick="gestisciInvito(3,'+att["IDP"]+',\''+att["attivita"]+'\')"><i id="declineInv" class="bi bi-x-circle-fill"></i></button>';
+            table += '<button id="'+att["IDP"]+'" class="dclnBtn" onclick="gestisciInvito(this,3)"><i class="bi bi-x-circle-fill declineInv"></i></button>';
+            //table += '<button class="btn dclnBtn"><i class="bi bi-x-circle-fill declineInv"></i></button>';
             table += "</span></div>";
 
         }
@@ -95,11 +99,11 @@ function showBookings(oggi, type) {
                     clearTable();
                     timetable.innerHTML += table_from_schedule(data.dati.bookings, 8, 18);
                     setWeekdays(data.dati.week);
-                    
                 } else {
                     scroll_from_invites(data.dati.bookings);
                     console.log(data.dati.bookings);
                 }
+                
             } else {
                 alert(data.message);
             }
@@ -114,22 +118,24 @@ function displayAtt(att) {
     //console.log(att);
     if (att["orafine"]<=att["orainizio"]) {return "";}
     
-    out += "<div class=\"cell " + att["stato"]+ " att\" ";
+    out += "<div id='"+att["IDP"]+"' class=\"cell " + att["stato"]+ " att\" ";
     if(att["stato"]==="attRifiutata") {
         out += "style='display: none;'";
     }
     out += ">";
     out += att["attivita"];
     out += "<span class='invites-icons'>";
-    out += '<button class="axptBtn" onclick="gestisciInvito('+(att['stato']=='attInSospeso'?0:2)+','+att["IDP"]+',\''+att["attivita"]+'\')">';
-    out += '<i id="acceptInv" class="bi bi-check-circle-fill"></i></button>';
+    out += '<button class="axptBtn" onclick="gestisciInvito(this,'+(att['stato']=='attInSospeso'?0:2)+')">';
+    //out += '<button class="btn axptBtn">';
+    out += '<i class="bi bi-check-circle-fill acceptInv"></i></button>';
     if(att["stato"]=="attInSospeso") {
-        out += '<button class="dclnBtn" onclick="gestisciInvito(1,'+att["IDP"]+',\''+att["attivita"]+'\')">';
-        out+= '<i id="declineInv" class="bi bi-x-circle-fill"></i></button>';
+        out += '<button class="dclnBtn" onclick="gestisciInvito(this, 1)">';
+        //out += '<button class="btn dclnBtn">';
+        out+= '<i class="bi bi-x-circle-fill declineInv"></i></button>';
     }
     out += "</span></div>";
 
-    console.log("Att: "+out)
+    //console.log("Att: "+out)
     return out;
     
 }
@@ -145,11 +151,11 @@ function scroll_from_invites(inviti) {
 
     for (const g in inviti) {
         //console.log(week[g]);
-        let dayconthtml = "<div id='"+ g +"'>";
+        let dayconthtml = "<div id='"+ g +"' class='daycont'>";
         let invithtml = "<div class=\"cell index\">"+inviti[g]["wkday"]+"</div>";
         for (const attIdx in inviti[g]["attivita"]) {
             invithtml += displayAtt(inviti[g]["attivita"][attIdx]);
-            console.log("Attività aggiunta");
+            //console.log("Attività aggiunta");
         }
         dayconthtml += invithtml + "</div>";
         scrollhtml += dayconthtml;
@@ -157,7 +163,9 @@ function scroll_from_invites(inviti) {
 
     }
     scroll.innerHTML = scrollhtml;
-    console.log(scroll.innerHTML);
+    toggle_rossi(rossiShown);
+    console.log("Invites fine");
+    //console.log(scroll.innerHTML);
     return;
     
 }
@@ -185,58 +193,90 @@ function clearTable() {
     }
 }
 
-function toggle_rossi(action) {
+function toggle_rossi(shown) {
+
+    if (arguments.length === 0) {
+        rossiShown = !rossiShown;
+    } else {
+        rossiShown = shown;
+    }
 
     let butt = document.getElementById("toggle-red");
     let reds = document.getElementsByClassName("attRifiutata");
-    if(action!=0) {
-        
-        for (let i = 0; i < reds.length; i++) {
-            reds[i].style.display = "block";
-        }
-        
-        
-        butt.style.color = "white";
-        butt.style.backgroundColor = "#970000";
-        //butt.innerHTML = "Nascondi inviti rifiutati";
-        butt.setAttribute('onclick','toggle_rossi(0)');
+    
+    if(rossiShown) {
+        butt.classList.add("rossi-shown");
     } else {
-
-        for (let i = 0; i < reds.length; i++) {
-            reds[i].style.display = "none";
-        }
-        
-        butt.style.color = "white";
-        butt.style.backgroundColor = "#955656ff";
-        //butt.innerHTML = "Mostra inviti rifiutati";
-        butt.setAttribute('onclick','toggle_rossi(1)');
-
+        butt.classList.remove("rossi-shown");
     }
+
+    let disp = rossiShown?"block":"none";
+    for (let i = 0; i < reds.length; i++) {
+        reds[i].style.display = disp;
+    }
+
+    console.log("fine rossi");
 
 }
 
+function check_vuoti() {
 
-function gestisciInvito(code, IDP, name) {
+    let dayconts = document.getElementsByClassName("daycont");
+    console.log(dayconts.length);
+    let count = 0;
+    for (let i = 0; i < dayconts.length; i++) {
+        let children = dayconts[i].children;
+        
+        for (let k = 0; k < children.length; k++) {
+            
+            if (!children[k].classList.contains("index") && children[k].style.display == "none") {count++;}
+            
+        }
+        
+        if (count<1) {dayconts[i].style.display = "none";}
+        else {dayconts[i].style.display = "block";}
+    }
+
+    console.log("Check fine");
+
+}
+
+function gestisciInvito(btnEl, code) {
 
     //0: accetta da sospeso
     //1: rifiuta da sospeso
     //2: accetta da rifiutato
     //3: rifiuta da accettato
 
+    let name = btnEl.parentElement.parentElement.textContent;
+    let IDP = btnEl.parentElement.parentElement.id;
+
     let msg = "";
     let act = -1;
     switch(code) {
-        case 0: msg = "Vuoi davvero accettare l'invito a " + name + "?"; act = 0; break;
-        case 1: msg = "Vuoi davvero rifiutare l'invito a " + name + "?"; act = 1; break;
-        case 2: msg = "Avevi rifiutato l'invito a " + name + ". Sei sicuro di voler cambiare?"; act = 0; break;
-        case 3: msg = "Vuoi davvero annullare la tua partecipazione a " + name + "?"; act = 1; break;
+        case 0: msg = "Vuoi davvero accettare l'invito a " + name + "?"; act = 1; break;
+        case 1: msg = "Vuoi davvero rifiutare l'invito a " + name + "? Dai una motivazione:"; act = 0; break;
+        case 2: msg = "Avevi rifiutato l'invito a " + name + ". Sei sicuro di voler cambiare?"; act = 1; break;
+        case 3: msg = "Vuoi davvero annullare la tua partecipazione a " + name + "? Dai una motivazione:"; act = 0; break;
     }
     if(msg=="" || act==-1) {alert("Errore nel codice di accettazione/rifiuto inviti. Contatta un tecnico"); return;}
-    if(!confirm(msg)) {return;}
-
+    
     let url = APIurl+"primkey="+IDP;
     url += "&type=change";
     url += "&action="+act;
+
+    if (act==0) {
+        let just = prompt(msg);
+        while (just === "") {
+            just = prompt("La motivazione non può essere vuota:");
+        }
+        if (just===null) {return;}
+        console.log(just);
+        url += "&just="+encodeURI(just);
+    } else {
+        if(!confirm(msg)) {return;}
+    }
+
     console.log(url);
     fetch(url)
         .then(response => response.json())
@@ -244,7 +284,14 @@ function gestisciInvito(code, IDP, name) {
             //console.log(data);
             //console.log("ciao");
             if (data.success) {
-                alert(data.dati.yay);
+                //alert(data.message);
+                //document.getElementById("scroll").innerHTML = "";
+                if (act==0) {
+                    showBookings(todayStamp, "invites");
+                }
+                else {document.getElementById(IDP).remove();}
+                changeWeek(0, "week");
+                toggle_rossi(rossiShown);
             } else {
                 alert(data.message);
             }
