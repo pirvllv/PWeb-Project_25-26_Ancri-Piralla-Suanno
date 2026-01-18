@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", function() {
     rossiShown = false;
     APIurl = "../backend/bookings_API.php?";
     primkey="";
+    hmax = 18;
 
     if (document.body.id=="area-personale") {
 
@@ -24,9 +25,10 @@ document.addEventListener("DOMContentLoaded", function() {
     
 }); 
 
-function table_from_schedule(sched, hmin, hmax) {
+function table_from_schedule(sched) {
 
     let table = "";
+    let hmin = 9;
     for (const g in sched) {
         
         for (const i in sched[g]) {
@@ -58,6 +60,12 @@ function table_from_schedule(sched, hmin, hmax) {
 
     //console.log(table);
     document.getElementById("timetbl").innerHTML += table;
+
+    let sera = document.getElementsByClassName("hsera");
+    for (let i = 0; i < sera.length; i++) {
+        console.log(hmax, 18*3600);
+        sera[i].style.display = (hmax>18*3600)?"block":"none";
+    }
 
 }
 
@@ -95,7 +103,8 @@ function showBookings(oggi, type) {
                 
                 if (type!="invites") {
                     clearTable();
-                    table_from_schedule(data.dati.bookings, 8, 18);
+                    hmax = data.dati.hmax;
+                    table_from_schedule(data.dati.bookings);
                     setWeekdays(data.dati.week);
                 } else {
                     clearScroll();

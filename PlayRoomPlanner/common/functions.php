@@ -220,13 +220,13 @@ function getIndexes() {
     $weekdays = getWeekdays();
     for ($g = 0; $g < count($weekdays); $g++) {
 
-        echo "<div class=\"".$weekdays[$g]." cell index\"; style=\"grid-area: 1 / ".($g+2)."/ 3 / span 1;\"></div>";
+        echo "<div class='".$weekdays[$g]." cell index'; style='grid-area: 1 / ".($g+2)."/ 3 / span 1;'></div>";
 
     }
 
-    for ($h = 0; $h < 11; $h++) {
+    for ($h = 9; $h < 23; $h++) {
 
-        echo "<div class=\"cell index\"; style=\"grid-area: ".(2*($h+1)+1)."/"."1/ span 2 /1;\">".($h+8).":00</div>";
+        echo "<div class='cell index ".($h<=18?"":"hsera")."'; style='grid-area: ".(2*($h-9+1)+1)."/"."1/ span 2 /1;'>".($h).":00</div>";
 
     }
     

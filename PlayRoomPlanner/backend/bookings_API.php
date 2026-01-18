@@ -14,12 +14,13 @@ if ((esiste("today", $_GET)=="" && esiste("type", $_GET)!="change") || esiste("p
 if($_GET["type"]!="week" && $_GET["type"]!="room" && $_GET["type"]!="invites" && $_GET["type"]!="change") {fail("Tipo incorretto di chiamata API. Contatta un tecnico");}
 
 $dati = array();
+$hmax = 0;
 if($_GET["type"]!="change") {
     $mondayStamp = getMondayStamp($_GET["today"]);
     $weekdays = getWeekdays();
 
     $bookings = get_bookings($_GET["primkey"], $mondayStamp, $_GET["type"]);
-
+    
 
     if ($_GET["type"]!="invites") {
         $week = array();
@@ -31,9 +32,11 @@ if($_GET["type"]!="change") {
         }
         $dati["week"] = $week;
         $dati["weekstart"] = date("d/m/Y", $mondayStamp);
+        $dati["hmax"] = $hmax;
     }
 
     $dati["bookings"] = $bookings;
+    echo json_encode(["success" => true, "dati" => $dati]);
 } else {
     //fail($_GET);
     $idp = $_GET["primkey"];
@@ -115,11 +118,7 @@ if($_GET["type"]!="change") {
 
 }
 
-//$dati["query"] = $qry;
-/*$sched = get_room_schedule($inviti);
-$dati["sched"] = $sched;*/
-
-echo json_encode(["success" => true, "dati" => $dati]);
+//Funzioni
 
 function getMondayStamp($stamp) {
 
@@ -148,7 +147,7 @@ function user_invites_query(string $email, int $data1, int $data2) {
     $query .= " AND invito.IscrittoEmail=\"".$email."\"";
     $query .= " AND (invito.Accettazione ".($data2==-1?"IS NULL OR invito.Accettazione=0":"= 1").")";
     $query .= ")";
-    $query .= " ORDER BY DataPren";
+    $query .= " ORDER BY DataPren, OraInizio";
 
     return $query;
     
@@ -199,6 +198,7 @@ function get_bookings(string $primaryKey, int $data, string $action) {
     $cid->close();
 
     $bookings = array();
+    global $hmax;
     if ($result->num_rows > 0) {
         while($row = $result->fetch_assoc()) {
             //echo "<p>".print_r($row)."<br></p>";
@@ -214,6 +214,7 @@ function get_bookings(string $primaryKey, int $data, string $action) {
             $endAr = explode(":", $row["OraFine"]);
             $end = $endAr[0]*3600+1800*(int)($endAr[1]/30);
 
+            
             $orari = $initAr[0].":".$initAr[1]."-".$endAr[0].":".$endAr[1];
 
             if ($action=="invites") {
@@ -225,12 +226,14 @@ function get_bookings(string $primaryKey, int $data, string $action) {
                 }
 
                 global $weekdays;
+                
                 $bookings[$dataPrenStamp]["wkday"] = $weekdays[date("w",$dataPrenStamp)-1]." ".date("d/m",$dataPrenStamp);
                 $bookings[$dataPrenStamp]["attivita"][] = creaAtt($row["Attivita"]." (".$orari.")", $dataPrenStamp, $status, $init, $end, $row["IDPrenotazione"]);
             } else {
 
+                if ($end>$hmax) {$hmax = $end;}
                 if ($action=="week") {$status = "attAccettata";}
-                $bookings[$dayIdx][] = creaAtt($row["Attivita"], $dataPrenStamp, $status, $init, $end, $row["IDPrenotazione"]);
+                $bookings[$dayIdx][] = creaAtt("<b>".$row["Attivita"]."</b><br>".$orari, $dataPrenStamp, $status, $init, $end, $row["IDPrenotazione"]);
         }    
             }
             
