@@ -25,7 +25,7 @@ $action = isset($_POST['azione']) ? $_POST['azione'] : (isset($_GET['azione']) ?
 
 switch ($action) {
     case 'accettaIscrizione':
-        accettaIscrizione($cid, $_POST);
+        assegnaRuolo($cid, $_POST);
         break;
     
     case 'nominaResponsabile':
@@ -33,33 +33,33 @@ switch ($action) {
         break;
 }
 
-function accettaIscrizione($cid, $data) {
+function assegnaRuolo($cid, $data) {
     $email = $data['email'];
-    $corso = $data['corso'];
+    $ruolo = $data['ruolo'];
 
-    $sqlCheck = "SELECT COUNT(*) as giaIscritto
-                 FROM Iscrizione
-                 WHERE IscrittoEmail = ?
-                 AND SettoreNome = ?";
+    $sqlCheck = "SELECT Ruolo
+                 FROM Iscritto
+                 WHERE Email = ?";
     $stmtCheck = $cid->prepare($sqlCheck);
-    $stmtCheck->bind_param("ss", $email, $corso);
+    $stmtCheck->bind_param("s", $email);
     $stmtCheck->execute();
-    $resCheck = $stmtCheck->get_result()->fetch_assoc();
+    $resCheck = $stmtCheck->get_result();
 
-    if ($resCheck['giaIscritto'] > 0) {
-        echo json_encode(['success' => false, 'message' => 'Utente già iscritto al corso']);
+    if ($resCheck['Ruolo'] === $ruolo) {
+        echo json_encode(['success' => false, 'message' => 'Ruolo già assegnato']);
         return;
     }
     
-    $sqlIscrivi =  "UPDATE Iscrizione
-                    SET IscrittoEmail = ?, SettoreNome = ?";
-    $stmtIscrivi = $cid->prepare($sqlIscrivi);
-    $stmtIscrivi->bind_param("ss", $email, $corso);
+    $sqlAssegna =  "UPDATE Iscritto
+                    WHERE Email = ?
+                    SET Ruolo = ?";
+    $stmtAssegna = $cid->prepare($sqlAssegna);
+    $stmtAssegna->bind_param("ss", $email, $ruolo);
 
-    if ($stmtIscrivi->execute()) {
-        echo json_encode(['success' => true, 'message' => 'Utente iscritto']);
+    if ($stmtAssegna->execute()) {
+        echo json_encode(['success' => true, 'message' => 'Ruolo modificato']);
     } else {
-        echo json_encode(['success' => false, 'message' => 'Errore nell\'iscrizione']);
+        echo json_encode(['success' => false, 'message' => 'Errore nell\'assegnazione']);
     }
     return;
 }
@@ -96,5 +96,7 @@ function nominaResponsabile($cid, $data) {
 
     return;
 }
+
+
 
 ?>
