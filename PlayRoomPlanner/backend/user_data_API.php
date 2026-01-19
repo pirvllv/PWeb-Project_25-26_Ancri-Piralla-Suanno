@@ -52,10 +52,11 @@ if ($azione=="") {
     if(isset($_POST["role"])) {$dati["Ruolo"] = $_POST["role"];}
     if(isset($_POST["DOB"])) {$dati["DataNascita"] = $_POST["DOB"];}
 
-    $fotonome = esiste("photoname", $_POST);
+    $fotonome = ($azione=="inserisci")?getFotoNome($dati["Nome"], $dati["Cognome"]):esiste("photoname", $_POST);
     if(isset($_FILES["photo"]) && $fotonome != "") {
 
         $destination = '../immagini/foto_profilo/'.$fotonome;
+        $dati["Foto"] = $fotonome;
 
         if (!move_uploaded_file($_FILES['photo']['tmp_name'], $destination)) {
             fail("Attenzione! Errore nel caricamento della nuova foto.");
@@ -66,6 +67,7 @@ if ($azione=="") {
 
     if ($azione=="inserisci") {
         $query = insert_query($dati, "Iscritto");
+        
     } else if ($azione=="modifica") {
         $query = update_query($dati, "Iscritto", $_POST["primkey"], "Email");
     }

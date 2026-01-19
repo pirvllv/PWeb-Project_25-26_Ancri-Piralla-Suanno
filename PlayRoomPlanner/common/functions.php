@@ -14,6 +14,11 @@ function getCss() {
 	
 }
 
+function getFotoNome($nome,$cognome) {
+
+    return $nome."_".$cognome.".jpg";
+
+}
 
 function fail($message) {
 

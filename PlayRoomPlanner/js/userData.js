@@ -199,6 +199,10 @@ function crea_account() {
     fetchBody.append("role", ROLE);
 
     if(!confirm(confMess)) {return;}
+
+    if(photoInput.files.length!==0) {
+        fetchBody.append("photo", imageFile);
+    }
     
     fetch(APIurl, {
       method: "POST",
@@ -209,7 +213,7 @@ function crea_account() {
         console.log(data);
         if (data.success) {
             alert(data.message);
-            window.location.href = "/PlayRoomPlanner/frontend/login.php";
+            window.location.href = "../frontend/login.php";
         } else {
             alert(data.message);
         }
