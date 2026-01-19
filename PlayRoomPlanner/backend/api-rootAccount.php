@@ -3,7 +3,7 @@
 session_start();
 
 /* Controllo validita' utente */
-if(!isset($_SESSION) || $_SESSION['logged_in'] == false /*|| $_SESSION['root'] == false*/) {
+if(!isset($_SESSION) || $_SESSION['logged_in'] == false || $_SESSION['admin'] == false) {
     http_response_code(403);
     echo "Error 403: forbidden";
     exit;
@@ -28,8 +28,8 @@ switch ($action) {
         assegnaRuolo($cid, $_POST);
         break;
     
-    case 'nominaResponsabile':
-        nominaResponsabile($cid, $_POST);
+    case 'aggiornaResponsabile':
+        aggiornaResponsabile($cid, $_POST);
         break;
 
     case 'mostraSettori':
@@ -72,16 +72,18 @@ function assegnaRuolo($cid, $data) {
     return;
 }
 
-function nominaResponsabile($cid, $data) {
-    $email_resp = $data['email_resp'];
-    $corso = $data['corso'];
+function aggiornaResponsabile($cid, $data) {
+    $email = $data['email'];
+    $settore = $data['settore'];
+
+    if ($email === 'NULL') $email = null;
     
     $sqlCheck = "SELECT COUNT(*) as giaResp
                  FROM Settore
                  WHERE ResponsabileEmail = ?";
     
     $stmtCheck = $cid->prepare($sqlCheck);
-    $stmtCheck->bind_param("s", $email_resp);
+    $stmtCheck->bind_param("s", $email);
     $stmtCheck->execute();
     $resCheck = $stmtCheck->get_result()->fetch_assoc();
 
@@ -94,7 +96,7 @@ function nominaResponsabile($cid, $data) {
                   SET ResponsabileEmail = ?
                   WHERE Nome = ?";
     $stmtUpdate = $cid->prepare($sqlUpdate);
-    $stmtUpdate->bind_param("ss", $email_resp, $corso);
+    $stmtUpdate->bind_param("ss", $email, $settore);
 
     if($stmtUpdate->execute()) {
         echo json_encode(['success' => true, 'message' => 'Nuovo responsabile assegnato']);
@@ -113,8 +115,8 @@ function mostraSettori($cid) {
                 Iscritto.Cognome AS ResponsabileCognome
             FROM Settore
             LEFT JOIN Iscritto
-                ON Iscritto.Email = Settore.ResponsabileEmail;
-";
+                ON Iscritto.Email = Settore.ResponsabileEmail
+            ORDER BY SettoreNome";
     
     $stmt = $cid->prepare($sql);
     $stmt->execute();

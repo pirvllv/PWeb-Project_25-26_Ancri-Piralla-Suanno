@@ -82,12 +82,13 @@ function mostraSettori(listaSettori) {
                         </button>
 
                         <div>
-                            <form id='${formId}' style='display:none;'>
+                            <form id='${formId}' data-settore='${s.SettoreNome}' style='display:none;'>
+
                                 <select id='${selectId}' class='form-control' required>
                                     <option value="NULL">Nessun responsabile</option>
                                 </select>
 
-                                <button class='green-button' type='submit'>Modifica</button>
+                                <button class='green-button' type='submit' onclick="mostraFormResponsabile('${formId}')">Modifica</button>
                                 <button class='red-button' type='reset'
                                         onclick="mostraFormResponsabile('${formId}')">
                                     Annulla
@@ -134,7 +135,42 @@ function visualizzaResponsabili(responsabili, selectId) {
     select.innerHTML = optionsHtml;
 }
 
+function aggiornaResponsabile(settore, email) {
+    const formData = new FormData();
+    formData.append('azione', 'aggiornaResponsabile');
+    formData.append('settore', settore);
+    formData.append('email', email);
+    fetch('/PlayRoomPlanner/backend/api-rootAccount.php', {
+        method: "POST",
+        body: formData
+        })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert("Responsabile aggiornato");
+            caricaSettori();
+        } else {
+            alert(data.message);
+        }
+    })
+    .catch(err => console.error("Errore:", err));
+}
+
 
 document.addEventListener('DOMContentLoaded', function() {
     caricaSettori();
+
+    document.getElementById("lista-responsabili").addEventListener("submit", function(e) {
+        if (e.target.matches("form[id^='form-email-responsabile-']")) {
+            e.preventDefault();
+
+            const form = e.target;
+            const settore = form.dataset.settore;
+            const select = form.querySelector("select");
+            const email = select.value;
+
+            aggiornaResponsabile(settore, email);
+        }
+    });
+
 })
