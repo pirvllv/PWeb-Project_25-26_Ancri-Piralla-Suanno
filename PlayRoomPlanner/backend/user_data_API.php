@@ -22,7 +22,7 @@ if ($azione != "inserisci" && $azione != "aggiorna") {
 }
 
 $query = "";
-$outMsg = "";
+//$outMsg = "";
 if ($azione=="") {
     $cid->close();
     fail("Non c'è azione legata ai dati. Contatta un tecnico");
@@ -49,21 +49,40 @@ if ($azione=="") {
     if(isset($_POST["surname"])) {$dati["Cognome"] = $_POST["surname"];}
     // in caso di modifica della password per utente esistente o di inserimento nuovo utente, critta la password dal form e la inserisce nel db
     if(isset($_POST["password"])) {$dati["Password"] = password_hash($_POST["password"], PASSWORD_DEFAULT);}
-    if(isset($_POST["photo"])) {$dati["Foto"] = $_POST["photo"];}
     if(isset($_POST["role"])) {$dati["Ruolo"] = $_POST["role"];}
     if(isset($_POST["DOB"])) {$dati["DataNascita"] = $_POST["DOB"];}
+
+    $fotonome = esiste("photoname", $_POST);
+    if(isset($_FILES["photo"]) && $fotonome != "") {
+
+        $destination = '../immagini/foto_profilo/'.$fotonome;
+
+        if (!move_uploaded_file($_FILES['photo']['tmp_name'], $destination)) {
+            fail("Attenzione! Errore nel caricamento della nuova foto.");
+        } else {
+            //success("fooooooo");
+        }
+    }
 
     if ($azione=="inserisci") {
         $query = insert_query($dati, "Iscritto");
     } else if ($azione=="modifica") {
         $query = update_query($dati, "Iscritto", $_POST["primkey"], "Email");
-    } 
+    }
     
 }
 
 if ($query == -1) {
-    $cid->close();
-    fail("Cambia almeno un campo");
+
+    if (!isset($_FILES["photo"])) {
+        $cid->close();
+        fail("Cambia almeno un campo");
+    } else {
+
+        success("Foto aggiornata con successo");
+
+    }
+
 }
 
 try { 
