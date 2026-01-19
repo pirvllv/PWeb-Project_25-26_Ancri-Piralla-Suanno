@@ -27,8 +27,8 @@ function mostraSezione(sectionId) {
     }
 }
 
-function mostraFormResponsabile() {
-    const Responsabili = document.getElementById('form-email-responsabile');
+function mostraFormResponsabile(formId) {
+    const Responsabili = document.getElementById(formId);
 
     Responsabili.style.display == 'none' ? Responsabili.style.display = 'block' : Responsabili.style.display = 'none';
 }
@@ -50,10 +50,13 @@ function mostraSettori(listaSettori) {
     const container = document.getElementById('lista-responsabili');
 
     let html = '';
-    listaSettori.forEach(s => {
+    listaSettori.forEach((s, index) => {
         const nome = s.ResponsabileNome ?? "—";
         const cognome = s.ResponsabileCognome ?? "—";
         const email = s.ResponsabileEmail ?? "—";
+
+        const formId = `form-email-responsabile-${index}`;
+        const selectId = `email-resp-${index}`;
 
         html += `
             <div style='margin-bottom: 15px; padding: 15px; border: 1px solid #ddd; border-radius: 5px; background-color: #fafafa;'>
@@ -71,24 +74,66 @@ function mostraSettori(listaSettori) {
                         <div style='margin-bottom: 8px;'>
                             <strong>Email:</strong> ${email}
                         </div>
-                        <button class='green-button' style='padding: 8px 16px; white-space: nowrap;' onclick="mostraFormResponsabile()">Modifica</button>
+
+                        <button class='green-button'
+                                style='padding: 8px 16px; white-space: nowrap;'
+                                onclick="mostraFormResponsabile('${formId}'); caricaResponsabili('${selectId}')">
+                            Modifica
+                        </button>
+
                         <div>
-                            <form id='form-email-responsabile' style='display:none;'>
-                                <select id='email-resp' class='form-control' required>
+                            <form id='${formId}' style='display:none;'>
+                                <select id='${selectId}' class='form-control' required>
                                     <option value="NULL">Nessun responsabile</option>
                                 </select>
-                                <button class='green-button' type='submit' onclick="mostraFormResponsabile()">Modifica</button>
-                                <button class='red-button' type='reset' onclick="mostraFormResponsabile()">Annulla</button> 
+
+                                <button class='green-button' type='submit'>Modifica</button>
+                                <button class='red-button' type='reset'
+                                        onclick="mostraFormResponsabile('${formId}')">
+                                    Annulla
+                                </button>
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
         `;
-    })
+    });
 
     container.innerHTML = html;
 }
+
+
+function caricaResponsabili(selectId) {
+    fetch('/PlayRoomPlanner/backend/api-rootAccount.php?azione=caricaResponsabili')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                visualizzaResponsabili(data.data, selectId);
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(error => console.error('Errore: ', error));
+}
+
+function visualizzaResponsabili(responsabili, selectId) {
+    const select = document.getElementById(selectId);
+    if (!select) return; // sicurezza
+
+    let optionsHtml = '<option value="NULL">Nessun responsabile</option>';
+
+    responsabili.forEach(r => {
+        optionsHtml += `
+            <option value="${r.DocenteEmail}">
+                ${r.DocenteNome} ${r.DocenteCognome}
+            </option>
+        `;
+    });
+
+    select.innerHTML = optionsHtml;
+}
+
 
 document.addEventListener('DOMContentLoaded', function() {
     caricaSettori();

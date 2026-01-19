@@ -35,6 +35,10 @@ switch ($action) {
     case 'mostraSettori':
         mostraSettori($cid);
         break;
+
+    case 'caricaResponsabili':
+        caricaResponsabili($cid);
+        break;
 }
 
 function assegnaRuolo($cid, $data) {
@@ -123,6 +127,33 @@ function mostraSettori($cid) {
     echo json_encode(['success' => true, 'data' => $settori]);
 
     return;
+}
+
+function caricaResponsabili($cid) {
+
+    $sql = "SELECT
+                Iscritto.Nome AS DocenteNome,
+                Iscritto.Cognome AS DocenteCognome,
+                Iscritto.Email AS DocenteEmail
+            FROM Iscritto
+            WHERE Iscritto.Ruolo = 'docente'
+            AND Iscritto.Email NOT IN (
+                SELECT ResponsabileEmail
+                FROM Settore
+                WHERE ResponsabileEmail IS NOT NULL
+            )";
+
+
+    $stmt = $cid->prepare($sql);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    $responsabili = [];
+    while ($row = $result->fetch_assoc()) {
+        $responsabili[] = $row;
+    }
+
+    echo json_encode(['success' => true, 'data' => $responsabili]);
 }
 
 ?>
