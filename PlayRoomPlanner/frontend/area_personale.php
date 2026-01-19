@@ -13,6 +13,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
         <?php getCss(); ?>
         <link rel="stylesheet" href="../css/custom_style.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
 
         <script src="../js/calendarManager.js"></script>
         <script>
@@ -31,6 +32,7 @@ if (session_status() === PHP_SESSION_NONE) {
                     <div class="col-lg-12">
                         <div class="header-text">
                             <h2>Area personale</h2>
+                            
                             <h2><?php echo $_SESSION['nome']." ".$_SESSION['cognome']?></h2>
                             <div class="div-dec"></div>
                         </div>
@@ -54,17 +56,17 @@ if (session_status() === PHP_SESSION_NONE) {
                 <div style="grid-area: 1/2/span 1/2;">
                     <h4 style="text-align: center;">Inviti</h4>
                 </div>
-                <div class="timetable" id="timetbl">
+                <div id="timetbl">
                     <?php
                     getIndexes();
                     ?>
                 </div>
-                <div class="scroll-invites" id="scroll" style= "grid-area: 2/2/2/2;">
-                    <?php
-                    foreach (getWeekdays() as $g => $day) {
-                        echo "<div id=\"".$day."-cont\"></div>";
-                    }
-                    ?>
+                <div id="scroll-cont" style= "grid-area: 2/2/2/2;">
+                    <div id="scroll">
+                        <h5 id="no-invites" style="display: none;">Non hai inviti in sospeso</h5>
+                    </div>
+                    <button type="button" id="toggle-red" class="orange-button" onclick="toggle_rossi()" >
+                    Inviti rifiutati</button>
                 </div>
             </div>
             <div class="green-button" style="grid-area: 1/2/span 1/span 1;">

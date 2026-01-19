@@ -10,7 +10,7 @@ if (session_status() === PHP_SESSION_NONE) {
 if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
   // salva la pagina richiesta per il redirect dopo il login
   $_SESSION['redirect_to'] = $_SERVER['REQUEST_URI'];
-  header("Location: ../frontend/login.php");
+  header("Location: /PlayRoomPlanner/frontend/login.php");
   exit;
 }
 ?>

@@ -6,33 +6,119 @@ require_once("../backend/connection.php");
 $cid = connessione($hostname, $username, $password, $dbname);
 //$qry = "";
 
-if (!$cid) { fail("Connessione al database non riuscita"); }
+if (!$cid) { fail("Connessione al database non riuscita. Contatta un tecnico"); }
 //print_r($_GET);
-if (esiste("today", $_GET)=="" || esiste("primkey", $_GET)=="" || esiste("type", $_GET)=="") {
-    fail('Non ci sono abbastanza dati per la chiamata API');
+if ((esiste("today", $_GET)=="" && esiste("type", $_GET)!="change") || esiste("primkey", $_GET)=="" || esiste("type", $_GET)=="") {
+    fail('Non ci sono abbastanza dati per la chiamata API (week/invites). Contatta un tecnico');
 }
-if($_GET["type"]!="week" && $_GET["type"]!="room" && $_GET["type"]!="invites") {fail("Tipo incorretto di chiamata API");}
+if($_GET["type"]!="week" && $_GET["type"]!="room" && $_GET["type"]!="invites" && $_GET["type"]!="change") {fail("Tipo incorretto di chiamata API. Contatta un tecnico");}
 
-$mondayStamp = getMondayStamp($_GET["today"]);
-$week = array();
-$weekdays = getWeekdays();
-for ($g = 0; $g < count($weekdays); $g++) {
+$dati = array();
+$hmax = 0;
+if($_GET["type"]!="change") {
+    $mondayStamp = getMondayStamp($_GET["today"]);
+    $weekdays = getWeekdays();
+
+    $bookings = get_bookings($_GET["primkey"], $mondayStamp, $_GET["type"]);
     
-    $week[$g] = array($weekdays[$g], date("j".($_GET["type"]=="invites"?"/m":""), strtotime("+".$g." days", $mondayStamp)));
+
+    if ($_GET["type"]!="invites") {
+        $week = array();
+        
+        for ($g = 0; $g < count($weekdays); $g++) {
+            
+            $week[$g] = array($weekdays[$g], date("j".($_GET["type"]=="invites"?"/m":""), strtotime("+".$g." days", $mondayStamp)));
+            
+        }
+        $dati["week"] = $week;
+        $dati["weekstart"] = date("d/m/Y", $mondayStamp);
+        $dati["hmax"] = $hmax;
+    }
+
+    $dati["bookings"] = $bookings;
+    echo json_encode(["success" => true, "dati" => $dati]);
+} else {
+    //fail($_GET);
+    $idp = $_GET["primkey"];
+    $action = esiste("action", $_GET);
+    $just = esiste("just", $_GET);
     
+    if ($action=="" || $idp=="") {
+        fail('Non ci sono abbastanza dati per la chiamata API (change). Contatta un tecnico');
+    }
+    if($action<0 || $action>1) {
+        fail("Codice incorretto di azione inviti. Contatta un tecnico");
+    }
+
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+    $user = $_SESSION["user"];
+
+    if ($action == 1) {
+        
+        $just = NULL;
+
+        //Controllo della non sovrapposizione di un'invito che si sta accettando con altre attività
+        $sqlIF = "SELECT OraInizio, OraFine
+                    FROM Prenotazione
+                    WHERE IDPrenotazione = ?";
+
+        $sqlCheck = "SELECT COUNT(*) AS conflitto
+                    FROM Prenotazione INNER JOIN Invito
+                    ON (Prenotazione.IDPrenotazione = Invito.IDPrenotazione)
+                    WHERE Invito.IscrittoEmail = ?
+                    AND Invito.Accettazione = 1
+                    AND DataPren = (SELECT DataPren
+                                    FROM Prenotazione 
+                                    WHERE IDPrenotazione = ?)
+                    AND NOT (OraFine <= ? OR OraInizio >= ?);";
+
+        try {
+            $stmtIF = $cid->prepare($sqlIF);
+            $stmtIF->bind_param("i", $idp);
+            $stmtIF->execute();
+            $resIF = $stmtIF->get_result()->fetch_assoc();
+
+            $stmtCheck = $cid->prepare($sqlCheck);
+            $stmtCheck->bind_param("siss", $user, $idp, $resIF["OraInizio"], $resIF["OraFine"]);
+            $stmtCheck->execute();
+            $resCheck = $stmtCheck->get_result()->fetch_assoc();
+        } catch (exception $e) {
+            $errorMessage = $e->getMessage();
+            fail("Contatta un tecnico: ".$errorMessage);
+        }
+
+        if ($resCheck['conflitto'] > 0) {
+            fail("Questo invito è in conflitto con un'attività già in programma");
+        }
+    } else {
+        if ($just =="") {
+            fail("Nessuna giustificazione nella chiamata API. Contatta un tecnico");
+        }
+    }
+
+    //Modifica del campo "accettazione"
+    $sqlChange = "UPDATE Invito
+                    SET Accettazione = ?, Motivazione = ?
+                    WHERE IDPrenotazione = ?
+                    AND IscrittoEmail = ?";
+
+    try {
+        $stmtChange = $cid->prepare($sqlChange);
+
+        $stmtChange->bind_param("isis", $action, $just, $idp, $user);
+        $stmtChange->execute();
+    } catch (exception $e) {
+        $errorMessage = $e->getMessage();
+        fail("Contatta un tecnico: ".$errorMessage);
+    }
+
+    success("Invito ".($action==1?"accettato":"rifiutato")." con successo");
+
 }
 
-$dati = array("week" => $week);
-$dati["weekstart"] = date("d/m/Y", $mondayStamp);
-
-$bookings = get_bookings($_GET["primkey"], $mondayStamp, $_GET["type"]);
-
-$dati["bookings"] = $bookings;
-//$dati["query"] = $qry;
-/*$sched = get_room_schedule($inviti);
-$dati["sched"] = $sched;*/
-
-echo json_encode(["success" => true, "dati" => $dati]);
+//Funzioni
 
 function getMondayStamp($stamp) {
 
@@ -40,36 +126,18 @@ function getMondayStamp($stamp) {
     
 }
 
-function creaAtt(string $att, $data, string $stato, int $secinizio, float $secfine) {
+function creaAtt(string $att, $data, string $stato, int $secinizio, float $secfine, int $id) {
 
     //secinizio e secfine sono timestamp
-    return array("attivita"=>$att, "data" => $data, "stato"=>$stato, "orainizio"=>$secinizio, "orafine"=>$secfine);
+    return array("attivita"=>$att, "data" => $data, "stato"=>$stato, "orainizio"=>$secinizio, "orafine"=>$secfine, "IDP" => $id);
 
-}
-
-function displayAtt($att) {
-
-    $html = "";
-    try {
-
-        $html .= "<div class=\"cell ".$att["stato"]."\">";
-        $html .= date("H:i",$att["orainizio"]+$att["data"])." - ".$att["attivita"]."</div>";
-        
-    } catch (exception $e) {
-
-        return "<div class=\"cell\">Attività errata</div>";
-        
-    }
-
-    return $html;
-    
 }
 
 function user_invites_query(string $email, int $data1, int $data2) {
 
     $lunedi = date("Y-m-d", $data1);
     $domenica = date("Y-m-d", $data2);
-    $query = "SELECT Attivita, DataPren, OraInizio, OraFine, Accettazione
+    $query = "SELECT Invito.IDPrenotazione, Attivita, DataPren, OraInizio, OraFine, Accettazione
             FROM Prenotazione INNER JOIN Invito
             ON (Prenotazione.IDPrenotazione = Invito.IDPrenotazione";
     $query .= " AND \"".$lunedi."\" <= Prenotazione.DataPren";
@@ -79,7 +147,7 @@ function user_invites_query(string $email, int $data1, int $data2) {
     $query .= " AND Invito.IscrittoEmail=\"".$email."\"";
     $query .= " AND (Invito.Accettazione ".($data2==-1?"IS NULL OR Invito.Accettazione=0":"= 1").")";
     $query .= ")";
-    $query .= " ORDER BY DataPren";
+    $query .= " ORDER BY DataPren, OraInizio";
 
     return $query;
     
@@ -89,7 +157,7 @@ function room_bookings_query(string $room, int $data) {
 
     $lunedi = date("Y-m-d", $data);
     $domenica = date("Y-m-d", strtotime("+6 days", $data));
-    $query = "SELECT Attivita, DataPren, OraInizio, OraFine
+    $query = "SELECT IDPrenotazione, Attivita, DataPren, OraInizio, OraFine
             FROM Prenotazione";
     $query .= " WHERE (";
     $query .= "\"".$lunedi."\" <= DataPren";
@@ -106,7 +174,7 @@ function get_bookings(string $primaryKey, int $data, string $action) {
 
     global $hostname, $username, $password, $dbname;
     $cid = connessione($hostname, $username, $password, $dbname);
-    if(!$cid) {die("Errore di connessione al database");}
+    if(!$cid) {die("Errore di connessione al database. Contatta un tecnico");}
 
     //$todayStamp = strtotime("10-11-2025");
     $todayStamp = time();
@@ -125,11 +193,12 @@ function get_bookings(string $primaryKey, int $data, string $action) {
         //echo "Query eseguita correttamente: ".$result;
     } catch (exception $e) {
         $errorMessage = $e->getMessage();
-        fail($errorMessage);
+        fail("Contatta un tecnico: ".$errorMessage);
     }
     $cid->close();
 
     $bookings = array();
+    global $hmax;
     if ($result->num_rows > 0) {
         while($row = $result->fetch_assoc()) {
             //echo "<p>".print_r($row)."<br></p>";
@@ -137,58 +206,44 @@ function get_bookings(string $primaryKey, int $data, string $action) {
             $dataPrenStamp = strtotime($row["DataPren"]);
             //global $weekdays;
             $dayIdx = intval(date("N", $dataPrenStamp))-1;
-            $status = "";
-            if ($action=="invites") {
-                switch ($row["Accettazione"]) {
-                    case "": $status="attInSospeso"; break;
-                    case "0": $status="attRifiutata"; break;
-                    //case "1": $status="attAccettata"; break;
-                }
-            } else if ($action=="week") {$status = "attAccettata";}
-            else { $status = "attNeutra";}         
-            
+            $status = "attNeutra";
+
             $initAr = explode(":", $row["OraInizio"]);
             $init = $initAr[0]*3600+1800*(int)($initAr[1]/30);
 
             $endAr = explode(":", $row["OraFine"]);
             $end = $endAr[0]*3600+1800*(int)($endAr[1]/30);
+
+            
+            $orari = $initAr[0].":".$initAr[1]."-".$endAr[0].":".$endAr[1];
+
+            if ($action=="invites") {
+
+                switch ($row["Accettazione"]) {
+                    case "": $status="attInSospeso"; break;
+                    case "0": $status="attRifiutata"; break;
+                    //case "1": $status="attAccettata"; break;
+                }
+
+                global $weekdays;
+                
+                $bookings[$dataPrenStamp]["wkday"] = $weekdays[date("w",$dataPrenStamp)-1]." ".date("d/m",$dataPrenStamp);
+                $bookings[$dataPrenStamp]["attivita"][] = creaAtt($row["Attivita"]." (".$orari.")", $dataPrenStamp, $status, $init, $end, $row["IDPrenotazione"]);
+            } else {
+
+                if ($end>$hmax) {$hmax = $end;}
+                if ($action=="week") {$status = "attAccettata";}
+                $bookings[$dayIdx][] = creaAtt("<b>".$row["Attivita"]."</b><br>".$orari, $dataPrenStamp, $status, $init, $end, $row["IDPrenotazione"]);
+        }    
+            }
+            
             //echo "<p>".$init."<br></p>";
             
-            $bookings[$dayIdx][] = creaAtt($row["Attivita"], $dataPrenStamp, $status, $init, $end);
-        }
+            
     }
 
     return $bookings;
 
-}
-
-function table_from_schedule($sched, $hmin, $hmax) {
-
-    $table = "";
-    foreach ($sched as $g => $day) {
-
-        foreach($day as $att) {
-
-            if ($att["orafine"]<=$att["orainizio"]) {continue;}
-
-            $column = $g+2;
-            $row = 2*($att["orainizio"]/3600-$hmin+1)+1;
-            $span = ($att["orafine"]-$att["orainizio"])/1800;
-            
-            $table = $table."\n<div class=\"cell ".$att["stato"]."\" style=\"grid-area: ".$row."/".$column."/ span ".$span."/".$column.";\">".$att["attivita"]."</div>";
-
-        }
-
-    }
-
-    return $table;
-
-}
-
-function fail($message) {
-
-    echo json_encode(['success' => false, 'message' => $message]);
-    exit();
 }
 
 ?>

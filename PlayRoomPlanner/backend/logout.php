@@ -22,6 +22,6 @@ if (ini_get("session.use_cookies")) {
 // distrugge la sessione.
 session_destroy();
 
-header("Location: ../index.php");
+header("Location: /PlayRoomPlanner/index.php");
 exit;
 ?>
