@@ -61,16 +61,16 @@ if($_GET["type"]!="change") {
 
         //Controllo della non sovrapposizione di un'invito che si sta accettando con altre attività
         $sqlIF = "SELECT OraInizio, OraFine
-                    FROM prenotazione
+                    FROM Prenotazione
                     WHERE IDPrenotazione = ?";
 
         $sqlCheck = "SELECT COUNT(*) AS conflitto
-                    FROM prenotazione INNER JOIN invito
-                    ON (prenotazione.IDPrenotazione = invito.IDPrenotazione)
-                    WHERE invito.IscrittoEmail = ?
-                    AND invito.Accettazione = 1
+                    FROM Prenotazione INNER JOIN Invito
+                    ON (Prenotazione.IDPrenotazione = Invito.IDPrenotazione)
+                    WHERE Invito.IscrittoEmail = ?
+                    AND Invito.Accettazione = 1
                     AND DataPren = (SELECT DataPren
-                                    FROM prenotazione 
+                                    FROM Prenotazione 
                                     WHERE IDPrenotazione = ?)
                     AND NOT (OraFine <= ? OR OraInizio >= ?);";
 
@@ -99,7 +99,7 @@ if($_GET["type"]!="change") {
     }
 
     //Modifica del campo "accettazione"
-    $sqlChange = "UPDATE invito
+    $sqlChange = "UPDATE Invito
                     SET Accettazione = ?, Motivazione = ?
                     WHERE IDPrenotazione = ?
                     AND IscrittoEmail = ?";
@@ -137,15 +137,15 @@ function user_invites_query(string $email, int $data1, int $data2) {
 
     $lunedi = date("Y-m-d", $data1);
     $domenica = date("Y-m-d", $data2);
-    $query = "SELECT invito.IDPrenotazione, Attivita, DataPren, OraInizio, OraFine, Accettazione
-            FROM prenotazione INNER JOIN invito
-            ON (prenotazione.IDPrenotazione = invito.IDPrenotazione";
-    $query .= " AND \"".$lunedi."\" <= prenotazione.DataPren";
+    $query = "SELECT Invito.IDPrenotazione, Attivita, DataPren, OraInizio, OraFine, Accettazione
+            FROM Prenotazione INNER JOIN Invito
+            ON (Prenotazione.IDPrenotazione = Invito.IDPrenotazione";
+    $query .= " AND \"".$lunedi."\" <= Prenotazione.DataPren";
     if ($data2 != -1) {
-        $query .= " AND prenotazione.DataPren <= \"".$domenica."\"";
+        $query .= " AND Prenotazione.DataPren <= \"".$domenica."\"";
     }
-    $query .= " AND invito.IscrittoEmail=\"".$email."\"";
-    $query .= " AND (invito.Accettazione ".($data2==-1?"IS NULL OR invito.Accettazione=0":"= 1").")";
+    $query .= " AND Invito.IscrittoEmail=\"".$email."\"";
+    $query .= " AND (Invito.Accettazione ".($data2==-1?"IS NULL OR Invito.Accettazione=0":"= 1").")";
     $query .= ")";
     $query .= " ORDER BY DataPren, OraInizio";
 
@@ -158,7 +158,7 @@ function room_bookings_query(string $room, int $data) {
     $lunedi = date("Y-m-d", $data);
     $domenica = date("Y-m-d", strtotime("+6 days", $data));
     $query = "SELECT IDPrenotazione, Attivita, DataPren, OraInizio, OraFine
-            FROM prenotazione";
+            FROM Prenotazione";
     $query .= " WHERE (";
     $query .= "\"".$lunedi."\" <= DataPren";
     $query .= " AND DataPren <= \"".$domenica."\"";
