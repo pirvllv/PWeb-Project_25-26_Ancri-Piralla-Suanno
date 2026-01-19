@@ -251,27 +251,31 @@ function mostraSale($cid, $tipologia)
       $capienza = htmlspecialchars($row["Capienza"]);
       $nomeSettore = htmlspecialchars($row["SettoreNome"]);
 
-      echo <<<HTML
-            <div class="col-lg-12">
+      echo
+            '<div class="col-lg-12">
 						  <div class="service-item">
 							  <div class="row">
 								  <div class="col-lg-4">
 									  <div class="icon">
-										  <img src="/PlayRoomPlanner/immagini/{$tipologia}_{$numAula}.jpg" alt="Sala Prova {$numAula}">
+										  <img src="/PlayRoomPlanner/immagini/'.$tipologia.'_'.$numAula.'.jpg" alt="Sala Prova '.$numAula.'">
 					  				</div>
 					  			</div>
 						  		<div class="col-lg-8">
 							  		<div class="right-content">
-								  		<h4>Sala Prova {$numAula}</h4>
-                      <p><strong>Tipologia:</strong> {$tipologia}</p>
-                      <p><strong>Capienza:</strong> {$capienza} persone</p>
-                      <p><strong>Settore:</strong> {$nomeSettore}</p>
+								  		<h4>Sala Prova '.$numAula.'</h4>
+                      <p><strong>Tipologia:</strong> '.$tipologia.'</p>
+                      <p><strong>Capienza:</strong> '.$capienza.' persone</p>
+                      <p><strong>Settore:</strong> '.$nomeSettore.'</p>
 									  </div>
-								  </div>
-							  </div>
+								  </div>';
+
+                                if (isset($_SESSION['user'])) {
+                                    echo '<div class="col-lg-12" style="text-align: right;">
+                                            <button class="orange-button" style="margin-bottom: 20px;" onclick="window.location.href=\'/PlayRoomPlanner/frontend/prenotazioni_aula.php?aula=' . $numAula . '\'">Mostra prenotazioni</button>
+                                        </div>';}
+							  echo '</div>
 						  </div>
-				    </div>
-HTML;
+				    </div>';
     }
   } else {
     echo '<div class="row"><div class="col-12"><p class="text-center text-muted">Nessuna sala disponibile per questa categoria al momento.</p></div></div>';
@@ -279,3 +283,5 @@ HTML;
 }
 
 ?>
+
+
