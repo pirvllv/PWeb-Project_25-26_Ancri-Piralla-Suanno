@@ -269,10 +269,10 @@ function mostraSale($cid, $tipologia)
 									  </div>
 								  </div>';
 
-                                if (isset($_SESSION['user'])) { 
+                                if (isset($_SESSION['user'])) {
                                     echo '<div class="col-lg-12" style="text-align: right;">
-                                      <button class="orange-button" style="margin-bottom: 20px;" onclick="">Mostra prenotazioni</button>
-                                  </div>';}
+                                            <button class="orange-button" style="margin-bottom: 20px;" onclick="window.location.href=\'/PlayRoomPlanner/frontend/prenotazioni_aula.php?aula=' . $numAula . '\'">Mostra prenotazioni</button>
+                                        </div>';}
 							  echo '</div>
 						  </div>
 				    </div>';
