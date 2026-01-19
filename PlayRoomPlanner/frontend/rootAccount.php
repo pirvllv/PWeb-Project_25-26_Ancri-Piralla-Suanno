@@ -41,6 +41,7 @@ if(!isset($_SESSION) || $_SESSION['logged_in'] == false || $_SESSION['responsabi
     <link rel="stylesheet" href="../css/animate.css">
     <link rel="stylesheet" href="../css/custom_style_carlo.css">
     <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css">
+    <script src="../js/rootAccount.js"></script>
     <script src="../js/gestionePrenotazioni.js"></script>
     <title>Account admin</title>
 </head>
@@ -66,27 +67,26 @@ if(!isset($_SESSION) || $_SESSION['logged_in'] == false || $_SESSION['responsabi
         <div class="options bar" style="margin-top: 50px; margin-bottom: 50px;">
             <div class="row mb-3">
                 <div class="col-sm-3">
-                    <button class="orange-button" id="manager-responsabili">Responsabili corsi</a>
+                    <button class="orange-button" id="button-manager-responsabili" onclick="mostraSezione('manager-responsabili')">Responsabili corsi</a>
                 </div>
                 <div class="col-sm-3">
-                    <button class="orange-button" id="edit-user-data">Dati utenti e ruoli</a>
+                    <button class="orange-button" id="button-edit-user-data" onclick="mostraSezione('edit-user-data')">Dati utenti e ruoli</a>
                 </div>
                 <div class="col-sm-3">
-                    <button class="orange-button" id="booking-manager">Prenotazioni</a>
+                    <button class="orange-button" id="button-booking-manager" onclick="mostraSezione('booking-manager')">Prenotazioni</a>
                 </div>
             </div>
         </div>
-        <div class="container" id="admin-page-content">
-        </div>
     </div>
-    <div class="container" style="margin-top: 50px; margin-bottom: 50px;">
+
+    <div class="container" id="booking-manager" style="display:none; margin-top: 50px; margin-bottom: 50px;">
         <div class="section-prenotazioni">
             <div class="form-prenotazioni">
                 <div class="crea-prenotazione">
                     <button class="orange-button" style="margin-bottom: 20px;" onclick="mostraForm('crea')">Crea
                         prenotazione</button>
 
-                    <form id="crea" style="display:none; padding-top: 80px;">
+                    <form id="crea" style="display:none; padding-top: 50px;">
                         <div class="container">
                             <h5 style="margin-bottom: 20px;">Crea prenotazione</h5>
                             <div class="row mb-3">
