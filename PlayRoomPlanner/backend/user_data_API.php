@@ -47,8 +47,7 @@ if ($azione=="") {
     if(isset($_POST["email"])) {$dati["Email"] = $_POST["email"];}
     if(isset($_POST["name"])) {$dati["Nome"] = $_POST["name"];}
     if(isset($_POST["surname"])) {$dati["Cognome"] = $_POST["surname"];}
-    // in caso di modifica della password per utente esistente o di inserimento nuovo utente, critta la password dal form e la inserisce nel db
-    if(isset($_POST["password"])) {$dati["Password"] = password_hash($_POST["password"], PASSWORD_DEFAULT);}
+    if(isset($_POST["password"])) {$dati["Password"] = $_POST["password"];}
     if(isset($_POST["photo"])) {$dati["Foto"] = $_POST["photo"];}
     if(isset($_POST["role"])) {$dati["Ruolo"] = $_POST["role"];}
     if(isset($_POST["DOB"])) {$dati["DataNascita"] = $_POST["DOB"];}

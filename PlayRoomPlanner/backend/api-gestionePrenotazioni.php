@@ -337,7 +337,7 @@ function invitaUtenti ($cid, $data) {
 
     foreach ($nuoviInviti as $email) {
         $sqlInsert = "INSERT INTO Invito (IDPrenotazione, IscrittoEmail, Accettazione, Motivazione, DataRisposta)
-                      VALUES (?, ?, NULL, NULL, NULL)";
+                      VALUES (?, ?, 0, NULL, NULL)";
         $stmtInsert = $cid->prepare($sqlInsert);
         $stmtInsert->bind_param("is", $id_pren, $email);
 
