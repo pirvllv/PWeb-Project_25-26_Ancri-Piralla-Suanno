@@ -67,9 +67,9 @@ function mostraPrenotazioni($cid) {
     $sql = "SELECT IDPrenotazione, DataPren, OraInizio, OraFine, NumAula, Attivita
             FROM Prenotazione";
     if(!$_SESSION['admin']) {
-        $sql .= "WHERE ResponsabileEmail = ?";
+        $sql .= " WHERE ResponsabileEmail = ?";
     }
-    $sql .= "ORDER BY DataPren, OraInizio";
+    $sql .= " ORDER BY DataPren, OraInizio";
     
     $stmt = $cid->prepare($sql);
     if(!$_SESSION['admin']) {

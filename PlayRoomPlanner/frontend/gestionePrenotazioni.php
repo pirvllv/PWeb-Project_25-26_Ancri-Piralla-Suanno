@@ -69,7 +69,7 @@ if(!isset($_SESSION) || $_SESSION['logged_in'] == false || $_SESSION['responsabi
                     <button class="orange-button" style="margin-bottom: 20px;" onclick="mostraForm('crea')">Crea
                         prenotazione</button>
 
-                    <form id="crea" style="display:none; padding-top: 80px;">
+                    <form id="crea" style="display:none; padding-top: 50px;">
                         <div class="container">
                             <h5 style="margin-bottom: 20px;">Crea prenotazione</h5>
                             <div class="row mb-3">
