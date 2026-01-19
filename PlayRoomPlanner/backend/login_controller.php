@@ -20,9 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($result->num_rows == 1) {
       $row = $result->fetch_assoc();
 
-      // da modificare con riga sotto perchè non terremo nel db le password in chiaro
-      // if (password_verify($password, $row['Password'])) {
-      if ($password === $row['Password']) {
+      if (password_verify($password, $row['Password'])) {
         $_SESSION['logged_in'] = true;
         $_SESSION['user'] = $row['Email'];
         $_SESSION['nome'] = $row['Nome'];
@@ -46,7 +44,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           unset($_SESSION['redirect_to']);
           header("Location: " . $redirect_url);
         } else {
-            header("Location: /PlayRoomPlanner/index.php");
+          header("Location: ../frontend/area_personale.php");
         }
         exit;
       } else {
@@ -60,7 +58,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $error = "Errore di connessione al database.";
   }
 
-  header("Location: /PlayRoomPlanner/frontend/login.php?error=" . urlencode($error));
+  $_SESSION['login_error'] = $error;
+  header("Location: ../frontend/login.php");
   exit;
 }
 ?>

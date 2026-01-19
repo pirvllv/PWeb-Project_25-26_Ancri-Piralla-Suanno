@@ -1,0 +1,5 @@
+Lea: Gestione dell'accettazione e rifiuto degli inviti
+Lea: in userdataAPI ci sono troppi if else, usa uno switch
+Lea: cambiare le query usando bindparam etcc
+
+Carlo: Password criptate
