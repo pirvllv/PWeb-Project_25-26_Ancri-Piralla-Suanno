@@ -19,6 +19,7 @@ if (session_status() === PHP_SESSION_NONE) {
             <li class="has-sub">
               <a href="javascript:void(0)">Pagine</a>
               <ul class="sub-menu">
+                <li><a href="/PlayRoomPlanner/frontend/sale_prova.php">Sale prova</a></li>
                 <li><a href="/PlayRoomPlanner/frontend/chi_siamo.php">Chi siamo</a></li>
                 <li><a href="/PlayRoomPlanner/frontend/contattaci.php">Contattaci</a></li>
               </ul>
