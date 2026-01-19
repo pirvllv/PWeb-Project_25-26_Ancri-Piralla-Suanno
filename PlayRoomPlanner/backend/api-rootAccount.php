@@ -31,6 +31,10 @@ switch ($action) {
     case 'nominaResponsabile':
         nominaResponsabile($cid, $_POST);
         break;
+
+    case 'mostraSettori':
+        mostraSettori($cid);
+        break;
 }
 
 function assegnaRuolo($cid, $data) {
@@ -97,6 +101,28 @@ function nominaResponsabile($cid, $data) {
     return;
 }
 
+function mostraSettori($cid) {
+    $sql = "SELECT 
+                Settore.Nome AS SettoreNome,
+                Settore.ResponsabileEmail AS ResponsabileEmail,
+                Iscritto.Nome AS ResponsabileNome,
+                Iscritto.Cognome AS ResponsabileCognome
+            FROM Settore
+            LEFT JOIN Iscritto
+                ON Iscritto.Email = Settore.ResponsabileEmail;
+";
+    
+    $stmt = $cid->prepare($sql);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $settori = [];
+    while ($row = $result->fetch_assoc()) {
+        $settori[] = $row;
+    }
 
+    echo json_encode(['success' => true, 'data' => $settori]);
+
+    return;
+}
 
 ?>

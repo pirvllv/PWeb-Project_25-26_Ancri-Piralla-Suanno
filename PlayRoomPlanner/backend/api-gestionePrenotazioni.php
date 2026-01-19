@@ -243,19 +243,28 @@ il responsabile fa riferimento */
 function getAule($cid) {
     global $responsabile_email;
     
-    $sql = "SELECT DISTINCT sp.NumAula, sp.Capienza, sp.SettoreNome
-            FROM SalaProve sp
-            INNER JOIN Settore s ON sp.SettoreNome = s.Nome
-            WHERE s.Tipologia = (
-                SELECT DISTINCT s2.Tipologia
-                FROM Settore s2
-                WHERE s2.ResponsabileEmail = ?
-                LIMIT 1
-            )
-            ORDER BY sp.NumAula";
+    if(!$_SESSION['admin']) {
+        $sql = "SELECT DISTINCT sp.NumAula, sp.Capienza, sp.SettoreNome
+                FROM SalaProve sp
+                INNER JOIN Settore s ON sp.SettoreNome = s.Nome
+                WHERE s.Tipologia = (
+                    SELECT DISTINCT s2.Tipologia
+                    FROM Settore s2
+                    WHERE s2.ResponsabileEmail = ?
+                    LIMIT 1
+                )
+                ORDER BY sp.NumAula";
+    } else {
+        $sql = "SELECT DISTINCT sp.NumAula, sp.Capienza, sp.SettoreNome
+                FROM SalaProve sp
+                ORDER BY sp.NumAula";
+    }
+    
 
     $stmt = $cid->prepare($sql);
-    $stmt->bind_param("s", $responsabile_email);
+    if(!$_SESSION['admin']) {
+        $stmt->bind_param("s", $responsabile_email);
+    }
     $stmt->execute();
     $result = $stmt->get_result();
 

@@ -28,20 +28,6 @@ function mostraForm(formId) {
     }
 }
 
-/* Ottiene la lista di tutte le prenotazioni a nome del responsabile loggato */
-function caricaPrenotazioni() {
-    fetch('/PlayRoomPlanner/backend/api-gestionePrenotazioni.php?azione=mostraPren')
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                visualizzaPrenotazioni(data.data);
-            } else {
-                alert(data.message);
-            }
-        })
-        .catch(error => console.error('Errore:', error));
-}
-
 /* Ottiene la lista di tutte le aule facenti riferimento al macrosettore del responsabile loggato */
 function caricaAule() {
     fetch('/PlayRoomPlanner/backend/api-gestionePrenotazioni.php?azione=getAule')
@@ -49,6 +35,20 @@ function caricaAule() {
         .then(data => {
             if (data.success) {
                 visualizzaAule(data.data);
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(error => console.error('Errore:', error));
+}
+
+/* Ottiene la lista di tutte le prenotazioni a nome del responsabile loggato */
+function caricaPrenotazioni() {
+    fetch('/PlayRoomPlanner/backend/api-gestionePrenotazioni.php?azione=mostraPren')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                visualizzaPrenotazioni(data.data);
             } else {
                 alert(data.message);
             }

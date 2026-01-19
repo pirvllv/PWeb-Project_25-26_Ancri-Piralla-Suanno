@@ -41,8 +41,8 @@ if(!isset($_SESSION) || $_SESSION['logged_in'] == false || $_SESSION['responsabi
     <link rel="stylesheet" href="../css/animate.css">
     <link rel="stylesheet" href="../css/custom_style_carlo.css">
     <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css">
-    <script src="../js/rootAccount.js"></script>
     <script src="../js/gestionePrenotazioni.js"></script>
+    <script src="../js/rootAccount.js"></script>
     <title>Account admin</title>
 </head>
 
@@ -76,6 +76,12 @@ if(!isset($_SESSION) || $_SESSION['logged_in'] == false || $_SESSION['responsabi
                     <button class="orange-button" id="button-booking-manager" onclick="mostraSezione('booking-manager')">Prenotazioni</a>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <div class="container" id="manager-responsabili" style="display:none; margin-top:50px; margin-bottom:50px;">
+        <h5>Settori e responsabili</h5>
+        <div id="lista-responsabili">
         </div>
     </div>
 
@@ -137,6 +143,12 @@ if(!isset($_SESSION) || $_SESSION['logged_in'] == false || $_SESSION['responsabi
                                 <label class="col-sm-3 col-form-label">Attività</label>
                                 <div class="col-sm-9">
                                     <input type="text" name="Attivita" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label class="col-sm-3 col-form-label">Responsabile</label>
+                                <div class="col-sm-9">
+                                    <input type="text" name="Responsabile" class="form-control" required>
                                 </div>
                             </div>
                             <button class="green-button" type="submit">Crea</button>
