@@ -20,9 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($result->num_rows == 1) {
       $row = $result->fetch_assoc();
 
-      // da modificare con riga sotto perchè non terremo nel db le password in chiaro
-      // if (password_verify($password, $row['Password'])) {
-      if ($password === $row['Password']) {
+      if (password_verify($password, $row['Password'])) {
         $_SESSION['logged_in'] = true;
         $_SESSION['user'] = $row['Email'];
         $_SESSION['nome'] = $row['Nome'];
