@@ -33,7 +33,13 @@ if (session_status() === PHP_SESSION_NONE) {
 
             <?php if (isset($_SESSION['user'])): ?>
               <li>
-                <a href="/PlayRoomPlanner/frontend/area_personale.php">
+                <?php
+                if ($_SESSION['admin']) {
+                  echo '<a href="/PlayRoomPlanner/frontend/rootAccount.php">';
+                } else {
+                  echo '<a href="/PlayRoomPlanner/frontend/area_personale.php">';
+                }
+                ?>
                   <?php
                   $path = __DIR__ . "/../immagini/foto_profilo/" . $_SESSION['foto'];
                 

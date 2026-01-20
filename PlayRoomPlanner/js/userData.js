@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     caricaFoto();
 
-    if (document.body.id=="gestione-account") {
+    if (document.body.id=="gestione-account" || document.body.id=="root-account") {
         primkey = window.sessionData.username;
         datiCorrenti = [];
         caricaCampi();

@@ -63,14 +63,18 @@ switch ($action) {
 /* Restituisce la lista di prenotazioni relative allo specifico responsabile loggato */
 function mostraPrenotazioni($cid) {
     global $responsabile_email;
-    
-    $sql = "SELECT IDPrenotazione, DataPren, OraInizio, OraFine, NumAula, Attivita
-            FROM Prenotazione
-            WHERE ResponsabileEmail = ?
-            ORDER BY DataPren, OraInizio";
 
+    $sql = "SELECT IDPrenotazione, DataPren, OraInizio, OraFine, NumAula, Attivita
+            FROM Prenotazione";
+    if(!$_SESSION['admin']) {
+        $sql .= " WHERE ResponsabileEmail = ?";
+    }
+    $sql .= " ORDER BY DataPren, OraInizio";
+    
     $stmt = $cid->prepare($sql);
-    $stmt->bind_param("s", $responsabile_email);
+    if(!$_SESSION['admin']) {
+        $stmt->bind_param("s", $responsabile_email);;
+    }
     $stmt->execute();
     $result = $stmt->get_result();
 
@@ -93,6 +97,9 @@ function creaPrenotazione($cid, $data) {
     $attivita = $data['Attivita'];
     $ora_inizio_str = $data['OraInizio'];
     $ora_fine_str = $data['OraFine'];
+    if($_SESSION['admin']) {
+        $responsabile_email = $data['Responsabile'];
+    }
 
     $ora_inizio = strtotime($ora_inizio_str);
     $ora_fine = strtotime($ora_fine_str);
@@ -164,8 +171,6 @@ function creaPrenotazione($cid, $data) {
 
 /* Modifica di una prenotazione */
 function modificaPrenotazione($cid, $data) {
-    global $responsabile_email;
-    
     $id_prenotazione = $data['IDPrenotazione'];
     $sala = $data['NumAula'];
     $data_pren = $data['DataPren'];
@@ -202,10 +207,10 @@ function modificaPrenotazione($cid, $data) {
     /* Modifica */
     $sqlUpdate = "UPDATE Prenotazione 
                   SET NumAula = ?, DataPren = ?, OraInizio = ?, OraFine = ?, Attivita = ?
-                  WHERE IDPrenotazione = ? AND ResponsabileEmail = ?";
+                  WHERE IDPrenotazione = ?";
 
     $stmtUpdate = $cid->prepare($sqlUpdate);
-    $stmtUpdate->bind_param("sssssss", $sala, $data_pren, $ora_inizio_str, $ora_fine_str, $attivita, $id_prenotazione, $responsabile_email);
+    $stmtUpdate->bind_param("sssssss", $sala, $data_pren, $ora_inizio_str, $ora_fine_str, $attivita, $id_prenotazione);
 
     if ($stmtUpdate->execute()) {
         echo json_encode(['success' => true, 'message' => 'Prenotazione modificata']);
@@ -220,10 +225,10 @@ function eliminaPrenotazione($cid, $data) {
     
     $id_pren = $data['IDPrenotazione'];
 
-    $sqlDelete = "DELETE FROM Prenotazione WHERE IDPrenotazione = ? AND ResponsabileEmail = ?";
+    $sqlDelete = "DELETE FROM Prenotazione WHERE IDPrenotazione = ?";
 
     $stmtDelete = $cid->prepare($sqlDelete);
-    $stmtDelete->bind_param("is", $id_pren, $responsabile_email);
+    $stmtDelete->bind_param("i", $id_pren);
     $stmtDelete->execute();
 
     if ($stmtDelete->affected_rows > 0) {
@@ -238,19 +243,28 @@ il responsabile fa riferimento */
 function getAule($cid) {
     global $responsabile_email;
     
-    $sql = "SELECT DISTINCT sp.NumAula, sp.Capienza, sp.SettoreNome
-            FROM SalaProve sp
-            INNER JOIN Settore s ON sp.SettoreNome = s.Nome
-            WHERE s.Tipologia = (
-                SELECT DISTINCT s2.Tipologia
-                FROM Settore s2
-                WHERE s2.ResponsabileEmail = ?
-                LIMIT 1
-            )
-            ORDER BY sp.NumAula";
+    if(!$_SESSION['admin']) {
+        $sql = "SELECT DISTINCT sp.NumAula, sp.Capienza, sp.SettoreNome
+                FROM SalaProve sp
+                INNER JOIN Settore s ON sp.SettoreNome = s.Nome
+                WHERE s.Tipologia = (
+                    SELECT DISTINCT s2.Tipologia
+                    FROM Settore s2
+                    WHERE s2.ResponsabileEmail = ?
+                    LIMIT 1
+                )
+                ORDER BY sp.NumAula";
+    } else {
+        $sql = "SELECT DISTINCT sp.NumAula, sp.Capienza, sp.SettoreNome
+                FROM SalaProve sp
+                ORDER BY sp.NumAula";
+    }
+    
 
     $stmt = $cid->prepare($sql);
-    $stmt->bind_param("s", $responsabile_email);
+    if(!$_SESSION['admin']) {
+        $stmt->bind_param("s", $responsabile_email);
+    }
     $stmt->execute();
     $result = $stmt->get_result();
 
@@ -264,21 +278,22 @@ function getAule($cid) {
 
 /* Controlla l'esistenza di una e-mail (quindi di un utente) nel sistema */
 function checkValidEmail($cid, $data) {
-    $emailInvitato = $data['emailInvitato'];
+    $email = $data['email'];
 
-    $sql = "SELECT COUNT(*) AS conteggio
-            FROM Iscritto
-            WHERE Iscritto.Email = ?";
-
+    $sql = "SELECT EXISTS (
+                SELECT 1
+                FROM Iscritto
+                WHERE Email = ?
+            ) AS email_presente";
     $stmt = $cid->prepare($sql);
-    $stmt->bind_param("s", $emailInvitato);
+    $stmt->bind_param('s', $email);
     $stmt->execute();
-    $resCheck = $stmt->get_result()->fetch_assoc();
+    $row = $stmt->get_result()->fetch_assoc();
 
-    if ($resCheck['conteggio'] > 0) {
-        echo json_encode(['success' => true, 'message' => 'Utente registrato']);
+    if ($row['email_presente']) {
+        echo json_encode(['success' => true, 'email' => $email]);
     } else {
-        echo json_encode(['success' => false, 'message' => 'Utente non registrato']);
+        echo json_encode(["success" => false, "message" => "Email non trovata"]);
     }
 }
 
@@ -289,14 +304,15 @@ function getInviti($cid, $data) {
 
     echo json_encode([
         'success' => true,
-        'inviti' => $inviti
+        'inviti' => $inviti,
+        'idPren' => $id_prenotazione
     ]);
 }
 
 /* Restituisce la lista degli inviti a una specifica prenotazione, per endpoint API */
 function getInvitiPHP($cid, $id_prenotazione) {
 
-    $sql = "SELECT IscrittoEmail
+    $sql = "SELECT *
             FROM Invito
             WHERE IDPrenotazione = ?";
 
@@ -307,7 +323,7 @@ function getInvitiPHP($cid, $id_prenotazione) {
 
     $inviti = [];
     while ($row = $result->fetch_assoc()) {
-        $inviti[] = $row['IscrittoEmail'];
+        $inviti[] = $row;
     }
     return $inviti;
 }
