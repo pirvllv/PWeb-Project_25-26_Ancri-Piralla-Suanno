@@ -27,6 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION['cognome'] = $row['Cognome'];
         $_SESSION['ruolo'] = $row['Ruolo'];
         $_SESSION['foto'] = $row['Foto'];
+        $_SESSION['admin'] = false;
 
         $sql = "SELECT COUNT(*) as isResp
             FROM Settore
@@ -38,6 +39,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $respCheck = $stmt->get_result()->fetch_assoc();
 
         $_SESSION['responsabile'] = ($respCheck['isResp'] > 0);
+
+        if ($_SESSION['ruolo'] === 'admin') {
+          $_SESSION['admin'] = true;
+          $_SESSION['responsabile'] = true;
+        }
 
         if (isset($_SESSION['redirect_to'])) {
           $redirect_url = $_SESSION['redirect_to'];
