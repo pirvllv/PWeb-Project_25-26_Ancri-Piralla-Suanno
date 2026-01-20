@@ -69,7 +69,7 @@ function caricaCampi() {
 
                 datiCorrenti = data.dati;
                 console.log(datiCorrenti);
-                if (datiCorrenti["photo"]!="" && !is_null(datiCorrenti["photo"])) {
+                if (datiCorrenti["photo"]!="" && datiCorrenti["photo"] !== null) {
                     imagePreview.src = "../immagini/foto_profilo/"+datiCorrenti["photo"];
                 } else {
                     imagePreview.src = "../immagini/default_profile.webp";
