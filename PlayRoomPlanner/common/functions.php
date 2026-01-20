@@ -84,7 +84,7 @@ function getUserDataForm($type) {
                 <fieldset id="foto-fieldset">
                     <label for="photo">Foto</label><br>
                     <input type="hidden" name="MAX_FILE_SIZE" value="30000" />
-                    <img id="image-preview" src="../immagini/default_profile.webp">
+                    <img id="image-preview" onerror="this.src=\'../immagini/default_profile.webp\'" "src="../immagini/default_profile.webp">
                     <input class="'.$readOnlyClass.'" type="file" accept="image/png, image/jpeg, image/jpg" id="photo" '.$display.'></input>
                 </fieldset>
                 </div>
