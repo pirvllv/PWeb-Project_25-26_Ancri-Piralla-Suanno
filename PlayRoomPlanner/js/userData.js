@@ -216,7 +216,7 @@ function crea_account() {
     
     fetch(APIurl, {
       method: "POST",
-      //body: fetchBody
+      body: fetchBody
     })
     .then(response => response.json())
     .then(data => {
@@ -309,7 +309,7 @@ function conferma_modifica() {
     
     fetch(APIurl, {
       method: "POST",
-      //body: fetchBody
+      body: fetchBody
     })
     .then(response => response.json())
     .then(data => {
