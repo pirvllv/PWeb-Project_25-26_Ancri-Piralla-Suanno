@@ -33,6 +33,14 @@ function mostraFormResponsabile(formId) {
     Responsabili.style.display == 'none' ? Responsabili.style.display = 'block' : Responsabili.style.display = 'none';
 }
 
+function mostraFormModifica(formId, status) {
+    const Form = document.getElementById(formId);
+
+    Form.style.display == 'none' ? Form.style.display = 'block' : Form.style.display = 'none';
+
+    if (status) Form.style.display = 'block';
+}
+
 function caricaSettori() {
     fetch('/PlayRoomPlanner/backend/api-rootAccount.php?azione=mostraSettori')
         .then(response => response.json())
@@ -173,4 +181,36 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    document.getElementById("seleziona-utente-form").addEventListener("submit", function(e) {
+        e.preventDefault();
+
+        const email = document.getElementById("email-da-verificare").value;
+        const formData = new FormData();
+        formData.append('azione', 'verificaUser');
+        formData.append('email', email);
+
+        fetch("/PlayRoomPlanner/backend/api-rootAccount.php", {
+            method: "POST",
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (!data.success) {
+                alert("Email non trovata");
+                return;
+            }
+
+            window.sessionData.username = data.email;
+            window.sessionData.nome = data.nome;
+            window.sessionData.cognome = data.cognome;
+            window.sessionData.ruolo = data.ruolo;
+
+            document.getElementById("titolo-nome-utente").textContent = 
+                data.nome + " " + data.cognome;
+
+            mostraFormModifica('form-modifica-user', true);
+            caricaCampi();
+            caricaFoto();
+        });
+    });
 })

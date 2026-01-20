@@ -2,6 +2,7 @@
 
 session_start();
 require_once("../backend/auth_check.php");
+require_once("../common/functions.php");
 
     ini_set('display_errors', 1);
     ini_set('display_startup_errors', 1);
@@ -35,6 +36,8 @@ if(!isset($_SESSION) || $_SESSION['logged_in'] == false || $_SESSION['responsabi
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap"
         rel="stylesheet">
     <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/custom_style.css" rel="stylesheet">
+    <?php getCss(); ?>
     <link rel="stylesheet" href="../css/fontawesome.css">
     <link rel="stylesheet" href="../css/templatemo-574-mexant.css">
     <link rel="stylesheet" href="../css/owl.css">
@@ -42,11 +45,18 @@ if(!isset($_SESSION) || $_SESSION['logged_in'] == false || $_SESSION['responsabi
     <link rel="stylesheet" href="../css/custom_style_carlo.css">
     <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css">
     <script src="../js/gestionePrenotazioni.js"></script>
+    <script src="../js/userData.js"></script>
+    <script src="../common/functions.js"></script>
+    <script>
+          window.sessionData = {
+            username: "<?php echo $_SESSION['user']; ?>"
+          };
+    </script>
     <script src="../js/rootAccount.js"></script>
     <title>Account admin</title>
 </head>
 
-<body>
+<body id="root-account">
     <?php include "../common/navbar.php"; ?>
 
 
@@ -85,14 +95,37 @@ if(!isset($_SESSION) || $_SESSION['logged_in'] == false || $_SESSION['responsabi
         </div>
     </div>
 
-    <div class="container" id="booking-manager" style="display:none; margin-top: 50px; margin-bottom: 50px;">
+    <section class="services">
+        <div class="account-data-form service-item" id="edit-user-data" style="display:none;">
+            <div class="row">
+                <div class="col-lg-6 offset-lg-3">
+                <form id="seleziona-utente-form">
+                    <label>Email utente da modificare</label>
+                    <input type="text" id="email-da-verificare" required>
+                    <button class="green-button" type="submit">Seleziona</button>
+                </form>
+                <div id="form-modifica-user" style="display:none;">
+                    <div class="section-heading">
+                        <h6 id="titolo-nome-utente"></h6>
+                        <h4>Dati</h4>
+                    </div>
+                
+                    <div class="col-lg-10 offset-lg-1">
+                        <?php getUserDataForm("account"); ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="container" id="booking-manager" style="display:none; margin-bottom: 50px;">
         <div class="section-prenotazioni">
             <div class="form-prenotazioni">
                 <div class="crea-prenotazione">
                     <button class="orange-button" style="margin-bottom: 20px;" onclick="mostraForm('crea')">Crea
                         prenotazione</button>
 
-                    <form id="crea" style="display:none; padding-top: 50px;">
+                    <form id="crea" style="display:none;">
                         <div class="container">
                             <h5 style="margin-bottom: 20px;">Crea prenotazione</h5>
                             <div class="row mb-3">

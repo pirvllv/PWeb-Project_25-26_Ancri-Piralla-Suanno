@@ -39,6 +39,10 @@ switch ($action) {
     case 'caricaResponsabili':
         caricaResponsabili($cid);
         break;
+
+    case 'verificaUser':
+        verificaUser($cid, $_POST);
+        break;
 }
 
 function assegnaRuolo($cid, $data) {
@@ -156,6 +160,26 @@ function caricaResponsabili($cid) {
     }
 
     echo json_encode(['success' => true, 'data' => $responsabili]);
+}
+
+function verificaUser($cid, $data) {
+    $email = $data['email'];
+
+    $sql = "SELECT EXISTS (
+                SELECT 1
+                FROM Iscritto
+                WHERE Email = ?
+            ) AS email_presente";
+    $stmt = $cid->prepare($sql);
+    $stmt->bind_param('s', $email);
+    $stmt->execute();
+    $row = $stmt->get_result()->fetch_assoc();
+
+    if ($row['email_presente']) {
+        echo json_encode(['success' => true, 'email' => $email]);
+    } else {
+        echo json_encode(["success" => false, "message" => "Email non trovata"]);
+    }
 }
 
 ?>
