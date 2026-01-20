@@ -68,7 +68,12 @@ function caricaCampi() {
             if (data.success) {
 
                 datiCorrenti = data.dati;
-                imagePreview.src = "../immagini/foto_profilo/"+datiCorrenti["photo"];
+                console.log(datiCorrenti);
+                if (datiCorrenti["photo"]!="" && !is_null(datiCorrenti["photo"])) {
+                    imagePreview.src = "../immagini/foto_profilo/"+datiCorrenti["photo"];
+                } else {
+                    imagePreview.src = "../immagini/default_profile.webp";
+                }
 
                 for (let i = 0; i < fields.length; i++) {
                     fields[i].value = datiCorrenti[fields[i].id];
