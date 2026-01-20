@@ -43,6 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($_SESSION['ruolo'] === 'admin') {
           $_SESSION['admin'] = true;
           $_SESSION['responsabile'] = true;
+          $_SESSION['redirect_to'] = '/PlayRoomPlanner/frontend/rootAccount.php';
         }
 
         if (isset($_SESSION['redirect_to'])) {
