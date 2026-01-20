@@ -42,7 +42,7 @@ function getUserDataForm($type) {
     $readOnly = ($type=="account" || $type=="root-account")?" readOnly ":"";
     $readOnlyClass = ($type=="account" || $type=="root-account")?" read-only ":"";
     $display = ($type=="account" || $type=="root-account")?' style="display: none; "':"";
-    $disabled = ($type=="account" | $type=="root-account")?" disabled ":"";
+    $disabled = ($type=="account" || $type=="root-account")?" disabled ":"";
 
     echo '<form id="contact">
             <div class="row" style="overflow: auto;">
@@ -103,7 +103,7 @@ function getUserDataForm($type) {
                 echo    '<div class="col-lg-12">
                         <fieldset>';
                 }
-                if ($type==="account") {
+                if ($type==="account" || $type==="root-account") {
                     echo '<button type="button" id="account-data-enable" class="orange-button" onclick="abilita_modifica()">
                         Modifica dati</button>
                     <button type="button" id="account-data-submit" class="orange-button" onclick="conferma_modifica()" style="display: none;">
@@ -112,7 +112,7 @@ function getUserDataForm($type) {
                         Annulla</button>
                     <button type="button" id="account-data-erase" class="orange-button" onclick="elimina_account()" style="display: none;">
                         Elimina il tuo account</button>';
-                } else {
+                } else if ($type==="register"){
                     echo '<button type="button" id="account-data-create" class="orange-button" onclick="crea_account()">
                         Crea nuovo account</button>';
                 }

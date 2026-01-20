@@ -86,6 +86,8 @@ function caricaCampi() {
                     if (roles[i].id == datiCorrenti["role"]) {
                         roles[i].checked = true;
                         roles[i].disabled = false;
+                    } else {
+                        roles[i].disabled = true;
                     }
                     
                 }

@@ -102,7 +102,7 @@ if(!isset($_SESSION) || $_SESSION['logged_in'] == false || $_SESSION['admin'] ==
                 <form id="seleziona-utente-form">
                     <label>Email utente da modificare</label>
                     <input type="text" id="email-da-verificare" required>
-                    <button class="green-button" type="submit">Seleziona</button>
+                    <button class="green-button" type="submit" onclick="annulla_modifica()">Seleziona</button>
                 </form>
                 <div id="form-modifica-user" style="display:none;">
                     <div class="section-heading">
