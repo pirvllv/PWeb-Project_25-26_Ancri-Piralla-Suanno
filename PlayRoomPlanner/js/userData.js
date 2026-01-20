@@ -203,10 +203,13 @@ function crea_account() {
     if(photoInput.files.length!==0) {
         fetchBody.append("photo", imageFile);
     }
+
+    let check = checkDati(fetchBody);
+    if(!check.ok) {alert(check.msg);return;}
     
     fetch(APIurl, {
       method: "POST",
-      body: fetchBody
+      //body: fetchBody
     })
     .then(response => response.json())
     .then(data => {
@@ -239,12 +242,14 @@ function conferma_modifica() {
         //console.log(datiNuovi[fields[i].id]);
     }
 
+
     if (passEl.value != passConfEl.value) {
         alert("Le password devono coincidere");
         return;
     } else if (passEl.value!="") {
         fetchBody.append("password", passEl.value);
         logoutBool = true;
+        //console.log("pass ", fetchBody.get("password"));
     }
 
     //console.log(datiNuovi["DOB"]);
@@ -291,10 +296,13 @@ function conferma_modifica() {
         fetchBody.append("photo", imageFile);
         fetchBody.append("photoname", datiCorrenti["photo"]);
     }
+
+    let check = checkDati(fetchBody);
+    if(!check.ok) {alert(check.msg);return;}
     
     fetch(APIurl, {
       method: "POST",
-      body: fetchBody
+      //body: fetchBody
     })
     .then(response => response.json())
     .then(data => {
@@ -343,4 +351,30 @@ function abilita_modifica() {
     
 }
 
+function checkDati(data) {
 
+    let okk = true; let mess = "Errori nei dati:\n";
+
+    //console.log("Pass in check: ", data.get("password").length);
+    //console.log("Pass in data: ", "password" in data);
+    if(data.has("password")) {
+        if (data.get("password").length < 3 || data.get("password").length > 255) {okk = false;
+            mess += "La lunghezza della password deve essere tra 3 e 255 caratteri\n";
+        }
+        if (data.get("password").includes(" ")) {okk = false;
+            mess += "La password non può contenere spazi\n";
+        }
+    }
+
+    if(data.has("password")) {
+        if (data.get("password").length < 3 || data.get("password").length > 255) {okk = false;
+            mess += "La lunghezza della password deve essere tra 3 e 255 caratteri\n";
+        }
+        if (data.get("password").includes(" ")) {okk = false;
+            mess += "La password non può contenere spazi\n";
+        }
+    }
+
+    return {ok: okk, msg: mess};
+
+}
