@@ -11,7 +11,7 @@ require_once("../common/functions.php");
 ?>
 
 <?php
-if(!isset($_SESSION) || $_SESSION['logged_in'] == false || $_SESSION['responsabile'] == false) {
+if(!isset($_SESSION) || $_SESSION['logged_in'] == false || $_SESSION['admin'] == false) {
     http_response_code(403);
     ?>
 <!DOCTYPE html>

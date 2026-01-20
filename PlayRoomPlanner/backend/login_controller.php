@@ -39,11 +39,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $_SESSION['responsabile'] = ($respCheck['isResp'] > 0);
 
-        if($_SESSION['user'] === 'anna.verdi@email.com') {
-            $_SESSION['admin'] = true;
-            $_SESSION['responsabile'] = true;
-        }
-
         if (isset($_SESSION['redirect_to'])) {
           $redirect_url = $_SESSION['redirect_to'];
           unset($_SESSION['redirect_to']);
