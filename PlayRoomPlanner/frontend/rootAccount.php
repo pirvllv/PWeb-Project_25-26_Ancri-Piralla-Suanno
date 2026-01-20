@@ -111,7 +111,7 @@ if(!isset($_SESSION) || $_SESSION['logged_in'] == false || $_SESSION['admin'] ==
                     </div>
                 
                     <div class="col-lg-10 offset-lg-1">
-                        <?php getUserDataForm("account"); ?>
+                        <?php getUserDataForm("root-account"); ?>
                     </div>
                 </div>
             </div>
