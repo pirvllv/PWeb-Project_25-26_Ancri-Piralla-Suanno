@@ -5,3 +5,5 @@ Lea: data maggiore di oggi
 Lea: trim ai dati 
 Lea: controllo data e mail formato
 Lea: foto che devi caricare dal pc
+Lea: rimuovere possibilità di cambiarsi ruolo
+Lea: criptare pass anche su js
