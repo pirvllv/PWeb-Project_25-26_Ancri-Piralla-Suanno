@@ -14,6 +14,11 @@ function getCss() {
 	
 }
 
+function getFotoNome($nome,$cognome) {
+
+    return $nome."_".$cognome.".jpg";
+
+}
 
 function fail($message) {
 
@@ -76,9 +81,11 @@ function getUserDataForm($type) {
                 </fieldset>
                 </div>
                 <div class="col-lg-6">
-                <fieldset>
-                    <label for="photo">Foto (link)</label><br>
-                    <input class="user-data-field '.$readOnlyClass.'" type="text" id="photo" autocomplete="on" '.$readOnly.'></input>
+                <fieldset id="foto-fieldset">
+                    <label for="photo">Foto</label><br>
+                    <input type="hidden" name="MAX_FILE_SIZE" value="30000" />
+                    <img id="image-preview" src="../immagini/default_profile.webp">
+                    <input class="'.$readOnlyClass.'" type="file" accept="image/png, image/jpeg, image/jpg" id="photo" '.$display.'></input>
                 </fieldset>
                 </div>
                 <div class="col-lg-6">

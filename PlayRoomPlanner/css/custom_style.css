@@ -70,6 +70,15 @@
     
 }
 
+#image-preview {
+    width: 20%;
+    height: 20%;
+}
+
+#foto-fieldset {
+    /* display: flex; */
+}
+
 #area-personale .page-heading, #gestione-account .page-heading, #prenotazioni-aula .page-heading, #nuovo-account .page-heading{
   padding: calc(var(--navheight) + 80px) 0px 80px 0px;
 }

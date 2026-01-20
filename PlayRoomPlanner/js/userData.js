@@ -1,3 +1,7 @@
+let imageFile;
+let photoInput;
+let imagePreview;
+
 document.addEventListener("DOMContentLoaded", function() {
 
     APIurl = "../backend/user_data_API.php";
@@ -6,14 +10,45 @@ document.addEventListener("DOMContentLoaded", function() {
     passEl = document.getElementById("password");
     passConfEl = document.getElementById("password-conf");
 
+    caricaFoto();
+
     if (document.body.id=="gestione-account") {
         primkey = window.sessionData.username;
         datiCorrenti = [];
         caricaCampi();
         
     }
+
     
-}); 
+    
+});
+
+function caricaFoto() {
+    photoInput = document.getElementById("photo");
+    imagePreview = document.getElementById('image-preview');
+
+    photoInput.addEventListener("change", async () => {
+       imageFile = photoInput.files[0];
+       //console.log(imageFile);
+
+        //CONTROLLARE LA DIMENSIONE DELL'IMMAGINE IN INGRESSO
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+        imagePreview.src = e.target.result;
+        };
+
+        reader.onerror = (err) => {
+            console.error("Error reading file:", err);
+            alert("Errore nella lettura dell'immagine, riprova.");
+        };
+
+
+        reader.readAsDataURL(imageFile);
+    });
+
+    //console.log("Finito foto");
+}
 
 function caricaCampi() {
     primkey = window.sessionData.username;
@@ -33,6 +68,7 @@ function caricaCampi() {
             if (data.success) {
 
                 datiCorrenti = data.dati;
+                imagePreview.src = "../immagini/foto_profilo/"+datiCorrenti["photo"];
 
                 for (let i = 0; i < fields.length; i++) {
                     fields[i].value = datiCorrenti[fields[i].id];
@@ -54,6 +90,8 @@ function caricaCampi() {
             }
         })
         .catch(error => console.error('Errore:' + error));
+
+        console.log("Finito campi");
 }
 
 function annulla_modifica() {
@@ -72,6 +110,9 @@ function annulla_modifica() {
 
     document.getElementById("password").readOnly = true;
     document.getElementById("password").style.display = "none";
+    document.getElementById("photo").style.display = "none";
+    document.getElementById("photo").value = "";
+    document.getElementById("image-preview").scr = datiCorrenti["photo"];
     document.getElementById("password-conf").readOnly = true;
     document.getElementById("password-conf").style.display = "none";
     document.getElementById("account-data-enable").style.display = "inline-block";
@@ -158,6 +199,10 @@ function crea_account() {
     fetchBody.append("role", ROLE);
 
     if(!confirm(confMess)) {return;}
+
+    if(photoInput.files.length!==0) {
+        fetchBody.append("photo", imageFile);
+    }
     
     fetch(APIurl, {
       method: "POST",
@@ -168,7 +213,7 @@ function crea_account() {
         console.log(data);
         if (data.success) {
             alert(data.message);
-            window.location.href = "/PlayRoomPlanner/frontend/login.php";
+            window.location.href = "../frontend/login.php";
         } else {
             alert(data.message);
         }
@@ -205,7 +250,7 @@ function conferma_modifica() {
     //console.log(datiNuovi["DOB"]);
 
     for (let i = 0; i < fields.length; i++) {
-        if (datiNuovi[fields[i].id] == "" && (fields[i].id!="photo")) {
+        if (datiNuovi[fields[i].id] == "") {
             alert("Il campo "+fields[i].id+" non può essere vuoto.");
             return;
         }
@@ -241,6 +286,11 @@ function conferma_modifica() {
     }
 
     if(!confirm(confMess)) {return;}
+
+    if(photoInput.files.length!==0) {
+        fetchBody.append("photo", imageFile);
+        fetchBody.append("photoname", datiCorrenti["photo"]);
+    }
     
     fetch(APIurl, {
       method: "POST",
@@ -259,7 +309,7 @@ function conferma_modifica() {
             }
         } else {
             alert(data.message);
-            logout();
+            //logout();
         }
     })
     .catch(error => console.error('Errore:' + error));
@@ -283,6 +333,7 @@ function abilita_modifica() {
 
     document.getElementById("password").readOnly = false;
     document.getElementById("password").style.display = "inline-block";
+    document.getElementById("photo").style.display = "inline-block";
     document.getElementById("password-conf").readOnly = false;
     document.getElementById("password-conf").style.display = "inline-block";
     document.getElementById("account-data-enable").style.display = "none";
