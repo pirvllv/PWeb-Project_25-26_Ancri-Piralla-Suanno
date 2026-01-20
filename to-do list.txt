@@ -1,9 +1,11 @@
 Lea: in userdataAPI ci sono troppi if else, usa uno switch
 Lea: cambiare le query usando bindparam etcc
 Lea: sezione nell'area personale dove ci si può iscrivere ai corsi
-Lea: data maggiore di oggi
-Lea: trim ai dati 
-Lea: controllo data e mail formato
+Lea: data maggiore di oggi (php)
+Lea: trim ai dati (php)
+Lea: controllo data e mail formato (php)
 Lea: foto che devi caricare dal pc
-Lea: rimuovere possibilità di cambiarsi ruolo
+Lea: rimuovere possibilità di cambiarsi ruolo (php)
 Lea: criptare pass anche su js
+Lea: controllo capienza prima di accettazione
+Lea: stamp data su accettazione

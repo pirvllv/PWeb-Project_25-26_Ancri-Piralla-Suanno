@@ -196,7 +196,7 @@ function crea_account() {
         
     }
 
-    if (ROLE=="") {
+    if (ROLE=="" && document.body.id=="root-account") {
         alert("Il campo ruolo non può essere vuoto.");
         return;
     }
@@ -286,12 +286,12 @@ function conferma_modifica() {
         
     }
 
-    if (ROLE=="") {
+    if (ROLE=="" && document.body.id=="root-account") {
         alert("Il campo ruolo non può essere vuoto.");
         return;
     }
     
-    if (ROLE != datiCorrenti["role"]) {
+    if (ROLE != datiCorrenti["role"] && document.body.id=="root-account") {
         fetchBody.append("role", ROLE);
     }
 
@@ -358,27 +358,112 @@ function abilita_modifica() {
 
 function checkDati(data) {
 
-    let okk = true; let mess = "Errori nei dati:\n";
+    /*
+    --mail formato corretto
+    --pass con caratteri: lettere, numeri, @, *, $
+    --Nome e cognome solo lettere, 1 <lunghezza < 100
+    --DOB esistente e passata
+    Ruolo modificabile solo se root
+    */
 
-    //console.log("Pass in check: ", data.get("password").length);
-    //console.log("Pass in data: ", "password" in data);
+    let okk = true; let mess = ""; let errcount = 0;
+
+    //Check pass
     if(data.has("password")) {
-        if (data.get("password").length < 3 || data.get("password").length > 255) {okk = false;
+
+        let pw = data.get("password");
+        if (pw.length < 3 || pw.length > 255) {okk = false; errcount++;
             mess += "La lunghezza della password deve essere tra 3 e 255 caratteri\n";
         }
-        if (data.get("password").includes(" ")) {okk = false;
-            mess += "La password non può contenere spazi\n";
+
+        if (!(/^[a-zA-Z0-9@-_]+$/.test(pw))) {okk = false; errcount++;
+            mess += "La password può contenere solo lettere ASCII, numeri, @, -, _\n";
         }
     }
 
-    if(data.has("password")) {
-        if (data.get("password").length < 3 || data.get("password").length > 255) {okk = false;
-            mess += "La lunghezza della password deve essere tra 3 e 255 caratteri\n";
-        }
-        if (data.get("password").includes(" ")) {okk = false;
-            mess += "La password non può contenere spazi\n";
+    //Check mail
+    if(data.has("email")) {
+
+        let em = data.get("email");
+        if (!(/^[a-zA-Z][\w]*.[\w]+@[\w]+.[a-zA-Z]+$/.test(em))) {okk = false; errcount++;
+            mess += "L'email non è nel formato corretto o ha caratteri vietati\n";
         }
     }
+
+    //Check DOB
+    if(data.has("DOB")) {
+
+        let date = new Date(data.get("DOB"));
+    
+        if (Object.prototype.toString.call(date) === "[object Date]") {
+            if (isNaN(date.getTime())) {okk = false; errcount++;
+                mess += "Data di nascita non valida\n";
+            }
+
+            let today = new Date();
+            today.setHours(0, 0, 0, 0);
+            if (date >= today) {okk = false; errcount++;
+                mess += "Data di nascita deve essere nel passato\n";
+            }
+        }
+    }
+
+    //Check nome
+    if(data.has("name")) {
+
+        let nomi = data.get("name").trim().split(/\s+/);
+        for (nm of nomi) {
+            console.log(nm);
+            if (!(/^\p{L}+$/u.test(nm))) {okk = false; errcount++;
+                mess += "Il nome può contenere solo lettere\n"; break;
+            }
+
+            if (nm.length > 100) {okk = false; errcount++;
+                mess += "Il nome deve avere massimo 100 lettere\n"; break;
+            }
+
+            if (nm.length < 1) {okk = false; errcount++;
+                mess += "Il nome deve avere almeno una lettera\n"; break;
+            }
+        }
+
+        data.set("name", nomi.join(" "));
+        console.log(data.get("name"));
+    }
+
+    //Check cognome
+    if(data.has("surname")) {
+
+        let cognomi = data.get("surname").trim().split(/\s+/);
+        for (cnm of cognomi) {
+            console.log(cnm);
+            if (!(/^\p{L}+$/u.test(cnm))) {okk = false; errcount++;
+                mess += "Il cognome può contenere solo lettere\n"; break;
+            }
+
+            if (cnm.length > 100) {okk = false; errcount++;
+                mess += "Il cognome deve avere massimo 100 lettere\n"; break;
+            }
+
+            if (cnm.length < 1) {okk = false; errcount++;
+                mess += "Il cognome deve avere almeno una lettera\n"; break;
+            }
+        }
+
+        data.set("surname", cognomi.join(" "));
+        console.log(data.get("surname"));
+    }
+
+    //Check ruolo
+    if(data.has("role") && document.body.id=="root-account") {
+
+        let rl = data.get("role");
+        if (!(rl in ["studente", "tecnico", "docente"])) {okk = false; errcount++;
+            mess += "Ruolo non consentito\n";
+        }
+    }
+
+    mess = "Ci sono "+errcount+" errori nei dati:\n"+mess
 
     return {ok: okk, msg: mess};
 

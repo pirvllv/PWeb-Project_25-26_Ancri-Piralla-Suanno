@@ -22,7 +22,7 @@ function getFotoNome($nome,$cognome) {
 
 function fail($message) {
 
-    echo json_encode(['success' => false, 'message' => $message]);
+    echo json_encode(['success' => false, 'message' => "Server: ".$message]);
     exit();
 }
 
@@ -34,18 +34,18 @@ function success($message) {
 
 function getUserDataForm($type) {
 
-    if ($type !== "register" && $type!=="account") {
-        echo "Errore nella creazione del form.";
+    if ($type !== "register" && $type!=="account" && $type!=="root-account") {
+        echo "<div>Errore nella creazione del form.</div>";
         return;
     }
 
-    $readOnly = ($type=="account")?" readOnly ":"";
-    $readOnlyClass = ($type=="account")?" read-only ":"";
-    $display = ($type=="account")?' style="display: none; "':"";
-    $disabled = ($type=="account")?" disabled ":"";
+    $readOnly = ($type=="account" || $type=="root-account")?" readOnly ":"";
+    $readOnlyClass = ($type=="account" || $type=="root-account")?" read-only ":"";
+    $display = ($type=="account" || $type=="root-account")?' style="display: none; "':"";
+    $disabled = ($type=="account" | $type=="root-account")?" disabled ":"";
 
     echo '<form id="contact">
-            <div class="row">
+            <div class="row" style="overflow: auto;">
                 <div class="col-lg-6">
                 <fieldset>
                     <label for="name">Nome</label><br>
@@ -87,20 +87,22 @@ function getUserDataForm($type) {
                     <img id="image-preview" onerror="this.src=\'../immagini/default_profile.webp\'" "src="../immagini/default_profile.webp">
                     <input class="'.$readOnlyClass.'" type="file" accept="image/png, image/jpeg, image/jpg" id="photo" '.$display.'></input>
                 </fieldset>
-                </div>
-                <div class="col-lg-6">
-                <label for="ruolo-fieldset">Ruolo</label><br>
-                <fieldset id="ruolo-fieldset" style="display: flex;">
-                    <input class="user-data-role" type="radio" id="studente" name="role" value="studente" '.$disabled.'>
-                    <label for="studente">Studente</label>
-                    <input class="user-data-role" type="radio" id="tecnico" name="role" value="tecnico" '.$disabled.'>
-                    <label for="tecnico">Tecnico</label>
-                    <input class="user-data-role" type="radio" id="docente" name="role" value="docente" '.$disabled.'>
-                    <label for="docente">Docente</label>
-                </fieldset>
-                </div>
-                <div class="col-lg-12">
-                <fieldset>';
+                </div>';
+                if ($type==="root-account") {
+                    echo '<div class="col-lg-6">
+                        <label for="ruolo-fieldset">Ruolo</label><br>
+                        <fieldset id="ruolo-fieldset" style="display: flex;">
+                            <input class="user-data-role" type="radio" id="studente" name="role" value="studente" '.$disabled.'>
+                            <label for="studente">Studente</label>
+                            <input class="user-data-role" type="radio" id="tecnico" name="role" value="tecnico" '.$disabled.'>
+                            <label for="tecnico">Tecnico</label>
+                            <input class="user-data-role" type="radio" id="docente" name="role" value="docente" '.$disabled.'>
+                            <label for="docente">Docente</label>
+                        </fieldset>
+                        </div>';
+                echo    '<div class="col-lg-12">
+                        <fieldset>';
+                }
                 if ($type==="account") {
                     echo '<button type="button" id="account-data-enable" class="orange-button" onclick="abilita_modifica()">
                         Modifica dati</button>
