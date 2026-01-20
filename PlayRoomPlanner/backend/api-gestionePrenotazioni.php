@@ -278,21 +278,22 @@ function getAule($cid) {
 
 /* Controlla l'esistenza di una e-mail (quindi di un utente) nel sistema */
 function checkValidEmail($cid, $data) {
-    $emailInvitato = $data['emailInvitato'];
+    $email = $data['email'];
 
-    $sql = "SELECT COUNT(*) AS conteggio
-            FROM Iscritto
-            WHERE Iscritto.Email = ?";
-
+    $sql = "SELECT EXISTS (
+                SELECT 1
+                FROM Iscritto
+                WHERE Email = ?
+            ) AS email_presente";
     $stmt = $cid->prepare($sql);
-    $stmt->bind_param("s", $emailInvitato);
+    $stmt->bind_param('s', $email);
     $stmt->execute();
-    $resCheck = $stmt->get_result()->fetch_assoc();
+    $row = $stmt->get_result()->fetch_assoc();
 
-    if ($resCheck['conteggio'] > 0) {
-        echo json_encode(['success' => true, 'message' => 'Utente registrato']);
+    if ($row['email_presente']) {
+        echo json_encode(['success' => true, 'email' => $email]);
     } else {
-        echo json_encode(['success' => false, 'message' => 'Utente non registrato']);
+        echo json_encode(["success" => false, "message" => "Email non trovata"]);
     }
 }
 
@@ -303,14 +304,15 @@ function getInviti($cid, $data) {
 
     echo json_encode([
         'success' => true,
-        'inviti' => $inviti
+        'inviti' => $inviti,
+        'idPren' => $id_prenotazione
     ]);
 }
 
 /* Restituisce la lista degli inviti a una specifica prenotazione, per endpoint API */
 function getInvitiPHP($cid, $id_prenotazione) {
 
-    $sql = "SELECT IscrittoEmail
+    $sql = "SELECT *
             FROM Invito
             WHERE IDPrenotazione = ?";
 
@@ -321,7 +323,7 @@ function getInvitiPHP($cid, $id_prenotazione) {
 
     $inviti = [];
     while ($row = $result->fetch_assoc()) {
-        $inviti[] = $row['IscrittoEmail'];
+        $inviti[] = $row;
     }
     return $inviti;
 }

@@ -188,6 +188,8 @@ function eliminaPrenotazione(id) {
 
 /* Lista globale degli utenti invitati (e da invitare) a una prenotazione */
 let listaInviti = [];
+let listaDaInvitare = [];
+let idPrenotazione;
 
 /* Ottiene la lista degli utenti gia' invitati a una prenotazione */
 function caricaInviti(IDPrenotazione) {  
@@ -203,7 +205,9 @@ function caricaInviti(IDPrenotazione) {
     .then(response => response.json())
     .then(data => {
         if(data.success) {
+            svuotaListaInvitati();
             listaInviti = data.inviti;
+            idPrenotazione = data.idPren;
             mostraListaInviti();
         }
     })
@@ -218,9 +222,16 @@ function controllaUtente(inputId) {
         alert('Inserisci un\'email');
         return;
     }
+
+    listaInviti.forEach((invito) => {
+        if (email == invito.IscrittoEmail) {
+            alert("Errore: utente già invitato");
+            return;
+        }
+    })
     
     const formData = new FormData()
-    formData.append('emailInvitato', email);
+    formData.append('email', email);
     formData.append('azione', 'checkValidEmail');
 
     fetch('/PlayRoomPlanner/backend/api-gestionePrenotazioni.php', {
@@ -232,11 +243,10 @@ function controllaUtente(inputId) {
         if (!data.success) {
             alert(data.message);
         } else {
-            if (!listaInviti.includes(email)) {
-                listaInviti.push(email);
+            if (!listaDaInvitare.includes(email)) {
+                listaDaInvitare.push(email);
                 mostraListaInviti();
-                document.getElementById(inputId).value = "";
-                
+                document.getElementById(inputId).value = "";     
             } else {
                 alert("Utente già inserito");
             }
@@ -248,37 +258,60 @@ function controllaUtente(inputId) {
 /* Visualizza la lista degli utenti invitati (e da invitare)
 in un oggetto <small> della form inviti */
 function mostraListaInviti() {
-    const container = document.getElementById('lista-invitati');
+    const containerInviti = document.getElementById('lista-invitati');
+    const titoloInviti = document.getElementById('titolo-prenotazione-inviti');
+    const containerDaInvitare = document.getElementById('lista-da-invitare');
+    const blockDaInvitare = document.getElementById('block-lista-da-invitare');
 
+    titoloInviti.innerHTML = `Prenotazione ${idPrenotazione}`;
+    
     if (listaInviti.length == 0) {
-        container.innerHTML = "<p>Nessun utente aggiunto</p>";
-        return;
+        containerInviti.innerHTML = "<p>Nessun utente invitato</p>";
+    } else {
+        let html = ''
+        listaInviti.forEach((invito) => {
+            html += `<p>${invito.IscrittoEmail} - `
+            if (invito.Accettazione === 1) {
+                html += `Accettato in data ${invito.DataRisposta}`
+            } else if (invito.Accettazione === 0) {
+                html += `Rifiutato in data ${invito.DataRisposta} con motivazione: "${invito.Motivazione}"`
+            } else {
+                html += `In attesa di risposta`
+            }
+            html += `</p>`
+        });
+        containerInviti.innerHTML = html;
     }
 
-    let html = '<p>'
+    if(listaDaInvitare.length == 0) {
+        blockDaInvitare.style.display = 'none';
+    } else {
+        blockDaInvitare.style.display = 'block';
+        html = '';
+        listaDaInvitare.forEach((invitato) => {
+            html += `<p>${invitato}</p>`;
+        })
+        containerDaInvitare.innerHTML = html;
+    }
 
-    listaInviti.forEach( (i, index) => {
-        if (listaInviti.length -1 == index) {
-            html += `${i}</p>`
-        } else {
-            html += `${i}, `
-        }
-    });
-
-    container.innerHTML = html;
+    return;
 }
 
-/* Svuota la lista globale degli inviti alla chiusura della form, al reset o alla submit degli inviti */
-function svuotaLista() {
+function svuotaListaInvitati() {
     listaInviti.length = 0;
     mostraListaInviti();
 }
 
+function svuotaListaDaInvitare() {
+    listaDaInvitare.length = 0;
+    mostraListaInviti();
+}
+
 /* Invita gli utenti */
-function invitaUtenti(IDPrenotazione) {
+function invitaUtenti() {
     const formData = new FormData();
-    formData.append('IDPren', IDPrenotazione);
-    formData.append('inviti', JSON.stringify(listaInviti));
+    formData.append('IDPren', idPrenotazione);
+    formData.append('inviti', JSON.stringify(listaDaInvitare));
     formData.append('azione', 'invita');
 
     fetch('/PlayRoomPlanner/backend/api-gestionePrenotazioni.php', {
@@ -289,6 +322,7 @@ function invitaUtenti(IDPrenotazione) {
     .then(data => {
         if(data.success) {
             alert(data.message);
+            svuotaListaDaInvitare();
             mostraListaInviti();
         }
         else {
