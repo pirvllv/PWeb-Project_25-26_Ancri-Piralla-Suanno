@@ -106,7 +106,7 @@ if($type!="change") {
                                     WHERE IDPrenotazione = ?
                                         AND Accettazione = 1)
                                  < (SELECT Capienza 
-                                    FROM Salaprove
+                                    FROM SalaProve
                                     WHERE NumAula = (SELECT NumAula
                                                     FROM Prenotazione
                                                     WHERE IDPrenotazione = ?))
