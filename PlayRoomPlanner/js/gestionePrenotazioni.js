@@ -28,6 +28,12 @@ function mostraForm(formId) {
     }
 }
 
+function vaiA(id) {
+    document.getElementById(id).scrollIntoView({
+        behavior: "smooth"
+    });
+}
+
 /* Ottiene la lista di tutte le aule facenti riferimento al macrosettore del responsabile loggato */
 function caricaAule() {
     fetch('/PlayRoomPlanner/backend/api-gestionePrenotazioni.php?azione=getAule')
@@ -91,8 +97,8 @@ function visualizzaPrenotazioni(prenotazioni) {
                         </div>
                     </div>
                     <div style='display: flex; gap: 8px; flex-direction: column;'>
-                        <button class='green-button' style='padding: 8px 16px; white-space: nowrap;' onclick="mostraForm('invita'); caricaInviti(${p.IDPrenotazione})">Invita</button>
-                        <button class='orange-button' style='padding: 8px 16px; white-space: nowrap;' onclick="caricaModifica(${p.IDPrenotazione}, '${p.DataPren}', '${p.OraInizio}', '${p.OraFine}', '${p.NumAula}', '${p.Attivita}')">Modifica</button>
+                        <button class='green-button' style='padding: 8px 16px; white-space: nowrap;' onclick="mostraForm('invita'); caricaInviti(${p.IDPrenotazione}); vaiA('navigazione')">Invita</button>
+                        <button class='orange-button' style='padding: 8px 16px; white-space: nowrap;' onclick="caricaModifica(${p.IDPrenotazione}, '${p.DataPren}', '${p.OraInizio}', '${p.OraFine}', '${p.NumAula}', '${p.Attivita}'); vaiA('navigazione')">Modifica</button>
                         <button class='red-button' style='padding: 8px 16px; white-space: nowrap;' onclick="eliminaPrenotazione(${p.IDPrenotazione})">Elimina</button>
                     </div>
                 </div>

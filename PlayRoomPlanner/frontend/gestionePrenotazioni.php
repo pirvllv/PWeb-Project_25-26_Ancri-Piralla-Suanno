@@ -63,7 +63,7 @@ if(!isset($_SESSION) || $_SESSION['logged_in'] == false || $_SESSION['responsabi
         </div>
     </div>
 
-    <div class="container-navigazione">
+    <div class="container-navigazione" id="navigazione">
         <div class="green-button" style="grid-area: 1/2/span 1/span 1; margin-top: 30px; margin-left: 30px;">
             <a href="area_personale.php" id="area-pers-button" style="width:100%; place-content: center;">Area Personale</a>
         </div>
@@ -79,10 +79,10 @@ if(!isset($_SESSION) || $_SESSION['logged_in'] == false || $_SESSION['responsabi
         <div class="section-prenotazioni">
             <div class="form-prenotazioni">
                 <div class="crea-prenotazione">
-                    <button class="orange-button" style="margin-bottom: 20px;" onclick="mostraForm('crea')">Crea
+                    <button class="orange-button" id="button-crea" style="margin-bottom: 20px;" onclick="mostraForm('crea')">Crea
                         prenotazione</button>
 
-                    <form id="crea" style="display:none; padding-top: 50px;">
+                    <form id="crea" style="display:none; margin-top:30px;">
                         <div class="container">
                             <h5 style="margin-bottom: 20px;">Crea prenotazione</h5>
                             <div class="row mb-3">
