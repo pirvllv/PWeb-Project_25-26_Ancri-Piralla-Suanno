@@ -19,6 +19,7 @@ if (!$cid) { fail("Connessione al database non riuscita. Contatta un tecnico"); 
 
 //print_r($_GET);
 $primkey = mysqli_real_escape_string($cid,esiste("primkey", $_GET));
+
 $today = esiste("today", $_GET);
 $type = esiste("type", $_GET);
 if (($today=="" && $type!="change") || $primkey=="" || $type=="") {
@@ -96,6 +97,24 @@ if($type!="change") {
                                     WHERE IDPrenotazione = ?)
                     AND NOT (OraFine <= ? OR OraInizio >= ?);";
 
+        //Controllo di non sforare la capienza di un'aula
+
+        $sqlCap = "SELECT
+                        CASE
+                            WHEN (SELECT COUNT(IscrittoEmail)
+                                    FROM Invito 
+                                    WHERE IDPrenotazione = ?
+                                        AND Accettazione = 1)
+                                 < (SELECT Capienza 
+                                    FROM Salaprove
+                                    WHERE NumAula = (SELECT NumAula
+                                                    FROM Prenotazione
+                                                    WHERE IDPrenotazione = ?))
+                            THEN 1
+                            ELSE 0
+                        END AS sfora";
+
+
         try {
             $stmtIF = $cid->prepare($sqlIF);
             $stmtIF->bind_param("i", $idp);
@@ -114,6 +133,11 @@ if($type!="change") {
             $stmtCheck->bind_param("siss", $user, $idp, $resIF["OraInizio"], $resIF["OraFine"]);
             $stmtCheck->execute();
             $resCheck = $stmtCheck->get_result()->fetch_assoc();
+
+            $stmtCap = $cid->prepare($sqlCap);
+            $stmtCap->bind_param("ii", $idp, $idp);
+            $stmtCap->execute();
+            $sfora = $stmtCap->get_result()->fetch_assoc()["sfora"];
             
         } catch (exception $e) {
             $errorMessage = $e->getMessage();
@@ -122,6 +146,8 @@ if($type!="change") {
 
         if ($resCheck['conflitto'] > 0) {
             fail("Questo invito è in conflitto con un'attività già in programma");
+        } else if ($sfora != 1){
+            fail("Non puoi partecipare a questo invito, la capienza dell'aula è stata raggiunta");
         }
     } else {
         if ($just =="") {
