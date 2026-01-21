@@ -31,23 +31,23 @@ if($_SESSION['user'] != $primkey) {
 }
 
 
-if($_GET["type"]!="week" && $_GET["type"]!="room" && $_GET["type"]!="invites" && $_GET["type"]!="change") {fail("Tipo incorretto di chiamata API. Contatta un tecnico");}
+if(!in_array($type, array("week", "invites", "change", "room"))) {fail("Tipo incorretto di chiamata API. Contatta un tecnico");}
 
 $dati = array();
 $hmax = 0;
-if($_GET["type"]!="change") {
-    $mondayStamp = getMondayStamp($_GET["today"]);
+if($type!="change") {
+    $mondayStamp = getMondayStamp($today);
     $weekdays = getWeekdays();
 
-    $bookings = get_bookings($_GET["primkey"], $mondayStamp, $_GET["type"]);
+    $bookings = get_bookings($primkey, $mondayStamp, $type);
     
 
-    if ($_GET["type"]!="invites") {
+    if ($type!="invites") {
         $week = array();
         
         for ($g = 0; $g < count($weekdays); $g++) {
             
-            $week[$g] = array($weekdays[$g], date("j".($_GET["type"]=="invites"?"/m":""), strtotime("+".$g." days", $mondayStamp)));
+            $week[$g] = array($weekdays[$g], date("j".($type=="invites"?"/m":""), strtotime("+".$g." days", $mondayStamp)));
             
         }
         $dati["week"] = $week;
@@ -58,15 +58,16 @@ if($_GET["type"]!="change") {
     $dati["bookings"] = $bookings;
     echo json_encode(["success" => true, "dati" => $dati]);
 } else {
-    //fail($_GET);
-    $idp = $_GET["primkey"];
+    //print_r($_GET);
+    $idp = esiste("IDP", $_GET);;
     $action = esiste("action", $_GET);
     $just = esiste("just", $_GET);
     
     if ($action=="" || $idp=="") {
         fail('Non ci sono abbastanza dati per la chiamata API (change). Contatta un tecnico');
     }
-    if($action<0 || $action>1) {
+
+    if($action!=0 && $action!=1) {
         fail("Codice incorretto di azione inviti. Contatta un tecnico");
     }
 
@@ -98,12 +99,21 @@ if($_GET["type"]!="change") {
             $stmtIF = $cid->prepare($sqlIF);
             $stmtIF->bind_param("i", $idp);
             $stmtIF->execute();
-            $resIF = $stmtIF->get_result()->fetch_assoc();
+            $stmtIF = $stmtIF->get_result();
+            
+            if ($stmtIF->num_rows == 0) {
+                fail("IDPrenotazione non trovato. Contatta un tecnico");
+            } else if ($stmtIF->num_rows > 1) {
+                fail("IDPrenotazione duplicato. Contatta un tecnico");
+            }
+            $resIF = $stmtIF->fetch_assoc();
+            
 
             $stmtCheck = $cid->prepare($sqlCheck);
             $stmtCheck->bind_param("siss", $user, $idp, $resIF["OraInizio"], $resIF["OraFine"]);
             $stmtCheck->execute();
             $resCheck = $stmtCheck->get_result()->fetch_assoc();
+            
         } catch (exception $e) {
             $errorMessage = $e->getMessage();
             fail("Contatta un tecnico: ".$errorMessage);
@@ -126,9 +136,9 @@ if($_GET["type"]!="change") {
 
     try {
         $stmtChange = $cid->prepare($sqlChange);
-
         $stmtChange->bind_param("isis", $action, $just, $idp, $user);
         $stmtChange->execute();
+        $stmtChange->get_result();
     } catch (exception $e) {
         $errorMessage = $e->getMessage();
         fail("Contatta un tecnico: ".$errorMessage);
@@ -253,7 +263,7 @@ function get_bookings(string $primaryKey, int $data, string $action) {
 
                 if ($end>$hmax) {$hmax = $end;}
                 if ($action=="week") {$status = "attAccettata";}
-                $bookings[$dayIdx][] = creaAtt("<b>".$row["Attivita"]."</b><br>".$orari, $dataPrenStamp, $status, $init, $end, $row["IDPrenotazione"]);
+                $bookings[$dayIdx][] = creaAtt("<b>".$row["Attivita"]."</b> <br>".$orari, $dataPrenStamp, $status, $init, $end, $row["IDPrenotazione"]);
         }    
             }
             

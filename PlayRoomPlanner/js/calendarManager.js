@@ -294,9 +294,10 @@ function gestisciInvito(btnEl, code) {
     }
     if(msg=="" || act==-1) {alert("Errore nel codice di accettazione/rifiuto inviti. Contatta un tecnico"); return;}
     
-    let url = APIurl+"primkey="+IDP;
+    let url = APIurl+"primkey="+primkey;
     url += "&type=change";
     url += "&action="+act;
+    url += "&IDP="+IDP;
 
     if (act==0) {
         let just = prompt(msg);
