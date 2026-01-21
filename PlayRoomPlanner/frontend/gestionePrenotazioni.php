@@ -68,10 +68,10 @@ if(!isset($_SESSION) || $_SESSION['logged_in'] == false || $_SESSION['responsabi
             <a href="area_personale.php" id="area-pers-button" style="width:100%; place-content: center;">Area Personale</a>
         </div>
         <div class="green-button" style="grid-area: 1/2/span 1/span 1; margin-top: 30px;">
-            <a href="gestione_account.php" id="dati-pers-button" style="width:100%; place-content: center;">Dati personali</a>
+            <a href="gestione_account.php" id="gestione-button" style="width:100%; place-content: center;">Dati personali</a>
         </div>
         <div class="green-button" style="grid-area: 1/2/span 1/span 1; margin-top: 30px;">
-            <a href="../frontend/sale_prova.php" id="gestione-button" style="width:100%; place-content: center;">Sale Prova</a>
+            <a href="../frontend/sale_prova.php" id="sale-button" style="width:100%; place-content: center;">Sale Prova</a>
         </div>
     </div>
 
