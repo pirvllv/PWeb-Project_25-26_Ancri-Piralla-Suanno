@@ -133,13 +133,14 @@ if($type!="change") {
 
     //Modifica del campo "accettazione"
     $sqlChange = "UPDATE Invito
-                    SET Accettazione = ?, Motivazione = ?
+                    SET Accettazione = ?, Motivazione = ?, DataRisposta = ?
                     WHERE IDPrenotazione = ?
                     AND IscrittoEmail = ?";
 
     try {
         $stmtChange = $cid->prepare($sqlChange);
-        $stmtChange->bind_param("isis", $action, $just, $idp, $user);
+        $td = date("Y-m-d H:i:s", time());
+        $stmtChange->bind_param("issis", $action, $just, $td,$idp, $user);
         $stmtChange->execute();
         $stmtChange->get_result();
     } catch (exception $e) {
