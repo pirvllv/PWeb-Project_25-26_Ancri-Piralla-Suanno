@@ -80,8 +80,9 @@ if ($azione=="") {
 
     if($azione=="inserisci") {
         $fotonome = getFotoNome($dati["Nome"], $dati["Cognome"]);
+        $dati["Foto"] = $fotonome;
     } else if ($azione=="modifica"){
-        $fotonome = trim(esiste("photoname", $_POST));
+        $fotonome = $_SESSION["foto"];
         if ($fotonome=="") {
             fail("Nome file della foto mancante. Contatta un tecnico");
         }
@@ -90,13 +91,14 @@ if ($azione=="") {
     if(isset($_FILES["photo"]) && $fotonome != "") {
 
         $destination = '../immagini/foto_profilo/'.$fotonome;
-        $dati["Foto"] = $fotonome;
 
         if (!move_uploaded_file($_FILES['photo']['tmp_name'], $destination)) {
             fail("Attenzione! Errore nel caricamento della nuova foto.");
         } else {
             //success("fooooooo");
         }
+    } else {
+        fail("Foto mancante.");
     }
 
     if ($azione=="inserisci") {

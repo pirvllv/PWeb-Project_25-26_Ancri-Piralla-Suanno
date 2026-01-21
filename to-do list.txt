@@ -1,11 +1,10 @@
 Lea: in userdataAPI ci sono troppi if else, usa uno switch
-Lea: data maggiore di oggi (php)
-Lea: trim ai dati (php)
 Lea: controllo data e mail formato (php)
 Lea: rimuovere possibilità di cambiarsi ruolo (php)
 Lea: criptare pass anche su js
 Lea: controllo capienza prima di accettazione
 Lea: stamp data su accettazione
+Pulizia commenti
 
 /*
     --mail formato corretto

@@ -301,11 +301,11 @@ function conferma_modifica() {
 
     if(photoInput.files.length!==0) {
         fetchBody.append("photo", imageFile);
-        fetchBody.append("photoname", datiCorrenti["photo"]);
+        //fetchBody.append("photoname", datiCorrenti["photo"]);
     }
 
     let check = checkDati(fetchBody);
-    //if(!check.ok) {alert(check.msg);return;}
+    if(!check.ok) {alert(check.msg);return;}
     
     fetch(APIurl, {
       method: "POST",

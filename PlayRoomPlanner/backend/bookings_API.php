@@ -17,9 +17,20 @@ $cid = connessione($hostname, $username, $password, $dbname);
 
 if (!$cid) { fail("Connessione al database non riuscita. Contatta un tecnico"); }
 //print_r($_GET);
-if ((esiste("today", $_GET)=="" && esiste("type", $_GET)!="change") || esiste("primkey", $_GET)=="" || esiste("type", $_GET)=="") {
+$primkey = esiste("primkey", $_GET);
+$today = esiste("today", $_GET);
+$type = esiste("type", $_GET);
+if (($today=="" && $type!="change") || $primkey=="" || $type=="") {
     fail('Non ci sono abbastanza dati per la chiamata API (week/invites). Contatta un tecnico');
 }
+
+if($_SESSION['user'] != $primkey) {
+    http_response_code(403);
+    fail("Error 403: forbidden access");
+    exit;
+}
+
+
 if($_GET["type"]!="week" && $_GET["type"]!="room" && $_GET["type"]!="invites" && $_GET["type"]!="change") {fail("Tipo incorretto di chiamata API. Contatta un tecnico");}
 
 $dati = array();
