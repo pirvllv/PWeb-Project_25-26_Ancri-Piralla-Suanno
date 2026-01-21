@@ -21,7 +21,7 @@ if(esiste("action", $_POST)=="") {
     $azione = trim($_POST["action"]);
 }
 
-if ($azione != "inserisci" && $azione != "aggiorna") {
+if ($azione != "inserisci") {
     if(esiste("primkey", $_POST)!="") {
         $primkey = trim($_POST["primkey"]);
     } else {
