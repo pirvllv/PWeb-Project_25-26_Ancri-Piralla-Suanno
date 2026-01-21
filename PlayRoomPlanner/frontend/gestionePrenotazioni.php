@@ -39,6 +39,7 @@ if(!isset($_SESSION) || $_SESSION['logged_in'] == false || $_SESSION['responsabi
     <link rel="stylesheet" href="../css/templatemo-574-mexant.css">
     <link rel="stylesheet" href="../css/owl.css">
     <link rel="stylesheet" href="../css/animate.css">
+    <link rel="stylesheet" href="../css/custom_style.css">
     <link rel="stylesheet" href="../css/custom_style_carlo.css">
     <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css">
     <script src="../js/gestionePrenotazioni.js"></script>
