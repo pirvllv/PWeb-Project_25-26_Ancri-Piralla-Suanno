@@ -41,6 +41,22 @@ if (session_status() === PHP_SESSION_NONE) {
             </div>
         </div>
         <section class="services">
+            <div class="green-button" style="grid-area: 1/2/span 1/span 1;">
+                <a href="../frontend/gestione_account.php" id="gestione-button" style="width:100%; place-content: center;">
+                    Gestione account</a>
+            </div>
+            <div class="green-button" style="grid-area: 1/2/span 1/span 1;">
+                <a href="../frontend/sale_prova.php" id="sale-button" style="width:100%; place-content: center;">
+                    Sale prova</a>
+            </div>
+            <?php
+            if ($_SESSION["responsabile"]) {
+                echo '<div class="orange-button" style="grid-area: 2/2/span 1/span 1;">
+                            <a href="../frontend/gestionePrenotazioni.php" id="gestione-button" style="width:100%; place-content: center;">
+                            Gestione prenotazioni</a>
+                        </div>';
+            }
+            ?>
             <div class="schedule service-item" style="grid-area: 1/1/span 2/1;">
                 <div style="display:flex; grid-area: 1/1/span 1/1;">
                     <button id="change-week" class="green-button" onclick="changeWeek(-1,'week')">
@@ -69,18 +85,6 @@ if (session_status() === PHP_SESSION_NONE) {
                     Inviti rifiutati</button>
                 </div>
             </div>
-            <div class="green-button" style="grid-area: 1/2/span 1/span 1;">
-                <a href="../frontend/gestione_account.php" id="gestione-button" style="width:100%; place-content: center;">
-                    Gestione account</a>
-            </div>
-            <?php
-            if ($_SESSION["responsabile"]) {
-                echo '<div class="orange-button" style="grid-area: 2/2/span 1/span 1;">
-                            <a href="../frontend/gestionePrenotazioni.php" id="gestione-button" style="width:100%; place-content: center;">
-                            Gestione prenotazioni</a>
-                        </div>';
-            }
-            ?>
         </section>
         <?php
         include "../common/footer.php"; 
