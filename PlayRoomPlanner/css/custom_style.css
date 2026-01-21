@@ -75,6 +75,11 @@
     height: 20%;
 }
 
+#account-data-erase {
+    background-color: red !important;
+    color: black !important;
+}
+
 #foto-fieldset {
     /* display: flex; */
 }
