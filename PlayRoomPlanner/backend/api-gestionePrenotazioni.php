@@ -210,7 +210,7 @@ function modificaPrenotazione($cid, $data) {
                   WHERE IDPrenotazione = ?";
 
     $stmtUpdate = $cid->prepare($sqlUpdate);
-    $stmtUpdate->bind_param("sssssss", $sala, $data_pren, $ora_inizio_str, $ora_fine_str, $attivita, $id_prenotazione);
+    $stmtUpdate->bind_param("ssssss", $sala, $data_pren, $ora_inizio_str, $ora_fine_str, $attivita, $id_prenotazione);
 
     if ($stmtUpdate->execute()) {
         echo json_encode(['success' => true, 'message' => 'Prenotazione modificata']);
