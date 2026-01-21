@@ -3,45 +3,55 @@ require_once "../backend/connection.php";
 require_once "../common/functions.php";
 
 session_start();
-/* Controllo validita' utente */
-if(!isset($_SESSION) || $_SESSION['logged_in'] == false) {
-    http_response_code(403);
-    fail("Error 403: forbidden");
-    exit;
-}
 
 $cid = connessione($hostname, $username, $password, $dbname);
 if(!$cid) {fail("Errore di connessione al database. Contatta un tecnico");}
 
-$azione = "";
-$primkey = "";
 if(esiste("action", $_POST)=="") {
     fail("Azione mancante per completare la query. Contatta un tecnico");
 } else {
     $azione = trim($_POST["action"]);
 }
 
+$primkey = "";
+$logged = false;
 if ($azione != "inserisci") {
     if(esiste("primkey", $_POST)!="") {
-        $primkey = trim($_POST["primkey"]);
+        $primkey = mysqli_real_escape_string($cid,trim($_POST["primkey"]));
     } else {
         fail("Chiave mancante per completare la query. Contatta un tecnico");
     }
+
+    /* Controllo validita' utente */
+    if(!isset($_SESSION["logged_in"]) || $_SESSION['logged_in'] == false) {
+        http_response_code(403);
+        fail("Error 403: forbidden");
+        exit;
+    }
+
+    if($_SESSION['user'] != $primkey && !$_SESSION["admin"]) {
+        http_response_code(403);
+        fail("Error 403: forbidden access");
+        exit;
+    }
+
+    $logged = true;
+    
 }
 
-if($_SESSION['user'] != $primkey && !$_SESSION["admin"]) {
-    http_response_code(403);
-    fail("Error 403: forbidden access");
-    exit;
-}
+
 
 $query = "";
 //$outMsg = "";
-if ($azione=="") {
+switch($azione) {
+
+    case "":
     $cid->close();
     fail("Non c'è azione legata ai dati. Contatta un tecnico");
+    break;
     
-} else if ($azione=="aggiorna") {
+    case "aggiorna":
+
         $err = update_session();
         if ($err!=""){
             fail("Aggiornamento dati - ".$err);
@@ -49,67 +59,76 @@ if ($azione=="") {
             success("Sessione aggiornata");
             exit();
         }
-} else if ($azione=="elimina") {
+        break;
+
+    case "elimina" :
         $query = delete_query("Iscritto", $primkey, "Email");
-} else if ($azione=="getData") {
+        break;
+
+    case "getData" :
         $query = "SELECT Email, Nome, Cognome, Password, Foto, Ruolo, DataNascita
                     FROM Iscritto ";
         $query .= "WHERE Email = \"".$primkey."\"";
-} else if ($azione=="inserisci" || $azione=="modifica"){
+        break;
 
-    $dati = array();
-    if(isset($_POST["email"])) {$dati["Email"] = trim($_POST["email"]);}
-    if(isset($_POST["name"])) {$dati["Nome"] = trim($_POST["name"]);}
-    if(isset($_POST["surname"])) {$dati["Cognome"] = trim($_POST["surname"]);}
-    // in caso di modifica della password per utente esistente o di inserimento nuovo utente, critta la password dal form e la inserisce nel db
-    if(isset($_POST["password"])) {$dati["Password"] = password_hash(trim($_POST["password"]), PASSWORD_DEFAULT);}
-    if(isset($_POST["DOB"])) {$dati["DataNascita"] = trim($_POST["DOB"]);}
+    case "inserisci":
+    case "modifica":
 
-    if(isset($_POST["role"])) {
+        $dati = array();
+        if(isset($_POST["email"])) {$dati["Email"] = mysqli_real_escape_string($cid,trim($_POST["email"]));}
+        if(isset($_POST["name"])) {$dati["Nome"] = mysqli_real_escape_string($cid,trim($_POST["name"]));}
+        if(isset($_POST["surname"])) {$dati["Cognome"] = mysqli_real_escape_string($cid,trim($_POST["surname"]));}
+        // in caso di modifica della password per utente esistente o di inserimento nuovo utente, critta la password dal form e la inserisce nel db
+        if(isset($_POST["password"])) {$dati["Password"] = password_hash(mysqli_real_escape_string($cid,trim($_POST["password"])), PASSWORD_DEFAULT);}
+        if(isset($_POST["DOB"])) {$dati["DataNascita"] = mysqli_real_escape_string($cid,trim($_POST["DOB"]));}
 
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
+        if(esiste("role", $_POST)!="") {
+
+            if (session_status() === PHP_SESSION_NONE) {
+                session_start();
+            }
+            if ($logged && $_SESSION["admin"]){
+                $dati["Ruolo"] = mysqli_real_escape_string($cid,trim($_POST["role"]));
+            }
+        } else if ($azione == "inserisci") {
+            $dati["Ruolo"] = "studente";
         }
-        if ($_SESSION["admin"]){
-            $dati["Ruolo"] = trim($_POST["role"]);
+
+        $check = checkDati($dati);
+        if(!$check["ok"]) {fail($check["msg"]);}
+
+        if($azione=="inserisci") {
+            $fotonome = getFotoNome($dati["Nome"], $dati["Cognome"]);
+            $dati["Foto"] = $fotonome;
+        } else if ($azione=="modifica"){
+            $fotonome = esiste("foto", $_SESSION);
+            if ($fotonome=="") {
+                fail("Nome file della foto mancante. Contatta un tecnico");
+            }
         }
-    }
-
-    $check = checkDati($dati);
-    if(!$check["ok"]) {fail($check["msg"]);}
-
-    if($azione=="inserisci") {
-        $fotonome = getFotoNome($dati["Nome"], $dati["Cognome"]);
-        $dati["Foto"] = $fotonome;
-    } else if ($azione=="modifica"){
-        $fotonome = $_SESSION["foto"];
-        if ($fotonome=="") {
-            fail("Nome file della foto mancante. Contatta un tecnico");
-        }
-    }
-    
-    if(isset($_FILES["photo"]) && $fotonome != "") {
-
-        $destination = '../immagini/foto_profilo/'.$fotonome;
-
-        if (!move_uploaded_file($_FILES['photo']['tmp_name'], $destination)) {
-            fail("Errore nel caricamento della nuova foto.");
-        } else {
-            //success("fooooooo");
-        }
-    } else {
-        fail("Foto mancante.");
-    }
-
-    if ($azione=="inserisci") {
-        $query = insert_query($dati, "Iscritto");
         
-    } else if ($azione=="modifica") {
-        $query = update_query($dati, "Iscritto", $_POST["primkey"], "Email");
-    }
+        if(isset($_FILES["photo"]) && $fotonome != "") {
+
+            $destination = '../immagini/foto_profilo/'.$fotonome;
+
+            if (!move_uploaded_file($_FILES['photo']['tmp_name'], $destination)) {
+                fail("Errore nel caricamento della nuova foto.");
+            } else {
+                //success("fooooooo");
+            }
+        }
+
+        if ($azione=="inserisci") {
+            $query = insert_query($dati, "Iscritto");
+            
+        } else if ($azione=="modifica") {
+            $query = update_query($dati, "Iscritto", $primkey, "Email");
+        }
+        break;
     
-} else {
+    default:
     fail("Azione sbagliata nella chiamata a user API. Contatta un tecnico");
+
 }
 
 if ($query == -1) {
@@ -139,34 +158,42 @@ try {
             break;
     
         default:
-            $errorMessage = "Errore nell'esecuzione della richiesta al database. Contatta un tecnico";
-            fail($query);
+            $errorMessage = "Errore nell'esecuzione della richiesta al database (err: ".$e->getCode()."). Contatta un tecnico";
+            //fail($query);
             break;
     }
     fail($errorMessage);
 }
 $cid->close();
 
-if ($azione == "getData") {
-    if ($result->num_rows > 0) {
-        while($row = $result->fetch_assoc()) {
-            $dati = array("email" => $row["Email"], 
-                  "name" => $row["Nome"], 
-                  "surname" => $row["Cognome"], 
-                  //"pwd" => $row["Password"], 
-                  "photo" => $row["Foto"], 
-                  "role" => $row["Ruolo"], 
-                  "DOB" => $row["DataNascita"]);
-        }
+switch ($azione){
+    case "getData":
+        if ($result->num_rows > 0) {
+            while($row = $result->fetch_assoc()) {
+                $dati = array("email" => $row["Email"], 
+                    "name" => $row["Nome"], 
+                    "surname" => $row["Cognome"], 
+                    //"pwd" => $row["Password"], 
+                    "photo" => $row["Foto"], 
+                    "role" => $row["Ruolo"], 
+                    "DOB" => $row["DataNascita"]);
+            }
 
         echo json_encode(["success" => true, "dati" => $dati]);
-    } 
-} else if ($azione == "modifica") {
-    success("Modifiche eseguite con successo");
-} else if ($azione == "elimina") {
-    success("Account eliminato con successo");
-} else if ($azione == "inserisci") {
-    success("Account creato con successo");
+        }
+        break;
+
+    case "modifica":
+        success("Modifiche eseguite con successo");
+        break;
+
+    case "elimina":
+        success("Account eliminato con successo");
+        break;
+
+    case "inserisci":
+        success("Account creato con successo");
+        break;
 }
 
 function checkDati($data) {
@@ -184,7 +211,7 @@ function checkDati($data) {
     $mess = "";
     $errcount = 0;
 
-    // Check pass
+    /* Check pass
     if (isset($data["Password"])) {
 
         $pw = $data["Password"];
@@ -196,18 +223,19 @@ function checkDati($data) {
         }
 
         if (!preg_match('/^[a-zA-Z0-9@-_]+$/', $pw)) {
+            fail($pw);
             $okk = false;
             $errcount++;
             $mess .= "La password può contenere solo lettere ASCII, numeri, @, -, _\n";
         }
-    }
+    }*/
 
     // Check mail
     if (isset($data["Email"])) {
 
         $em = $data["Email"];
 
-        if (!preg_match('/^[a-zA-Z][\w]*\.[\w]+@[\w]+\.[a-zA-Z]+$/', $em)) {
+        if (!preg_match('/^[a-zA-Z][\w]*.[\w]+@[\w]+\.[a-zA-Z]+$/', $em)) {
             $okk = false;
             $errcount++;
             $mess .= "L'email non è nel formato corretto o ha caratteri vietati\n";
@@ -218,27 +246,25 @@ function checkDati($data) {
     if (isset($data["DataNascita"])) {
 
         try {
-            $date = new DateTime($data["DataNascita"]);
-            $today = new DateTime();
-            $today->setTime(0, 0, 0);
+            $dt = preg_split('/-+/', trim($data["DataNascita"]));
 
-            if ($date >= $today) {
+            if (!checkdate(intval($dt[1]),intval($dt[2]),intval($dt[0]))) {
+                $okk = false;
+                $errcount++;
+                $mess .= "Data di nascita non valida!\n";
+            } else if (strtotime($data["DataNascita"]) > time()) {
                 $okk = false;
                 $errcount++;
                 $mess .= "Data di nascita deve essere nel passato\n";
             }
-
-            if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $data["DataNascita"])) {
-                $okk = false;
-                $errcount++;
-                $mess .= "Data di nascita nel formato sbagliato\n";
-            }
         } catch (Exception $e) {
+            fail($e->getMessage());
             $okk = false;
             $errcount++;
             $mess .= "Data di nascita non valida\n";
         }
     }
+
 
     // Check nome
     if (isset($data["Nome"])) {

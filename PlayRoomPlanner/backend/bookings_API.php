@@ -16,15 +16,17 @@ $cid = connessione($hostname, $username, $password, $dbname);
 //$qry = "";
 
 if (!$cid) { fail("Connessione al database non riuscita. Contatta un tecnico"); }
+
 //print_r($_GET);
-$primkey = esiste("primkey", $_GET);
+$primkey = mysqli_real_escape_string($cid,esiste("primkey", $_GET));
+
 $today = esiste("today", $_GET);
 $type = esiste("type", $_GET);
 if (($today=="" && $type!="change") || $primkey=="" || $type=="") {
     fail('Non ci sono abbastanza dati per la chiamata API (week/invites). Contatta un tecnico');
 }
 
-if($_SESSION['user'] != $primkey) {
+if($_SESSION['user'] != $primkey && $type != "room") {
     http_response_code(403);
     fail("Error 403: forbidden access");
     exit;
@@ -61,7 +63,7 @@ if($type!="change") {
     //print_r($_GET);
     $idp = esiste("IDP", $_GET);;
     $action = esiste("action", $_GET);
-    $just = esiste("just", $_GET);
+    $just = mysqli_real_escape_string($cid,esiste("just", $_GET));
     
     if ($action=="" || $idp=="") {
         fail('Non ci sono abbastanza dati per la chiamata API (change). Contatta un tecnico');
@@ -95,6 +97,24 @@ if($type!="change") {
                                     WHERE IDPrenotazione = ?)
                     AND NOT (OraFine <= ? OR OraInizio >= ?);";
 
+        //Controllo di non sforare la capienza di un'aula
+
+        $sqlCap = "SELECT
+                        CASE
+                            WHEN (SELECT COUNT(IscrittoEmail)
+                                    FROM Invito 
+                                    WHERE IDPrenotazione = ?
+                                        AND Accettazione = 1)
+                                 < (SELECT Capienza 
+                                    FROM SalaProve
+                                    WHERE NumAula = (SELECT NumAula
+                                                    FROM Prenotazione
+                                                    WHERE IDPrenotazione = ?))
+                            THEN 1
+                            ELSE 0
+                        END AS sfora";
+
+
         try {
             $stmtIF = $cid->prepare($sqlIF);
             $stmtIF->bind_param("i", $idp);
@@ -113,6 +133,11 @@ if($type!="change") {
             $stmtCheck->bind_param("siss", $user, $idp, $resIF["OraInizio"], $resIF["OraFine"]);
             $stmtCheck->execute();
             $resCheck = $stmtCheck->get_result()->fetch_assoc();
+
+            $stmtCap = $cid->prepare($sqlCap);
+            $stmtCap->bind_param("ii", $idp, $idp);
+            $stmtCap->execute();
+            $sfora = $stmtCap->get_result()->fetch_assoc()["sfora"];
             
         } catch (exception $e) {
             $errorMessage = $e->getMessage();
@@ -121,22 +146,27 @@ if($type!="change") {
 
         if ($resCheck['conflitto'] > 0) {
             fail("Questo invito è in conflitto con un'attività già in programma");
+        } else if ($sfora != 1){
+            fail("Non puoi partecipare a questo invito, la capienza dell'aula è stata raggiunta");
         }
     } else {
         if ($just =="") {
             fail("Nessuna giustificazione nella chiamata API. Contatta un tecnico");
         }
+
+        
     }
 
     //Modifica del campo "accettazione"
     $sqlChange = "UPDATE Invito
-                    SET Accettazione = ?, Motivazione = ?
+                    SET Accettazione = ?, Motivazione = ?, DataRisposta = ?
                     WHERE IDPrenotazione = ?
                     AND IscrittoEmail = ?";
 
     try {
         $stmtChange = $cid->prepare($sqlChange);
-        $stmtChange->bind_param("isis", $action, $just, $idp, $user);
+        $td = date("Y-m-d H:i:s", time());
+        $stmtChange->bind_param("issis", $action, $just, $td,$idp, $user);
         $stmtChange->execute();
         $stmtChange->get_result();
     } catch (exception $e) {

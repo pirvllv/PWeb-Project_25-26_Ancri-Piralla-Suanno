@@ -205,8 +205,8 @@ document.addEventListener('DOMContentLoaded', function() {
             window.sessionData.cognome = data.cognome;
             window.sessionData.ruolo = data.ruolo;
 
-            document.getElementById("titolo-nome-utente").textContent = 
-                data.nome + " " + data.cognome;
+            /*document.getElementById("titolo-nome-utente").textContent = 
+                data.nome + " " + data.cognome;*/
 
             mostraFormModifica('form-modifica-user', true);
             caricaCampi();

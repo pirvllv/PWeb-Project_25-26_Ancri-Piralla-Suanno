@@ -1,13 +1,1 @@
-Lea: in userdataAPI ci sono troppi if else, usa uno switch
-Lea: controllo capienza prima di accettazione
-Lea: stamp data su accettazione
 Pulizia commenti
-
-/*
-    --mail formato corretto
-    --pass con caratteri: lettere, numeri, @, *, $
-    --Nome e cognome solo lettere, 1 <lunghezza < 100
-    --DOB esistente e passata
-    --Ruolo modificabile solo se root
-    Ruolo tra quelli consentiti
-    */
