@@ -117,6 +117,7 @@ switch($azione) {
         }
 
         if ($azione=="inserisci") {
+            $dati["Ruolo"] = "studente";
             $query = insert_query($dati, "Iscritto");
             
         } else if ($azione=="modifica") {
@@ -156,8 +157,8 @@ try {
             break;
     
         default:
-            $errorMessage = "Errore nell'esecuzione della richiesta al database. Contatta un tecnico";
-            fail($query);
+            $errorMessage = "Errore nell'esecuzione della richiesta al database (err: ".$e->getCode()."). Contatta un tecnico";
+            //fail($query);
             break;
     }
     fail($errorMessage);
