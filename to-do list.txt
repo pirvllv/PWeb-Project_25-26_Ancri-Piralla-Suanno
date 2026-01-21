@@ -2,6 +2,7 @@ Lea: in userdataAPI ci sono troppi if else, usa uno switch
 Lea: controllo capienza prima di accettazione
 Lea: stamp data su accettazione
 Pulizia commenti
+Alert quando errori fetch
 
 /*
     --mail formato corretto
