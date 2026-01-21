@@ -82,7 +82,7 @@ switch($azione) {
         if(isset($_POST["password"])) {$dati["Password"] = password_hash(mysqli_real_escape_string($cid,trim($_POST["password"])), PASSWORD_DEFAULT);}
         if(isset($_POST["DOB"])) {$dati["DataNascita"] = mysqli_real_escape_string($cid,trim($_POST["DOB"]));}
 
-        if(isset($_POST["role"])) {
+        if(esiste("role", $_POST)!="") {
 
             if (session_status() === PHP_SESSION_NONE) {
                 session_start();
@@ -235,7 +235,7 @@ function checkDati($data) {
 
         $em = $data["Email"];
 
-        if (!preg_match('/^[a-zA-Z][\w]*\.[\w]+@[\w]+\.[a-zA-Z]+$/', $em)) {
+        if (!preg_match('/^[a-zA-Z][\w]*.[\w]+@[\w]+\.[a-zA-Z]+$/', $em)) {
             $okk = false;
             $errcount++;
             $mess .= "L'email non è nel formato corretto o ha caratteri vietati\n";
