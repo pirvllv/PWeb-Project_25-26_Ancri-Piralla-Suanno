@@ -68,7 +68,7 @@ function caricaCampi() {
             if (data.success) {
 
                 //window.sessionData.username = data.email;
-                if (document.body.id = "root-account") {
+                if (document.body.id == "root-account") {
                     window.sessionData.nome = data.dati["name"];
                     window.sessionData.cognome = data.dati["surname"];
                     window.sessionData.ruolo = data.dati["role"];
