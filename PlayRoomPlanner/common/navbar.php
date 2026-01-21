@@ -33,23 +33,29 @@ if (session_status() === PHP_SESSION_NONE) {
 
             <?php if (isset($_SESSION['user'])): ?>
               <li>
-                <a href="/PlayRoomPlanner/frontend/area_personale.php">
+                <?php
+                if ($_SESSION['admin']) {
+                  echo '<a href="/PlayRoomPlanner/frontend/rootAccount.php">';
+                } else {
+                  echo '<a href="/PlayRoomPlanner/frontend/area_personale.php">';
+                }
+                ?>
                   <?php
-                  $filename = $_SESSION['nome'] . "_" . $_SESSION['cognome'] . ".jpg";
-
-                  if (!file_exists(__DIR__ . "/../immagini/foto_profilo/" . $filename)) {
-                    echo '<img src="/PlayRoomPlanner/immagini/default_profile.webp" alt="Default Profile" 
-                          style="width: 30px; height: 30px; border-radius: 50%; margin-right: 8px; vertical-align: middle;"> ' . $_SESSION['nome'];
-                  } else {
-                    echo '<img src="/PlayRoomPlanner/immagini/foto_profilo/' . $filename . '" alt="Profile"
+                  $path = __DIR__ . "/../immagini/foto_profilo/" . $_SESSION['foto'];
+                
+                  if (!empty($_SESSION['foto']) && file_exists($path)) {
+                    echo '<img src="/PlayRoomPlanner/immagini/foto_profilo/' . $_SESSION['foto'] . '" alt="Profile"
                           style="width: 30px; height: 30px; border-radius: 50%; margin-right: 8px; vertical-align: middle;">
                     ' . $_SESSION['nome'] . ' ';
+                  } else {
+                    echo '<img src="/PlayRoomPlanner/immagini/default_profile.webp" alt="Default Profile" 
+                          style="width: 30px; height: 30px; border-radius: 50%; margin-right: 8px; vertical-align: middle;"> ' . $_SESSION['nome'];
                   }
                   ?>
-                </a>
-              </li>
+                  </a>
+                </li>
             <?php else: ?>
-              <li><a href="/PlayRoomPlanner/frontend/login.php">Login</a></li>
+                <li><a href="/PlayRoomPlanner/frontend/login.php">Login</a></li>
             <?php endif; ?>
           </ul>
         </nav>

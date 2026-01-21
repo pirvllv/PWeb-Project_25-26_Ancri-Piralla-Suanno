@@ -1,4 +1,5 @@
 INSERT INTO Iscritto (Email, Cognome, Nome, DataNascita, Foto, Ruolo, Password) VALUES
+('admin.account@email.com', 'Account', 'Admin', '2026-01-20', '', 'admin', '$2y$10$g1gYyVQt.f3UGIrjj91OCulStNx8Gwax/aBrpFfk556oKhkazsAgK'),
 ('mario.rossi@email.com', 'Rossi', 'Mario', '1980-05-15', 'Mario_Rossi.jpg', 'docente', '$2y$12$kGNZOReM7EH5tjTGK9yA/eCNp5LSKYgq.ufRqSg4pIh796zSbyODW'),
 ('anna.verdi@email.com', 'Verdi', 'Anna', '1985-09-20', 'Anna_Verdi.jpg', 'docente', '$2y$12$ub1aRRX.d7eCWHSlA0PISezt8ntRKtdAH50ja6H/cgglu/e9zYtbC'),
 ('luca.bianchi@email.com', 'Bianchi', 'Luca', '2002-11-30', 'Luca_Bianchi.jpg', 'studente', '$2y$12$4TZrgkpePjVizwryrbR6HOhOEwMHKm8tgMRvWHeumNogR7fiS8ScC'),

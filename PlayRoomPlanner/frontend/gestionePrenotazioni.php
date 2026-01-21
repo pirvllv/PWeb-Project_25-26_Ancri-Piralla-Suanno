@@ -69,7 +69,7 @@ if(!isset($_SESSION) || $_SESSION['logged_in'] == false || $_SESSION['responsabi
                     <button class="orange-button" style="margin-bottom: 20px;" onclick="mostraForm('crea')">Crea
                         prenotazione</button>
 
-                    <form id="crea" style="display:none; padding-top: 80px;">
+                    <form id="crea" style="display:none; padding-top: 50px;">
                         <div class="container">
                             <h5 style="margin-bottom: 20px;">Crea prenotazione</h5>
                             <div class="row mb-3">
@@ -127,7 +127,7 @@ if(!isset($_SESSION) || $_SESSION['logged_in'] == false || $_SESSION['responsabi
                         </div>
                     </form>
 
-                    <form id="modifica" style="display:none; padding-top: 80px;">
+                    <form id="modifica" style="display:none; margin-top: 30px;">
                         <input type="hidden" id="modifica-id" name="IDPrenotazione">
                         <div class="container">
                             <h5 style="margin-bottom: 20px;">Modifica prenotazione</h5>
@@ -189,7 +189,8 @@ if(!isset($_SESSION) || $_SESSION['logged_in'] == false || $_SESSION['responsabi
                         </div>
                     </form>
 
-                    <form id="invita" style="display:none; padding-top: 80px;">
+                    <form id="invita" style="display:none; margin-top: 30px; padding: 10px;">
+                        <h5 id="titolo-prenotazione-inviti" style="margin-bottom:30px;"></h5>
                         <input type="hidden" id="id-prenotazione-invito">
                         <div class="row mb-3">
                             <label class="col-sm-3 col-form-label">E-mail utente</label>
@@ -201,15 +202,18 @@ if(!isset($_SESSION) || $_SESSION['logged_in'] == false || $_SESSION['responsabi
                             </div>
                         </div>
                         <div class="row mb-3">
+                            <div class="col-sm-12" id="block-lista-da-invitare" style="margin-bottom: 20px; padding: 10px; background-color: #f5f5f5; border-radius: 4px;">
+                                <small id="lista-da-invitare"></small>
+                            </div>
                             <div class="col-sm-12" style="margin-bottom: 20px; padding: 10px; background-color: #f5f5f5; border-radius: 4px;">
                                 <small id="lista-invitati"></small>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-sm-9">
-                                <button class="green-button" type="button" onclick="mostraForm(null); invitaUtenti(document.getElementById('id-prenotazione-invito').value)">Invita</button>
-                                <button class="orange-button" type="reset" onclick="svuotaLista()">Resetta</button>
-                                <button class="red-button" type="reset" onclick="mostraForm(null); svuotaLista()">Annulla</button>
+                                <button class="green-button" type="button" onclick="mostraForm(null); invitaUtenti(); svuotaListaDaInvitare(); svuotaListaInvitati();">Invita</button>
+                                <button class="orange-button" type="reset" onclick="svuotaListaDaInvitare();">Resetta</button>
+                                <button class="red-button" type="reset" onclick="mostraForm(null); svuotaListaDaInvitare(); svuotaListaInvitati();">Annulla</button>
                             </div>
                         </div>
                     </form>
