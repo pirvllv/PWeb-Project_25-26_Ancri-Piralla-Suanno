@@ -257,7 +257,7 @@ function get_bookings(string $primaryKey, int $data, string $action) {
 
                 global $weekdays;
                 
-                $bookings[$dataPrenStamp]["wkday"] = $weekdays[date("w",$dataPrenStamp)-1]." ".date("d/m",$dataPrenStamp);
+                $bookings[$dataPrenStamp]["wkday"] = $weekdays[(date("w",$dataPrenStamp)+6)%7]." ".date("d/m",$dataPrenStamp);
                 $bookings[$dataPrenStamp]["attivita"][] = creaAtt($row["Attivita"]." (".$orari.")", $dataPrenStamp, $status, $init, $end, $row["IDPrenotazione"]);
             } else {
 
