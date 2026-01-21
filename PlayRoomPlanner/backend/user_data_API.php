@@ -245,18 +245,18 @@ function checkDati($data) {
 
         try {
             $dt = preg_split('/-+/', trim($data["DataNascita"]));
-            //fail($dt[0]."f".$dt[1]."f".$dt[2]);
 
-            if (!checkdate(intval($dt[0]),intval($dt[1]),intval($dt[2]))) {
+            if (!checkdate(intval($dt[1]),intval($dt[2]),intval($dt[0]))) {
                 $okk = false;
                 $errcount++;
-                $mess .= "Data di nascita non valida\n";
+                $mess .= "Data di nascita non valida!\n";
             } else if (strtotime($data["DataNascita"]) > time()) {
-                    $okk = false;
-                    $errcount++;
-                    $mess .= "Data di nascita deve essere nel passato\n";
+                $okk = false;
+                $errcount++;
+                $mess .= "Data di nascita deve essere nel passato\n";
             }
-        } catch (exception $e) {
+        } catch (Exception $e) {
+            fail($e->getMessage());
             $okk = false;
             $errcount++;
             $mess .= "Data di nascita non valida\n";
