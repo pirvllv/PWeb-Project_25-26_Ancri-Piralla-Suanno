@@ -26,7 +26,7 @@ if (($today=="" && $type!="change") || $primkey=="" || $type=="") {
     fail('Non ci sono abbastanza dati per la chiamata API (week/invites). Contatta un tecnico');
 }
 
-if($_SESSION['user'] != $primkey) {
+if($_SESSION['user'] != $primkey && $type != "room") {
     http_response_code(403);
     fail("Error 403: forbidden access");
     exit;
