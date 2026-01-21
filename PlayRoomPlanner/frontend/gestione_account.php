@@ -36,6 +36,19 @@ if (session_status() === PHP_SESSION_NONE) {
                 </div>
             </div>
         </div>
+        <div class="green-button" style="grid-area: 1/2/span 1/span 1; margin-top: 30px; margin-left: 30px;">
+            <a href="../frontend/area_personale.php" id="gestione-button" style="width:100%; place-content: center;">Area Personale</a>
+        </div>
+        <div class="green-button" style="grid-area: 1/2/span 1/span 1; margin-top: 30px;">
+            <a href="../frontend/sale_prova.php" id="gestione-button" style="width:100%; place-content: center;">Sale Prova</a>
+        </div>
+        <?php
+        if ($_SESSION["responsabile"]) {
+            echo '<div class="orange-button" style="grid-area: 2/2/span 1/span 1;">
+                    <a href="../frontend/gestionePrenotazioni.php" id="gestione-button" style="width:100%; place-content: center;">Gestione prenotazioni</a>
+                  </div>';
+            }
+        ?>
         <section class="services">
             <div class="account-data-form service-item">
                 <div class="row">
