@@ -1,7 +1,9 @@
 function aggiorna_info() {
 
     let fetchBody = new FormData();
+    primkey = window.sessionData.username;
     fetchBody.append("action", "aggiorna");
+    fetchBody.append("primkey", primkey);
     fetch("../backend/user_data_API.php", {
       method: "POST",
       body: fetchBody
