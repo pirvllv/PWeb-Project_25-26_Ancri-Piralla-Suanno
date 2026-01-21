@@ -90,6 +90,8 @@ switch($azione) {
             if ($logged && $_SESSION["admin"]){
                 $dati["Ruolo"] = mysqli_real_escape_string($cid,trim($_POST["role"]));
             }
+        } else if ($azione == "inserisci") {
+            $dati["Ruolo"] = "studente";
         }
 
         $check = checkDati($dati);
@@ -117,7 +119,6 @@ switch($azione) {
         }
 
         if ($azione=="inserisci") {
-            $dati["Ruolo"] = "studente";
             $query = insert_query($dati, "Iscritto");
             
         } else if ($azione=="modifica") {
