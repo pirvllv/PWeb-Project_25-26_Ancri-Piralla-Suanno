@@ -40,7 +40,7 @@ if (session_status() === PHP_SESSION_NONE) {
             <a href="../frontend/area_personale.php" id="gestione-button" style="width:100%; place-content: center;">Area Personale</a>
         </div>
         <div class="green-button" style="grid-area: 1/2/span 1/span 1; margin-top: 30px;">
-            <a href="../frontend/sale_prova.php" id="gestione-button" style="width:100%; place-content: center;">Sale Prova</a>
+            <a href="../frontend/sale_prova.php" id="sale-button" style="width:100%; place-content: center;">Sale Prova</a>
         </div>
         <?php
         if ($_SESSION["responsabile"]) {
