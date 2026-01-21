@@ -93,7 +93,7 @@ if ($azione=="") {
         $destination = '../immagini/foto_profilo/'.$fotonome;
 
         if (!move_uploaded_file($_FILES['photo']['tmp_name'], $destination)) {
-            fail("Attenzione! Errore nel caricamento della nuova foto.");
+            fail("Errore nel caricamento della nuova foto.");
         } else {
             //success("fooooooo");
         }
