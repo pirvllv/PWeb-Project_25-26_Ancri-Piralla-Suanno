@@ -6,3 +6,12 @@ Lea: rimuovere possibilità di cambiarsi ruolo (php)
 Lea: criptare pass anche su js
 Lea: controllo capienza prima di accettazione
 Lea: stamp data su accettazione
+
+/*
+    --mail formato corretto
+    --pass con caratteri: lettere, numeri, @, *, $
+    --Nome e cognome solo lettere, 1 <lunghezza < 100
+    --DOB esistente e passata
+    --Ruolo modificabile solo se root
+    Ruolo tra quelli consentiti
+    */

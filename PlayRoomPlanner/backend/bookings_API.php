@@ -3,6 +3,15 @@
 require_once("../common/functions.php");
 require_once("../backend/connection.php");
 
+session_start();
+
+/* Controllo validita' utente */
+if(!isset($_SESSION) || $_SESSION['logged_in'] == false) {
+    http_response_code(403);
+    fail("Error 403: forbidden");
+    exit;
+}
+
 $cid = connessione($hostname, $username, $password, $dbname);
 //$qry = "";
 

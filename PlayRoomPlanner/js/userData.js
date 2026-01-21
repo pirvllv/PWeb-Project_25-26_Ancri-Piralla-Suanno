@@ -305,7 +305,7 @@ function conferma_modifica() {
     }
 
     let check = checkDati(fetchBody);
-    if(!check.ok) {alert(check.msg);return;}
+    //if(!check.ok) {alert(check.msg);return;}
     
     fetch(APIurl, {
       method: "POST",
@@ -365,7 +365,8 @@ function checkDati(data) {
     --pass con caratteri: lettere, numeri, @, *, $
     --Nome e cognome solo lettere, 1 <lunghezza < 100
     --DOB esistente e passata
-    Ruolo modificabile solo se root
+    --Ruolo modificabile solo se root
+    Ruolo tra quelli consentiti
     */
 
     let okk = true; let mess = ""; let errcount = 0;
@@ -407,6 +408,8 @@ function checkDati(data) {
             if (date >= today) {okk = false; errcount++;
                 mess += "Data di nascita deve essere nel passato\n";
             }
+        } else {okk = false; errcount++;
+            mess += "Data di nascita non valida\n";
         }
     }
 
