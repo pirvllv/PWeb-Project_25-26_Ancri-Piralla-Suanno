@@ -23,7 +23,7 @@ if(esiste("action", $_POST)=="") {
 
 if ($azione != "inserisci") {
     if(esiste("primkey", $_POST)!="") {
-        $primkey = trim($_POST["primkey"]);
+        $primkey = mysqli_real_escape_string(trim($_POST["primkey"]));
     } else {
         fail("Chiave mancante per completare la query. Contatta un tecnico");
     }
@@ -58,12 +58,12 @@ if ($azione=="") {
 } else if ($azione=="inserisci" || $azione=="modifica"){
 
     $dati = array();
-    if(isset($_POST["email"])) {$dati["Email"] = trim($_POST["email"]);}
-    if(isset($_POST["name"])) {$dati["Nome"] = trim($_POST["name"]);}
-    if(isset($_POST["surname"])) {$dati["Cognome"] = trim($_POST["surname"]);}
+    if(isset($_POST["email"])) {$dati["Email"] = mysqli_real_escape_string(trim($_POST["email"]));}
+    if(isset($_POST["name"])) {$dati["Nome"] = mysqli_real_escape_string(trim($_POST["name"]));}
+    if(isset($_POST["surname"])) {$dati["Cognome"] = mysqli_real_escape_string(trim($_POST["surname"]));}
     // in caso di modifica della password per utente esistente o di inserimento nuovo utente, critta la password dal form e la inserisce nel db
-    if(isset($_POST["password"])) {$dati["Password"] = password_hash(trim($_POST["password"]), PASSWORD_DEFAULT);}
-    if(isset($_POST["DOB"])) {$dati["DataNascita"] = trim($_POST["DOB"]);}
+    if(isset($_POST["password"])) {$dati["Password"] = password_hash(mysqli_real_escape_string(trim($_POST["password"])), PASSWORD_DEFAULT);}
+    if(isset($_POST["DOB"])) {$dati["DataNascita"] = mysqli_real_escape_string(trim($_POST["DOB"]));}
 
     if(isset($_POST["role"])) {
 
@@ -71,7 +71,7 @@ if ($azione=="") {
             session_start();
         }
         if ($_SESSION["admin"]){
-            $dati["Ruolo"] = trim($_POST["role"]);
+            $dati["Ruolo"] = mysqli_real_escape_string(trim($_POST["role"]));
         }
     }
 
@@ -105,7 +105,7 @@ if ($azione=="") {
         $query = insert_query($dati, "Iscritto");
         
     } else if ($azione=="modifica") {
-        $query = update_query($dati, "Iscritto", $_POST["primkey"], "Email");
+        $query = update_query($dati, "Iscritto", $primkey, "Email");
     }
     
 } else {

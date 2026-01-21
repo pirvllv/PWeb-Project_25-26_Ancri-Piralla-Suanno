@@ -16,8 +16,9 @@ $cid = connessione($hostname, $username, $password, $dbname);
 //$qry = "";
 
 if (!$cid) { fail("Connessione al database non riuscita. Contatta un tecnico"); }
+
 //print_r($_GET);
-$primkey = esiste("primkey", $_GET);
+$primkey = mysqli_real_escape_string(esiste("primkey", $_GET));
 $today = esiste("today", $_GET);
 $type = esiste("type", $_GET);
 if (($today=="" && $type!="change") || $primkey=="" || $type=="") {
@@ -61,7 +62,7 @@ if($type!="change") {
     //print_r($_GET);
     $idp = esiste("IDP", $_GET);;
     $action = esiste("action", $_GET);
-    $just = esiste("just", $_GET);
+    $just = mysqli_real_escape_string(esiste("just", $_GET));
     
     if ($action=="" || $idp=="") {
         fail('Non ci sono abbastanza dati per la chiamata API (change). Contatta un tecnico');
@@ -126,6 +127,8 @@ if($type!="change") {
         if ($just =="") {
             fail("Nessuna giustificazione nella chiamata API. Contatta un tecnico");
         }
+
+        
     }
 
     //Modifica del campo "accettazione"
