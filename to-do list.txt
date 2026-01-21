@@ -1,5 +1,3 @@
-Lea: in userdataAPI ci sono troppi if else, usa uno switch
-Lea: controllo capienza prima di accettazione
 Pulizia commenti
 Alert quando errori fetch
 
