@@ -473,7 +473,7 @@ function checkDati(data) {
     if(data.has("role") && document.body.id=="root-account") {
 
         let rl = data.get("role");
-        if (!(rl in ["studente", "tecnico", "docente"])) {okk = false; errcount++;
+        if (!(["studente", "tecnico", "docente"].includes(rl))) {okk = false; errcount++;
             mess += "Ruolo non consentito\n";
         }
     }

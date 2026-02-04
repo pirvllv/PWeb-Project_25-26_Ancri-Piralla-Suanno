@@ -102,7 +102,7 @@ switch($azione) {
             $dati["Foto"] = $fotonome;
         } else if ($azione=="modifica"){
             $fotonome = esiste("foto", $_SESSION);
-            if ($fotonome=="") {
+            if ($fotonome=="" && !$_SESSION["admin"]) {
                 fail("Nome file della foto mancante. Contatta un tecnico");
             }
         }
