@@ -1,4 +1,4 @@
-let imageFile;
+﻿let imageFile;
 let photoInput;
 let imagePreview;
 
@@ -473,7 +473,8 @@ function checkDati(data) {
     if(data.has("role") && document.body.id=="root-account") {
 
         let rl = data.get("role");
-        if (!(["studente", "tecnico", "docente"].includes(rl))) {okk = false; errcount++;
+	let allRoles = ["studente", "tecnico", "docente"];
+        if (!(allRoles.includes(rl))) {okk = false; errcount++;
             mess += "Ruolo non consentito\n";
         }
     }
